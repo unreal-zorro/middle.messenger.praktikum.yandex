@@ -24,3 +24,11 @@ body {
   color: $main;
   height: 100%;
 }
+
+#root {
+  width: 100%;
+  min-height: 100%;
+  padding: 10px;
+
+  @include flex(column, center, center);
+}
