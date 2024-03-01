@@ -1,0 +1,26 @@
+@import './styles/fonts';
+@import './styles/reset';
+@import './styles/variables';
+@import './styles/mixins';
+
+*::-webkit-scrollbar {
+  width: 15px;
+  height: 15px;
+}
+
+*::-webkit-scrollbar-track {
+  background: $light;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: $secondary;
+  border-radius: 15px;
+}
+
+html,
+body {
+  font-family: $font;
+  font-size: $font-text;
+  color: $main;
+  height: 100%;
+}
