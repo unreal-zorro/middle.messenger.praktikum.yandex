@@ -1,1 +1,4 @@
-import './style.scss'
+import './style.scss';
+import Handlebars from 'handlebars';
+
+
