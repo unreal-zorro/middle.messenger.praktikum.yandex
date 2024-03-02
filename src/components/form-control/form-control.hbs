@@ -1,0 +1,19 @@
+<div class="{{#if className}}{{ className }}{{/if}}">
+  {{> Label
+    className=classNameLabel
+    for=name
+    text=labelText
+  }}
+
+  {{> Input
+    className=classNameInput
+    type=type
+    name=name
+    value=value
+  }}
+
+  {{> Error
+    className=classNameError
+    text=errorText
+  }}
+</div>

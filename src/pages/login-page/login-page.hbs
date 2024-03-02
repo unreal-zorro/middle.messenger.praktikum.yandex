@@ -1,0 +1,47 @@
+<main id="login" class="login">
+  {{> Header
+    className="login__header"
+    text="Вход"
+  }}
+
+  {{#> Form className="login__form" }}
+    <div class="login__form-controls">
+      {{> FormControl
+        className="login__form-control"
+        classNameLabel="login__label"
+        classNameInput="login__input"
+        classNameError="login__error"
+        name="login"
+        labelText="Логин"
+        type="text"
+        value="ivanivanov"
+        errorText="Неверный логин"
+      }}
+
+      {{> FormControl
+        className="login__form-control"
+        classNameLabel="login__label"
+        classNameInput="login__input"
+        classNameError="login__error"
+        name="password"
+        labelText="Пароль"
+        type="password"
+        value="123456789"
+        errorText="Неверный пароль"
+      }}
+    </div>
+
+    {{#> Button
+      className="login__button"
+      type="submit"
+    }}
+      <a href="chats.html">Войти</a>
+    {{/ Button }}
+  {{/ Form }}
+
+  {{> Link
+    className="login__footer"
+    href="register.html"
+    text="Зарегистрироваться"
+  }}
+</main>

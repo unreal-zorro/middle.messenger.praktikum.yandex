@@ -1,0 +1,26 @@
+@import '../../styles/variables';
+
+.input {
+  font-size: $font-text;
+  line-height: 2;
+  color: $dark;
+  padding: 0 10px;
+  border: 1px solid $border;
+  border-radius: 10px;
+  background-color: $light;
+
+  &_error {
+    border: 3px solid $error;
+  }
+
+  &[disabled] {
+    border: 1px solid $gray;
+    background-color: $accent;
+    color: $bold-gray;
+  }
+
+  &:focus {
+    border: 2px solid $border;
+    box-shadow: 0 0 4px 0 $gray;
+  }
+}

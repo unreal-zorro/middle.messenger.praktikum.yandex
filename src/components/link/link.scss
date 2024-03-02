@@ -1,0 +1,12 @@
+@import '../../styles/variables';
+
+.link {
+  text-decoration: none;
+  color: $main;
+  transition: all 0.3s;
+
+  &:hover {
+    scale: 1.05;
+    text-decoration: underline;
+  }
+}
