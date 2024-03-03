@@ -1,9 +1,8 @@
 import express from 'express';
 import serverless from 'serverless-http';
-import path from 'path';
 
 const app = express();
-const root = path.join('../../dist');
+const root = './dist';
 
 app.use(express.static(root));
 
