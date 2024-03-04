@@ -1,0 +1,14 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.page404 {
+  @include flex(column, center, center);
+
+  &__header {
+    margin-bottom: 20px;
+  }
+
+  &__text {
+    margin-bottom: 50px;
+  }
+}

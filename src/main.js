@@ -5,7 +5,8 @@ import * as Pages from './pages';
 
 const pages = {
   login: [Pages.LoginPage],
-  register: [Pages.RegisterPage]
+  register: [Pages.RegisterPage],
+  page404: [Pages.Page404]
 };
 
 Object.entries(Components).forEach(([name, component]) => {
@@ -29,6 +30,9 @@ const contentLoadedHandler = () => {
       break;
     case '/register':
       page = 'register';
+      break;
+    case '/page404':
+      page = 'page404';
       break;
     default:
       break;
