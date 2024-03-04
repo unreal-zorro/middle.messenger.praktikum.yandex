@@ -1,0 +1,62 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.avatar {
+  min-width: $avatar-normal-size;
+  max-width: $avatar-normal-size;
+  height: $avatar-normal-size;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: all 0.3s;
+  color: $light;
+  position: relative;
+
+  &__mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    visibility: hidden;
+    opacity: 0;
+    background: $dark-gray;
+    padding: 20px;
+
+    @include flex(column, space-between, center);
+  }
+
+  &__text {
+    text-align: center;
+    color: $light;
+  }
+
+  &__icon {
+    fill: $light;
+    width: $avatar-normal-size;
+    height: $avatar-normal-size;
+  }
+
+  &_big {
+    min-width: $avatar-big-size;
+    max-width: $avatar-big-size;
+    height: $avatar-big-size;
+    position: relative;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    fill: $light;
+  }
+
+  &:hover {
+    scale: 1.05;
+    cursor: pointer;
+
+    & > div {
+      visibility: visible;
+      opacity: 1;
+      transition: all 0.3s;
+    }
+  }
+}
