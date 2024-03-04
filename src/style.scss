@@ -32,3 +32,9 @@ body {
 
   @include flex(column, center, center);
 }
+
+.spritesheet {
+  display: none;
+  width: 0;
+  height: 0;
+}

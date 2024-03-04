@@ -7,7 +7,8 @@ const pages = {
   login: [Pages.LoginPage],
   register: [Pages.RegisterPage],
   page404: [Pages.Page404],
-  page500: [Pages.Page500]
+  page500: [Pages.Page500],
+  profile: [Pages.ProfilePage]
 };
 
 Object.entries(Components).forEach(([name, component]) => {
@@ -37,6 +38,9 @@ const contentLoadedHandler = () => {
       break;
     case '/page500':
       page = 'page500';
+      break;
+    case '/profile':
+      page = 'profile';
       break;
     default:
       break;

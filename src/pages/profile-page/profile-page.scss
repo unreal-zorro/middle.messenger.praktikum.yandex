@@ -1,0 +1,76 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.profile {
+  @include flex(column, center, center);
+
+  &__avatar {
+    margin-bottom: 20px;
+  }
+
+  &__header {
+    margin-bottom: 40px;
+  }
+
+  &__form {
+    min-width: $profile-form-width;
+    margin-bottom: 20px;
+
+    @include flex(column, center, center);
+    
+    &-controls {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    &-control {
+      display: grid;
+      grid-template-columns: $profile-label-width auto;
+      grid-template-rows: calc($font-text * 2 + 6px) auto;
+      gap: 10px;
+      justify-items: start;
+      align-items: center;
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__label {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  &__input {
+    grid-row: 1;
+    grid-column: 2;
+    width: 100%;
+  }
+
+  &__error {
+    grid-row: 2;
+    grid-column: 2;
+  }
+
+  &__buttons {
+    @include flex(column, center, center);
+  }
+
+  &__button {
+    width: $button-width;
+    line-height: calc($font-button * 2);
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__footer {
+    color: $error;
+    font-size: $font-button;
+    font-weight: 700;
+  }
+}
