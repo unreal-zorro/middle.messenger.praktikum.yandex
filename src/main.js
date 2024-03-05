@@ -8,7 +8,8 @@ const pages = {
   register: [Pages.RegisterPage],
   page404: [Pages.Page404],
   page500: [Pages.Page500],
-  profile: [Pages.ProfilePage]
+  profile: [Pages.ProfilePage],
+  chats: [Pages.ChatsPage]
 };
 
 Object.entries(Components).forEach(([name, component]) => {
@@ -41,6 +42,9 @@ const contentLoadedHandler = () => {
       break;
     case '/profile':
       page = 'profile';
+      break;
+    case '/chats':
+      page = 'chats';
       break;
     default:
       break;

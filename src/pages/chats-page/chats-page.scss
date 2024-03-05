@@ -1,0 +1,36 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.chats {
+  flex: 1 0 auto;
+  display: grid;
+  grid-template-areas:
+    'search content'
+    'list content'
+    'list new-message';
+  grid-template-columns: $chats-width auto;
+  grid-template-rows: $chats-search-height auto $chats-new-height;
+  justify-self: stretch;
+  align-self: stretch;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  &__search {
+    grid-area: search;
+  }
+
+  &__list {
+    grid-area: list;
+  }
+
+  &__content {
+    grid-area: content;
+  }
+
+  &__new-message {
+    grid-area: new-message;
+  }
+}

@@ -1,0 +1,52 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.search {
+  grid-area: search;
+  padding: 20px 20px 10px 20px;
+  background-color: $accent;
+
+  @include flex(column, space-between, end);
+
+  &__link {
+    margin-bottom: 10px;
+  }
+
+  &__form {
+    width: 100%;
+    min-height: $search-form-height;
+    position: relative;
+    display: grid;
+    grid-template-areas:
+      'search-input'
+      'search-error';
+    grid-template-columns: auto;
+    grid-template-rows: calc($font-text * 2 + 4px) auto;
+    gap: 10px;
+  }
+
+  &__icon {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 9px;
+    left: 9px;
+    width: 16px;
+    height: 16px;
+    fill: $dark-gray;
+  }
+
+  &__input {
+    width: 100%;
+    padding-left: 30px;
+    grid-area: search-input;
+    align-self: center;
+    justify-self: center;
+  }
+
+  &__error {
+    grid-area: search-error;
+    align-self: center;
+    justify-self: self-start;
+  }
+}

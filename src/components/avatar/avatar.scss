@@ -59,4 +59,16 @@
       transition: all 0.3s;
     }
   }
+
+  &_no-edit {
+    &:hover {
+      scale: 1;
+      cursor: auto;
+
+      & > div {
+        visibility: hidden;
+        opacity: 0;
+      }
+    }
+  }
 }
