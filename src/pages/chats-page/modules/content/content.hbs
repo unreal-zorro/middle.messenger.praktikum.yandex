@@ -1,0 +1,23 @@
+<section
+  class="content{{#if className}} {{ className }}{{/if}}"
+>
+  {{#if content}}
+    <p class="content__date">
+      07 Фев 2024
+    </p>
+    <ul class="content__list">
+      {{> Message
+        className="content__message message_their"
+        name="Приятель"
+        text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, cum."
+        time="15:07"
+        check="check"
+      }}
+    </ul>
+  {{else}}
+    {{> Text
+      className="list__text"
+      text="Список сообщений пуст"
+    }}
+  {{/if}}
+</section>
