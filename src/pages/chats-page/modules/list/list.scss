@@ -6,8 +6,16 @@
   background-color: $accent;
   overflow: auto;
 
+  @include flex(column, flex-start, center);
+
   &::-webkit-scrollbar-track {
     background: $accent;
+  }
+
+  &__list {
+    width: 100%;
+
+    @include flex(column, flex-start, center);
   }
 
   &__item {
@@ -19,6 +27,6 @@
   }
 
   &__text {
-    text-align: center;
+    margin: auto;
   }
 }

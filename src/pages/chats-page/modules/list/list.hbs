@@ -2,7 +2,15 @@
   class="list{{#if className}} {{ className }}{{/if}}"
 >
   {{#if chat}}
-    <ul>
+    <ul class="list__list">
+      {{> Chat
+        className="list__item chat_active"
+      }}
+
+      {{> Chat
+        className="list__item"
+      }}
+
       {{> Chat
         className="list__item"
       }}

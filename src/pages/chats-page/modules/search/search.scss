@@ -21,7 +21,7 @@
       'search-input'
       'search-error';
     grid-template-columns: auto;
-    grid-template-rows: calc($font-text * 2 + 4px) auto;
+    grid-template-rows: calc($font-text * 2 + 6px) auto;
     gap: 10px;
   }
 
@@ -29,7 +29,7 @@
     position: absolute;
     width: 16px;
     height: 16px;
-    top: 9px;
+    top: 11px;
     left: 9px;
     width: 16px;
     height: 16px;

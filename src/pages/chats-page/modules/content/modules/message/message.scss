@@ -2,7 +2,7 @@
 @import '../../../../../../styles/mixins';
 
 .message {
-  width: 100%;
+  min-width: $min-chat-width;
   padding: 10px;
   color: $main;
   border: 1px solid $border;
@@ -16,8 +16,12 @@
     font-weight: 700;
   }
 
-  &__text {
+  &__text, &__image {
     margin-bottom: 10px;
+  }
+
+  &__image {
+    max-width: 100%;
   }
 
   &__info {

@@ -9,15 +9,31 @@
       {{> Message
         className="content__message message_their"
         name="Приятель"
-        text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, cum."
+        text="Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой. Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро."
+        time="15:07"
+        check="check"
+      }}
+
+      {{> Message
+        className="content__message message_their"
+        name="Приятель"
+        imageSrc="/images/flower.png"
+        time="15:07"
+        check="check"
+      }}
+
+      {{> Message
+        className="content__message message_our"
+        name="Вы"
+        text="Круто."
         time="15:07"
         check="check"
       }}
     </ul>
   {{else}}
     {{> Text
-      className="list__text"
-      text="Список сообщений пуст"
+      className="content__text"
+      text="Выберите чат, чтобы отправить сообщение"
     }}
   {{/if}}
 </section>
