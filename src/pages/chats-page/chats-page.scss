@@ -9,7 +9,7 @@
     'list content'
     'list message';
   grid-template-columns: $chats-width auto;
-  grid-template-rows: $chats-search-height auto minmax($chats-new-height, auto);
+  grid-template-rows: $chats-search-height auto $chats-new-height;
   justify-self: stretch;
   align-self: stretch;
   position: fixed;
@@ -28,151 +28,9 @@
 
   &__content {
     grid-area: content;
-    padding: 10px 20px;
-    overflow: auto;
-
-    @include flex(column, flex-start, center);
-
-    &-date {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-bottom: 1px solid $border;
-      text-align: center;
-      font-weight: 700;
-      color: $dark;
-    }
-
-    &-list {
-      width: 100%;
-
-      @include flex(column, flex-start, center);
-    }
-
-    &-message {
-      max-width: $chat-message-width;
-      margin-bottom: 10px;
-      padding: 10px;
-      color: $main;
-
-      @include flex(column, flex-start, start);
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      &_their {
-        align-self: flex-start;
-        border-bottom-left-radius: 0;
-      }
-
-      &_our {
-        align-self: flex-end;
-        border-bottom-right-radius: 0;
-        color: $border;
-        background-color: $accent;
-      }
-
-      &-name {
-        align-self: center;
-        margin-bottom: 10px;
-        font-weight: 700;
-      }
-
-      &-text {
-        margin-bottom: 10px;
-      }
-
-      &-info {
-        align-self: end;
-
-        @include flex(row, center, center);
-
-        color: $gray;
-        fill: $gray;
-
-        &_active {
-          color: $dark;
-          fill: $dark;
-        }
-      }
-
-      &-time {
-        color: inherit;
-      }
-
-      &-check {
-        width: calc($font-text * 1.2);
-        height: calc($font-text * 1.2);
-        color: inherit;
-      }
-
-      &-icon {
-        width: 100%;
-        height: 100%;
-        fill: inherit;
-      }
-    }
   }
 
   &__message {
     grid-area: message;
-    padding: 20px 20px 8px 20px;
-
-    @include flex(row, center, center);
-
-    &-form {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      grid-template-areas:
-        'message-attach message-input message-send'
-        'message-empty1 message-error message-empty2';
-      grid-template-columns: calc($font-text * 2) auto calc($font-text * 2);
-      grid-template-rows: calc($font-text * 2 + 4px) auto;
-      gap: 10px;
-    }
-
-    &-button {
-      min-width: calc($font-text * 2);
-      max-width: calc($font-text * 2);
-      height: calc($font-text * 2);
-      border-radius: 50%;
-      overflow: hidden;
-      align-self: center;
-      justify-self: center;
-      padding: 7px;
-
-      @include flex(row, center, center);
-
-      &:first-child {
-        grid-area: message-attach;
-      }
-
-      &:last-child {
-        grid-area: message-send;
-      }
-    }
-
-    &-icon {
-      width: 100%;
-      height: 100%;
-      fill: $light;
-    }
-
-    &-input {
-      grid-area: message-input;
-      width: 100%;
-      align-self: center;
-      justify-self: center;
-
-      &_error {
-        border: 3px solid $error;
-      }
-    }
-
-    &-error {
-      grid-area: message-error;
-    }
   }
 }

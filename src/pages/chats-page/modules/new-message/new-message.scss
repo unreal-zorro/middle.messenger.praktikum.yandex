@@ -1,0 +1,62 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.new-message {
+  padding: 20px 20px 8px 20px;
+
+  @include flex(row, center, center);
+
+  &__form {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-areas:
+      'message-attach message-input message-send'
+      'message-empty1 message-error message-empty2';
+    grid-template-columns: calc($font-text * 2) auto calc($font-text * 2);
+    grid-template-rows: calc($font-text * 2 + 4px) auto;
+    gap: 10px;
+  }
+
+  &__button {
+    min-width: calc($font-text * 2);
+    max-width: calc($font-text * 2);
+    height: calc($font-text * 2);
+    border-radius: 50%;
+    overflow: hidden;
+    align-self: center;
+    justify-self: center;
+    padding: 7px;
+
+    @include flex(row, center, center);
+
+    &:first-child {
+      grid-area: message-attach;
+    }
+
+    &:last-child {
+      grid-area: message-send;
+    }
+  }
+
+  &__icon {
+    width: 100%;
+    height: 100%;
+    fill: $light;
+  }
+
+  &__input {
+    grid-area: message-input;
+    width: 100%;
+    align-self: center;
+    justify-self: center;
+
+    &_error {
+      border: 3px solid $error;
+    }
+  }
+
+  &__error {
+    grid-area: message-error;
+  }
+}
