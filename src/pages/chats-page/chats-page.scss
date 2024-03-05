@@ -7,7 +7,7 @@
   grid-template-areas:
     'search content'
     'list content'
-    'list message';
+    'list new-message';
   grid-template-columns: $chats-width auto;
   grid-template-rows: $chats-search-height auto $chats-new-height;
   justify-self: stretch;
@@ -30,7 +30,7 @@
     grid-area: content;
   }
 
-  &__message {
-    grid-area: message;
+  &__new-message {
+    grid-area: new-message;
   }
 }
