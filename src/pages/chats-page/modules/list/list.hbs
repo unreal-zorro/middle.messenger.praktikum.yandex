@@ -1,0 +1,16 @@
+<section
+  class="list{{#if className}} {{ className }}{{/if}}"
+>
+  {{#if chat}}
+    <ul>
+      {{> Chat
+        className="list__item"
+      }}
+    </ul>
+  {{else}}
+    {{> Text
+      className="list__text"
+      text="Список чатов пуст"
+    }}
+  {{/if}}
+</section>
