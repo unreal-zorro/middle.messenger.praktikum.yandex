@@ -1,11 +1,19 @@
 <div
   class="avatar{{#if className}} {{ className }}{{/if}}"
 > 
-  <img
+  {{#if imgSrc}}
+    <img
     src={{#if imgSrc}}{{ imgSrc }}{{else}}"/icons/avatar.svg"{{/if}}
     alt="avatar"
     class="avatar__image"
   />
+  {{else}}
+    <div class="avatar__empty-mask">
+      <svg class="avatar__empty-icon">
+        <use xlink:href="#icon-avatar"></use>
+      </svg>
+    </div>
+  {{/if}}
 
   <div class="avatar__mask">
     <svg class="avatar__icon">

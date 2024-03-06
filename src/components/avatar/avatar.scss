@@ -11,6 +11,16 @@
   color: $light;
   position: relative;
 
+  &__empty-icon {
+    fill: $light;
+    width: $avatar-big-size;
+    height: $avatar-big-size;
+  }
+
+  &__empty-mask {
+    background-color: $secondary;
+  }
+
   &__mask {
     position: absolute;
     top: 0;
