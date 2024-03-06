@@ -1,7 +1,7 @@
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
-.page404 {
+.error-page {
   @include flex(column, center, center);
 
   &__header {

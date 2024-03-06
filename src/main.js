@@ -7,8 +7,8 @@ import * as Pages from './pages';
 const pages = {
   login: [Pages.LoginPage],
   register: [Pages.LoginPage],
-  page404: [Pages.Page404],
-  page500: [Pages.Page500],
+  error404: [Pages.ErrorPage],
+  error500: [Pages.ErrorPage],
   profile: [Pages.ProfilePage],
   chats: [Pages.ChatsPage]
 };
@@ -42,6 +42,20 @@ const errors = {
     status: 500,
     message: 'Внутренняя ошибка сервера'
   }
+};
+
+const getErrorPageData = (error) => {
+  const id = `error${error.status}`;
+
+  return {
+    id,
+    header: error.status,
+    text: error.message,
+    link: {
+      text: 'Назад к чатам',
+      href: '/chats'
+    }
+  };
 };
 
 const chats = [
@@ -131,32 +145,6 @@ const messages = [
     count: 177
   }
 ];
-
-const getErrorPageData = (error) => {
-  const id = `error${error.status}`;
-
-  return {
-    id,
-    header: error.status,
-    text: error.message,
-    link: {
-      text: 'Назад к чатам',
-      href: '/chats'
-    }
-  };
-};
-
-const getError500PageData = (error) => {
-  return {
-    id: 'error500',
-    header: error.status,
-    text: error.message,
-    link: {
-      text: 'Назад к чатам',
-      href: '/chats'
-    }
-  };
-};
 
 const getLoginPageData = (user) => {
   return {
@@ -405,6 +393,7 @@ const contentLoadedHandler = () => {
     case '/':
     case '/index.html': {
       data = getLoginPageData(user);
+      page = 'register';
       break;
     }
     case '/register': {
@@ -412,12 +401,16 @@ const contentLoadedHandler = () => {
       page = 'register';
       break;
     }
-    case '/page404':
-      page = 'page404';
+    case '/error404': {
+      data = getErrorPageData(errors.error404);
+      page = 'error404';
       break;
-    case '/page500':
-      page = 'page500';
+    }
+    case '/error500': {
+      data = getErrorPageData(errors.error500);
+      page = 'error500';
       break;
+    }
     case '/profile':
       page = 'profile';
       break;
