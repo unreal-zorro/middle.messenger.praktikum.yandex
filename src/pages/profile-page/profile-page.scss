@@ -24,18 +24,23 @@
     }
 
     &-control {
-      display: grid;
-      grid-template-columns: $profile-label-width auto;
-      grid-template-rows: calc($font-text * 2 + 6px) auto;
-      gap: 10px;
-      justify-items: start;
-      align-items: center;
+      min-height: $input-height;
+      width: 100%;
       margin-bottom: 10px;
-
+  
       &:last-child {
         margin-bottom: 0;
       }
     }
+  }
+
+  &__input-field {
+    display: grid;
+    grid-template-columns: $profile-label-width auto;
+    grid-template-rows: $input-height auto;
+    gap: 10px;
+    justify-items: start;
+    align-items: center;
   }
 
   &__label {

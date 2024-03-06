@@ -20,8 +20,8 @@ $font-header: 32px;
 // dimensions
 $login-height: 500px;
 $login-width: 400px;
-$register-height: 800px;
-$form-control-height: 80px;
+$input-height: calc($font-text * 2 + 6px);
+$input-field-height: 86px;
 $search-form-height: 58px;
 $button-width: 250px;
 $chats-width: 540px;
