@@ -1,39 +1,105 @@
 <section
   class="content{{#if className}} {{ className }}{{/if}}"
 >
-  {{#if content}}
-    <p class="content__date">
-      07 Фев 2024
-    </p>
-    <ul class="content__list">
-      {{> Message
-        className="content__message message_their"
-        name="Приятель"
-        text="Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой. Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро."
-        time="15:07"
-        check="check"
-      }}
+  {{#if this.chat}}
+    <div class="content__chat">
+      <div class="content__info">
+        {{> Avatar this.chat
+          className="content__avatar avatar_no-edit"
+          imgSrc=this.chat.avatar
+        }}
 
-      {{> Message
-        className="content__message message_their"
-        name="Приятель"
-        imageSrc="/images/flower.png"
-        time="15:07"
-        check="check"
-      }}
+        {{> Text this.chat
+          className="content__title"
+          text=this.chat.title
+        }}
+      </div>
 
-      {{> Message
-        className="content__message message_our"
-        name="Вы"
-        text="Круто."
-        time="15:07"
-        check="check"
+      {{#> Button this.chat
+        className="content__button"
+        type="button"
       }}
-    </ul>
+        <svg class="content__icon">
+          <use xlink:href="#icon-triple"></use>
+        </svg>
+      {{/ Button }}
+    </div>
+
+    {{#if this.messages}}
+      <p class="content__date">
+        {{ this.date }}
+      </p>
+      <ul class="content__list">
+
+        {{#each this.messages}}
+          {{> Message
+            className="content__message{{#if this.check}} message_our{{else}} message_their{{/if}}"
+            name=this.name
+            text=this.text
+            time=this.time
+            check=this.check
+          }}
+        {{/each}}
+
+        {{!-- {{> Message
+          className="content__message message_their"
+          name="Приятель"
+          text="Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой. Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро."
+          time="15:07"
+          check="check"
+        }}
+
+        {{> Message
+          className="content__message message_their"
+          name="Приятель"
+          text="Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой. Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро."
+          time="15:07"
+          check="check"
+        }}
+
+        {{> Message
+          className="content__message message_their"
+          name="Приятель"
+          imageSrc="/images/flower.png"
+          time="15:07"
+          check="check"
+        }}
+
+        {{> Message
+          className="content__message message_our"
+          name="Вы"
+          text="Круто."
+          time="15:07"
+          check="check"
+        }} --}}
+      </ul>
+    {{else}}
+      {{> Text
+        className="content__text"
+        text="В выбранном чате отсутствуют сообщения"
+      }}
+    {{/if}}
   {{else}}
     {{> Text
       className="content__text"
       text="Выберите чат, чтобы отправить сообщение"
     }}
   {{/if}}
+
+  <svg class="spritesheet">
+    <symbol id="icon-triple" viewBox="0 0 20 20">
+      <title>triple</title>
+      <path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+    </symbol>
+
+    <symbol id="icon-checkmark" viewBox="0 0 512 512">
+      <title>checkmark</title>
+      <polyline points="464 128 240 384 144 288"
+        style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" />
+      <line x1="144" y1="384" x2="48" y2="288"
+        style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" />
+      <line x1="368" y1="128" x2="232" y2="284"
+        style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" />
+    </symbol>
+  </svg>
 </section>

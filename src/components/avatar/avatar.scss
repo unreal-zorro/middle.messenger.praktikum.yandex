@@ -13,6 +13,12 @@
 
   &__empty-icon {
     fill: $light;
+    width: $avatar-normal-size;
+    height: $avatar-normal-size;
+  }
+
+  &_big &__empty-icon {
+    fill: $light;
     width: $avatar-big-size;
     height: $avatar-big-size;
   }
@@ -70,15 +76,13 @@
     }
   }
 
-  &_no-edit {
-    &:hover {
-      scale: 1;
-      cursor: auto;
+  &_no-edit:hover {
+    scale: 1;
+    cursor: auto;
 
-      & > div {
-        visibility: hidden;
-        opacity: 0;
-      }
+    & > div {
+      visibility: hidden;
+      opacity: 0;
     }
   }
 }

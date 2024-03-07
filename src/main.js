@@ -62,40 +62,40 @@ const chats = [
   {
     id: 1,
     avatar: '/images/avatar.png',
-    title: 'Приятель',
+    title: 'Андрей',
     message: {
-      date: '15:07',
-      sender: 'jack',
-      text: 'Привет.'
+      date: '10:49',
+      sender: 'andrew',
+      text: 'Изображение'
     },
-    count: 1
+    count: 2
   },
   {
     id: 2,
-    avatar: undefined,
-    title: 'Знакомый',
+    avatar: '/images/avatar.png',
+    title: 'Киноклуб',
     message: {
-      date: '07 Фев 2024',
+      date: '12:00',
       sender: 'ivanivanov',
-      text: 'Как дела?'
+      text: 'стикер'
     },
-    count: 0
+    count: ''
   },
   {
     id: 3,
-    avatar: '/images/avatar.png',
-    title: 'Знакомый',
+    avatar: '',
+    title: 'Вадим',
     message: {
       date: 'Пт',
-      sender: 'jack',
-      text: 'Всё хорошо?'
+      sender: 'ivanivanov',
+      text: 'Круто!!!'
     },
-    count: 177
+    count: ''
   }
 ];
 
 const getChatsListPageData = (user, chats) => {
-  return chats.forEach(chat => {
+  return chats.map(chat => {
     const isISendLastMessage = chat.message.sender === user.login;
 
     return {
@@ -113,53 +113,81 @@ const getChatsListPageData = (user, chats) => {
 const messages = [
   {
     id: 1,
-    avatar: '/images/avatar.png',
-    title: 'Приятель',
-    message: {
-      date: '15:07',
-      sender: 'jack',
-      text: 'Привет.'
-    },
-    count: 1
+    login: 'vadim',
+    display_name: 'Вадим',
+    date: '19 июня',
+    time: '11:56',
+    check: true,
+    content: [
+      {
+        type: 'text',
+        data: 'Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой.'
+      },
+      {
+        type: 'text',
+        data: 'Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро.'
+      }
+    ]
   },
   {
     id: 2,
-    avatar: undefined,
-    title: 'Знакомый',
-    message: {
-      date: '07 Фев 2024',
-      sender: 'ivanivanov',
-      text: 'Как дела?'
-    },
-    count: 0
+    login: 'vadim',
+    display_name: 'Вадим',
+    date: '19 июня',
+    time: '11:56',
+    check: true,
+    content: [
+      {
+        type: 'image',
+        data: '/images/camera.png'
+      }
+    ]
   },
   {
     id: 3,
-    avatar: '/images/avatar.png',
-    title: 'Знакомый',
-    message: {
-      date: 'Пт',
-      sender: 'jack',
-      text: 'Всё хорошо?'
-    },
-    count: 177
+    login: 'ivanivanov',
+    display_name: 'Иван',
+    date: '19 июня',
+    time: '12:00',
+    check: true,
+    content: [
+      {
+        type: 'text',
+        data: 'Круто!!!'
+      }
+    ]
   }
 ];
 
-const getChatsContentPageData = (user, messages) => {
-  return chats.forEach(chat => {
-    const isISendLastMessage = chat.message.sender === user.login;
+const currentChat = {
+  id: 1,
+  avatar: '/images/avatar.png',
+  title: 'Андрей',
+};
+
+const getChatsContentPageData = (user, messagesArray, currentChat) => {
+  const messages = messagesArray.map(message => {
+    const isISendMessage = message.login === user.login;
 
     return {
-      id: chat.id,
-      avatar: chat.avatar,
-      title: chat.title,
-      date: chat.message.date,
-      text: chat.message.text,
-      sender: isISendLastMessage,
-      count: chat.count
+      id: message.id,
+      name: message.display_name,
+      date: message.date,
+      time: message.time,
+      check: isISendMessage,
+      content: message.content
     };
   });
+
+  const date = messages[0].date;
+
+  const chat = currentChat.id ? currentChat : null;
+
+  return {
+    date,
+    messages,
+    chat
+  };
 };
 
 const getChatsPageData = (user, chats, messages) => {
@@ -182,8 +210,10 @@ const getChatsPageData = (user, chats, messages) => {
         }
       ]
     },
-    list: getChatsListPageData(user, chats),
-    content: getChatsContentPageData(user, messages),
+    list: {
+      chats: getChatsListPageData(user, chats)
+    },
+    content: getChatsContentPageData(user, messages, currentChat),
     newMessage: {
       control: {
         name: 'message',
@@ -369,7 +399,7 @@ const getProfilePageData = (user, mode) => {
         },
         {
           label: 'Имя в чате',
-          name: 'chat_name',
+          name: 'display_name',
           type: 'text',
           disabled: false,
           placeholder: '',
@@ -563,9 +593,6 @@ function navigate(page, args = {}) {
   const [source] = pages[page];
   const template = Handlebars.compile(source);
   const root = document.querySelector('#root');
-
-  console.log('args: ', args);
-
   root.innerHTML = template(args);
 }
 
