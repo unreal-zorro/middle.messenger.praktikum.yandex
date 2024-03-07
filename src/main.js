@@ -62,35 +62,35 @@ const chats = [
   {
     id: 1,
     avatar: '/images/avatar.png',
-    title: 'Приятель',
+    title: 'Андрей',
     message: {
-      date: '15:07',
-      sender: 'jack',
-      text: 'Привет.'
+      date: '10:49',
+      sender: 'andrew',
+      text: 'Изображение'
     },
-    count: 1
+    count: 2
   },
   {
     id: 2,
-    avatar: undefined,
-    title: 'Знакомый',
+    avatar: '/images/avatar.png',
+    title: 'Киноклуб',
     message: {
-      date: '07 Фев 2024',
+      date: '12:00',
       sender: 'ivanivanov',
-      text: 'Как дела?'
+      text: 'стикер'
     },
-    count: 0
+    count: ''
   },
   {
     id: 3,
-    avatar: '/images/avatar.png',
-    title: 'Знакомый',
+    avatar: '',
+    title: 'Вадим',
     message: {
       date: 'Пт',
-      sender: 'jack',
-      text: 'Всё хорошо?'
+      sender: 'ivanivanov',
+      text: 'Круто!!!'
     },
-    count: 177
+    count: ''
   }
 ];
 

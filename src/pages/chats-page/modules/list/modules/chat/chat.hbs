@@ -20,15 +20,18 @@
     </div>
 
     <div class="chat__message">
-      {{> Text
-        className="chat__text"
-        text=this.text
-      }}
+      <p
+        class="chat__text"
+      >
+        {{#if this.sender}}<span class="chat__text_i-sender">Вы: </span>{{/if}}{{ text }}
+      </p>
 
-      {{> Text
-        className="chat__count"
-        text=this.count
-      }}
+      {{#if this.count}}
+        {{> Text
+          className="chat__count"
+          text=this.count
+        }}
+      {{/if}}
     </div>
   </div>
 
