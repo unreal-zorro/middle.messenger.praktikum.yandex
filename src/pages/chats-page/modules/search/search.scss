@@ -14,15 +14,38 @@
 
   &__form {
     width: 100%;
-    min-height: $search-form-height;
-    position: relative;
+
+    &-controls {
+      width: 100%;
+  
+      @include flex(column, space-between, flex-start);
+    }
+
+    &-control {
+      position: relative;
+      height: calc($input-height + 10px + $font-error);
+      width: 100%;
+      margin-bottom: 10px;
+  
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__input-field {
+    width: 100%;
     display: grid;
-    grid-template-areas:
-      'search-input'
-      'search-error';
     grid-template-columns: auto;
-    grid-template-rows: calc($font-text * 2 + 6px) auto;
+    grid-template-rows: $input-height auto;
     gap: 10px;
+    justify-items: start;
+    align-items: center;
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   &__icon {
@@ -37,15 +60,17 @@
   }
 
   &__input {
+    grid-row: 1;
+    grid-column: 1;
     width: 100%;
     padding-left: 30px;
-    grid-area: search-input;
     align-self: center;
     justify-self: center;
   }
 
   &__error {
-    grid-area: search-error;
+    grid-row: 2;
+    grid-column: 1;
     align-self: center;
     justify-self: self-start;
   }

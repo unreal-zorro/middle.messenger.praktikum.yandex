@@ -1,33 +1,31 @@
 <section
   class="new-message{{#if className}} {{ className }}{{/if}}"
 >
-  {{#> Form
-    className="new-message__form"
-  }}
-    {{#> Button
+  {{#> Form className="new-message__form" }}
+    {{#> Button attachButton
       className="new-message__button"
-      type="button"
+      type=attachButton.type
     }}
       <svg class="new-message__icon">
         <use xlink:href="#icon-attach"></use>
       </svg>
     {{/ Button }}
 
-    {{> Input
+    {{> Input control
       className="new-message__input"
-      placeholder="Введите сообщение"
-      type="text"
-      name="message"
+      placeholder=control.placeholder
+      type=control.type
+      name=control.name
     }}
 
-    {{> Error
+    {{> Error control
       className="new-message__error"
-      text="Введите сообщение"
+      text=control.error
     }}
 
-    {{#> Button
+    {{#> Button sendButton
       className="new-message__button"
-      type="submit"
+      type=sendButton.type
     }}
       <svg class="new-message__icon">
         <use xlink:href="#icon-send"></use>

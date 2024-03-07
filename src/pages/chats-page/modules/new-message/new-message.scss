@@ -13,15 +13,15 @@
     grid-template-areas:
       'message-attach message-input message-send'
       'message-empty1 message-error message-empty2';
-    grid-template-columns: calc($font-text * 2) auto calc($font-text * 2);
-    grid-template-rows: calc($font-text * 2 + 4px) auto;
+    grid-template-columns: $icon-size auto $icon-size;
+    grid-template-rows: $input-height auto auto;
     gap: 10px;
   }
 
   &__button {
-    min-width: calc($font-text * 2);
-    max-width: calc($font-text * 2);
-    height: calc($font-text * 2);
+    min-width: $icon-size;
+    max-width: $icon-size;
+    height: $icon-size;
     border-radius: 50%;
     overflow: hidden;
     align-self: center;
@@ -50,10 +50,6 @@
     width: 100%;
     align-self: center;
     justify-self: center;
-
-    &_error {
-      border: 3px solid $error;
-    }
   }
 
   &__error {

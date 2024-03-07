@@ -94,7 +94,7 @@ const chats = [
   }
 ];
 
-const getChatsListPageData = (chats, user) => {
+const getChatsListPageData = (user, chats) => {
   return chats.forEach(chat => {
     const isISendLastMessage = chat.message.sender === user.login;
 
@@ -145,6 +145,61 @@ const messages = [
     count: 177
   }
 ];
+
+const getChatsContentPageData = (user, messages) => {
+  return chats.forEach(chat => {
+    const isISendLastMessage = chat.message.sender === user.login;
+
+    return {
+      id: chat.id,
+      avatar: chat.avatar,
+      title: chat.title,
+      date: chat.message.date,
+      text: chat.message.text,
+      sender: isISendLastMessage,
+      count: chat.count
+    };
+  });
+};
+
+const getChatsPageData = (user, chats, messages) => {
+  return {
+    id: 'chats',
+    search: {
+      navLink: {
+        text: 'Профиль >',
+        href: '/profile'
+      },
+      controls: [
+        {
+          label: '',
+          name: 'search',
+          type: 'text',
+          disabled: '',
+          placeholder: 'Поиск',
+          value: '',
+          error: ''
+        }
+      ]
+    },
+    list: getChatsListPageData(user, chats),
+    content: getChatsContentPageData(user, messages),
+    newMessage: {
+      control: {
+        name: 'message',
+        type: 'text',
+        placeholder: 'Введите сообщение',
+        error: ''
+      },
+      attachButton: {
+        type: 'button',
+      },
+      sendButton: {
+        type: 'submit',
+      }
+    }
+  };
+};
 
 const getLoginPageData = (user) => {
   return {
@@ -338,7 +393,11 @@ const getProfilePageData = (user, mode) => {
           href: '/profile'
         }
       ],
-      link: {}
+      link: {},
+      navLink: {
+        text: 'Назад в профиль',
+        href: '/profile'
+      }
     };
   } else if (mode === 'password') {
     data = {
@@ -380,7 +439,11 @@ const getProfilePageData = (user, mode) => {
           href: '/profile'
         }
       ],
-      link: {}
+      link: {},
+      navLink: {
+        text: 'Назад в профиль',
+        href: '/profile'
+      }
     };
   } else {
     data = {
@@ -474,17 +537,21 @@ const getProfilePageData = (user, mode) => {
         {
           type: 'button',
           text: 'Изменить данные',
-          href: '/profile/edit-data'
+          href: '/profile/data'
         },
         {
           type: 'button',
           text: 'Изменить пароль',
-          href: '/profile/edit-password'
+          href: '/profile/password'
         }
       ],
       link: {
         text: 'Выйти',
         href: '/'
+      },
+      navLink: {
+        text: 'Назад к чатам',
+        href: '/chats'
       }
     };
   }
@@ -534,7 +601,7 @@ const contentLoadedHandler = () => {
       page = 'profile';
       break;
     }
-    case '/profile/edit': {
+    case '/profile/data': {
       data = getProfilePageData(user, 'edit');
       page = 'profile';
       break;
@@ -544,9 +611,11 @@ const contentLoadedHandler = () => {
       page = 'profile';
       break;
     }
-    case '/chats':
+    case '/chats': {
+      data = getChatsPageData(user, chats, messages);
       page = 'chats';
       break;
+    }
     default:
       break;
   }
