@@ -9,7 +9,7 @@
     'list content'
     'list new-message';
   grid-template-columns: $chats-width auto;
-  grid-template-rows: $chats-search-height auto $chats-new-height;
+  grid-template-rows: minmax($chats-search-height, auto) auto minmax($chats-new-height, auto);
   justify-self: stretch;
   align-self: stretch;
   position: fixed;
@@ -20,6 +20,7 @@
 
   &__search {
     grid-area: search;
+    border-bottom: 1px solid $gray;
   }
 
   &__list {
@@ -32,5 +33,6 @@
 
   &__new-message {
     grid-area: new-message;
+    border-top: 1px solid $gray;
   }
 }

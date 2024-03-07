@@ -94,7 +94,7 @@ const chats = [
   }
 ];
 
-const getChatsListPageData = (chats, user) => {
+const getChatsListPageData = (user, chats) => {
   return chats.forEach(chat => {
     const isISendLastMessage = chat.message.sender === user.login;
 
@@ -145,6 +145,50 @@ const messages = [
     count: 177
   }
 ];
+
+const getChatsContentPageData = (user, messages) => {
+  return chats.forEach(chat => {
+    const isISendLastMessage = chat.message.sender === user.login;
+
+    return {
+      id: chat.id,
+      avatar: chat.avatar,
+      title: chat.title,
+      date: chat.message.date,
+      text: chat.message.text,
+      sender: isISendLastMessage,
+      count: chat.count
+    };
+  });
+};
+
+const getChatsPageData = (user, chats, messages) => {
+  return {
+    id: 'chats',
+    search: {
+      navLink: {
+        text: 'Профиль >',
+        href: '/profile'
+      },
+      controls: [
+        {
+          label: '',
+          name: 'search',
+          type: 'text',
+          disabled: '',
+          placeholder: 'Поиск',
+          value: '',
+          error: ''
+        }
+      ],
+    },
+    list: getChatsListPageData(user, chats),
+    content: getChatsContentPageData(user, messages),
+    newMessage: {
+
+    }
+  };
+};
 
 const getLoginPageData = (user) => {
   return {
@@ -556,9 +600,11 @@ const contentLoadedHandler = () => {
       page = 'profile';
       break;
     }
-    case '/chats':
+    case '/chats': {
+      data = getChatsPageData(user, chats, messages);
       page = 'chats';
       break;
+    }
     default:
       break;
   }
