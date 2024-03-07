@@ -180,12 +180,23 @@ const getChatsPageData = (user, chats, messages) => {
           value: '',
           error: ''
         }
-      ],
+      ]
     },
     list: getChatsListPageData(user, chats),
     content: getChatsContentPageData(user, messages),
     newMessage: {
-
+      control: {
+        name: 'message',
+        type: 'text',
+        placeholder: 'Введите сообщение',
+        error: ''
+      },
+      attachButton: {
+        type: 'button',
+      },
+      sendButton: {
+        type: 'submit',
+      }
     }
   };
 };

@@ -9,7 +9,7 @@
     'list content'
     'list new-message';
   grid-template-columns: $chats-width auto;
-  grid-template-rows: minmax($chats-search-height, auto) auto minmax($chats-new-height, auto);
+  grid-template-rows: $chats-search-height auto $chats-new-height;
   justify-self: stretch;
   align-self: stretch;
   position: fixed;
