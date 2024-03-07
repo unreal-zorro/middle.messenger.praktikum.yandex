@@ -5,7 +5,7 @@
   @include flex(column, center, center);
 
   &__avatar {
-    margin-bottom: 20px;
+    margin: 20px 0;
   }
 
   &__header {
@@ -24,7 +24,7 @@
     }
 
     &-control {
-      min-height: $input-height;
+      min-height: calc($input-height + 10px + $font-error);
       width: 100%;
       margin-bottom: 10px;
   
@@ -77,5 +77,13 @@
     color: $error;
     font-size: $font-button;
     font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  &__nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 20px auto auto 20px;
   }
 }

@@ -338,7 +338,11 @@ const getProfilePageData = (user, mode) => {
           href: '/profile'
         }
       ],
-      link: {}
+      link: {},
+      navLink: {
+        text: 'Назад в профиль',
+        href: '/profile'
+      }
     };
   } else if (mode === 'password') {
     data = {
@@ -380,7 +384,11 @@ const getProfilePageData = (user, mode) => {
           href: '/profile'
         }
       ],
-      link: {}
+      link: {},
+      navLink: {
+        text: 'Назад в профиль',
+        href: '/profile'
+      }
     };
   } else {
     data = {
@@ -474,17 +482,21 @@ const getProfilePageData = (user, mode) => {
         {
           type: 'button',
           text: 'Изменить данные',
-          href: '/profile/edit-data'
+          href: '/profile/data'
         },
         {
           type: 'button',
           text: 'Изменить пароль',
-          href: '/profile/edit-password'
+          href: '/profile/password'
         }
       ],
       link: {
         text: 'Выйти',
         href: '/'
+      },
+      navLink: {
+        text: 'Назад к чатам',
+        href: '/chats'
       }
     };
   }
@@ -534,7 +546,7 @@ const contentLoadedHandler = () => {
       page = 'profile';
       break;
     }
-    case '/profile/edit': {
+    case '/profile/data': {
       data = getProfilePageData(user, 'edit');
       page = 'profile';
       break;
