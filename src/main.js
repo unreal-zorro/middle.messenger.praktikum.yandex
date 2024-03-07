@@ -95,7 +95,7 @@ const chats = [
 ];
 
 const getChatsListPageData = (user, chats) => {
-  return chats.forEach(chat => {
+  return chats.map(chat => {
     const isISendLastMessage = chat.message.sender === user.login;
 
     return {
@@ -115,33 +115,27 @@ const messages = [
     id: 1,
     avatar: '/images/avatar.png',
     title: 'Приятель',
-    message: {
-      date: '15:07',
-      sender: 'jack',
-      text: 'Привет.'
-    },
+    date: '15:07',
+    sender: 'jack',
+    text: 'Привет.',
     count: 1
   },
   {
     id: 2,
     avatar: undefined,
     title: 'Знакомый',
-    message: {
-      date: '07 Фев 2024',
-      sender: 'ivanivanov',
-      text: 'Как дела?'
-    },
+    date: '07 Фев 2024',
+    sender: 'ivanivanov',
+    text: 'Как дела?',
     count: 0
   },
   {
     id: 3,
     avatar: '/images/avatar.png',
     title: 'Знакомый',
-    message: {
-      date: 'Пт',
-      sender: 'jack',
-      text: 'Всё хорошо?'
-    },
+    date: 'Пт',
+    sender: 'jack',
+    text: 'Всё хорошо?',
     count: 177
   }
 ];
@@ -182,7 +176,9 @@ const getChatsPageData = (user, chats, messages) => {
         }
       ]
     },
-    list: getChatsListPageData(user, chats),
+    list: {
+      chats: getChatsListPageData(user, chats)
+    },
     content: getChatsContentPageData(user, messages),
     newMessage: {
       control: {
@@ -563,9 +559,6 @@ function navigate(page, args = {}) {
   const [source] = pages[page];
   const template = Handlebars.compile(source);
   const root = document.querySelector('#root');
-
-  console.log('args: ', args);
-
   root.innerHTML = template(args);
 }
 
