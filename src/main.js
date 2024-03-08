@@ -115,16 +115,16 @@ const messages = [
     id: 1,
     login: 'vadim',
     display_name: 'Вадим',
-    date: '19 июня',
+    date: '2024-06-19T11:56:00.000+03:00',
     time: '11:56',
     check: true,
     content: [
       {
-        type: 'text',
+        isText: true,
         data: 'Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой.'
       },
       {
-        type: 'text',
+        isText: true,
         data: 'Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро.'
       }
     ]
@@ -133,12 +133,12 @@ const messages = [
     id: 2,
     login: 'vadim',
     display_name: 'Вадим',
-    date: '19 июня',
+    date: '2024-06-19T11:56:00.000+03:00',
     time: '11:56',
     check: true,
     content: [
       {
-        type: 'image',
+        isImage: true,
         data: '/images/camera.png'
       }
     ]
@@ -147,12 +147,12 @@ const messages = [
     id: 3,
     login: 'ivanivanov',
     display_name: 'Иван',
-    date: '19 июня',
+    date: '2024-06-19T12:00:00.000+03:00',
     time: '12:00',
     check: true,
     content: [
       {
-        type: 'text',
+        isText: true,
         data: 'Круто!!!'
       }
     ]
@@ -160,31 +160,94 @@ const messages = [
 ];
 
 const currentChat = {
-  id: 1,
-  avatar: '/images/avatar.png',
-  title: 'Андрей',
+  id: 3,
+  avatar: '',
+  title: 'Вадим',
 };
 
 const getChatsContentPageData = (user, messagesArray, currentChat) => {
-  const messages = messagesArray.map(message => {
+  const result = {};
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  // const currentMonth = currentDate.getMonth() + 1;
+  // const currentDayOfMonth = currentDate.getDate();
+  // const currentHour = currentDate.getHours();
+  // const currentMinutes = currentDate.getMinutes();
+
+  let dateFormatter = new Intl.DateTimeFormat("ru", {
+    month: "long",
+    day: "numeric"
+  });
+
+  const timeFormatter = new Intl.DateTimeFormat("ru", {
+    hour: "numeric",
+    minute: "numeric"
+  });
+
+  const messagesObject = messagesArray.forEach(message => {
+    const messageDate = new Date(message.date);
+    const messageYear = messageDate.getFullYear();
+    // const messageMonth = messageDate.getMonth() + 1;
+    // const messageDayOfMonth = messageDate.getDate();
+    // const messageHour = messageDate.getHours();
+    // const messageMinutes = messageDate.getMinutes();
+
     const isISendMessage = message.login === user.login;
 
-    return {
+    if (currentYear !== messageYear) {
+      dateFormatter = new Intl.DateTimeFormat("ru", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+    }
+
+    const date = dateFormatter.format(messageDate);
+    const time = timeFormatter.format(messageDate);
+
+    const resultMessage = {
       id: message.id,
       name: message.display_name,
-      date: message.date,
-      time: message.time,
+      time,
       check: isISendMessage,
       content: message.content
     };
+
+    const resultMessagesArray = result[date] || [];
+    resultMessagesArray.push(resultMessage)
+
+    result[date] = resultMessagesArray;
   });
 
-  const date = messages[0].date;
+  const messages = [];
+
+  for (const [date, message] of Object.entries(result)) {
+    messages.push({
+      date,
+      message
+    });
+  }
+
+  // const messages = messagesArray.map(message => {
+  //   const isISendMessage = message.login === user.login;
+
+  //   return {
+  //     id: message.id,
+  //     name: message.display_name,
+  //     date: message.date,
+  //     time: message.time,
+  //     check: isISendMessage,
+  //     content: message.content
+  //   };
+  // });
+
+  // const date = messages[0].date;
 
   const chat = currentChat.id ? currentChat : null;
 
   return {
-    date,
+    // date,
     messages,
     chat
   };
