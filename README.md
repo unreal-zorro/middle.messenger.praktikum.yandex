@@ -15,6 +15,10 @@
 
 Исходный код приложения написан на языке JavaScript. Для создания шаблонов страниц использован шаблонизатор Handlebars. Для написания стилей применён препроцессор SCSS.
 
+## Ссылка на шаблоны страниц в Figma
+
+https://www.figma.com/file/ztRVwTa1FVh3I42YLFFOyE/Web-messenger?type=design&node-id=0%3A1&mode=design&t=0G3GbYznBYrYK8db-1
+
 ## Работа с ветками
 
 При разработке проекта используются следующие ветки в git:
