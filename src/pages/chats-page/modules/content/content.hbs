@@ -26,53 +26,26 @@
     </div>
 
     {{#if this.messages}}
-      <p class="content__date">
-        {{ this.date }}
-      </p>
-      <ul class="content__list">
+      {{#each this.messages}}
+        <ul class="content__list">
+          <li>
+            <p class="content__date">
+              {{ this.date }}
+            </p>
 
-        {{#each this.messages}}
-          {{> Message
-            className="content__message{{#if this.check}} message_our{{else}} message_their{{/if}}"
-            name=this.name
-            text=this.text
-            time=this.time
-            check=this.check
-          }}
-        {{/each}}
-
-        {{!-- {{> Message
-          className="content__message message_their"
-          name="Приятель"
-          text="Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой. Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро."
-          time="15:07"
-          check="check"
-        }}
-
-        {{> Message
-          className="content__message message_their"
-          name="Приятель"
-          text="Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой. Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро."
-          time="15:07"
-          check="check"
-        }}
-
-        {{> Message
-          className="content__message message_their"
-          name="Приятель"
-          imageSrc="/images/flower.png"
-          time="15:07"
-          check="check"
-        }}
-
-        {{> Message
-          className="content__message message_our"
-          name="Вы"
-          text="Круто."
-          time="15:07"
-          check="check"
-        }} --}}
-      </ul>
+            {{#each this.message}}
+              {{> Message
+                className="content__message"
+                check=this.check
+                name=this.name
+                text=this.text
+                time=this.time
+                check=this.check
+              }}
+            {{/each}}
+          </li>
+        </ul>
+      {{/each}}
     {{else}}
       {{> Text
         className="content__text"

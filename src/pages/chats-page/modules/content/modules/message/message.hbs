@@ -1,34 +1,42 @@
 <li
-  class="message{{#if className}} {{ className }}{{/if}}"
+  class="message{{#if className}} {{ className }}{{/if}}{{#if check}} message_our{{else}} message_their{{/if}}"
 >
   <h3 class="message__name">
     {{ name }}
   </h3>
-  
-  {{#if text}}
-    <p class="message__text">
-      {{ text }}
-    </p>
-  {{/if}}
 
-  {{#if imageSrc}}
-    <img
-      class="message__image"
-      src={{ imageSrc }}
-    />
-  {{/if}}
+  {{#each this.content}}
+    {{#if this.isText}}
+      <p class="message__text">
+        {{ this.data }}
+      </p>
+    {{/if}}
 
-  <div
-    class="message__info{{#if check}} message__info_active{{/if}}"
-  >
-    <div class="message__check">
-      <svg class="message__icon">
-        <use xlink:href="#icon-checkmark"></use>
-      </svg>
+    {{#if this.isImage}}
+      <img
+        class="message__image"
+        src={{ this.data }}
+      />
+    {{/if}}
+  {{/each}}
+
+  {{#if check}}
+    <div class="message__info{{#if check}} message__info_active{{/if}}">
+      <div class="message__check">
+        <svg class="message__icon">
+          <use xlink:href="#icon-checkmark"></use>
+        </svg>
+      </div>
+
+      <div class="message__time">
+        {{ time }}
+      </div>
     </div>
-
-    <div class="message__time">
-      {{ time }}
+  {{else}}
+    <div class="message__info{{#if check}} message__info_active{{/if}}">
+      <div class="message__time">
+        {{ time }}
+      </div>
     </div>
-  </div>
+  {{/if}}
 </li>
