@@ -1,5 +1,5 @@
 const getChatsListPageData = (user, chats) => {
-  return chats.map(chat => {
+  return chats.map((chat) => {
     const isISendLastMessage = chat.message.sender === user.login;
 
     return {
@@ -20,27 +20,27 @@ export const getChatsContentPageData = (user, messagesArray, currentChat) => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
 
-  let dateFormatter = new Intl.DateTimeFormat("ru", {
-    month: "long",
-    day: "numeric"
+  let dateFormatter = new Intl.DateTimeFormat('ru', {
+    month: 'long',
+    day: 'numeric'
   });
 
-  const timeFormatter = new Intl.DateTimeFormat("ru", {
-    hour: "numeric",
-    minute: "numeric"
+  const timeFormatter = new Intl.DateTimeFormat('ru', {
+    hour: 'numeric',
+    minute: 'numeric'
   });
 
-  messagesArray.forEach(message => {
+  messagesArray.forEach((message) => {
     const messageDate = new Date(message.date);
     const messageYear = messageDate.getFullYear();
 
     const isISendMessage = message.login === user.login;
 
     if (currentYear !== messageYear) {
-      dateFormatter = new Intl.DateTimeFormat("ru", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
+      dateFormatter = new Intl.DateTimeFormat('ru', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       });
     }
 
@@ -56,7 +56,7 @@ export const getChatsContentPageData = (user, messagesArray, currentChat) => {
     };
 
     const resultMessagesArray = result[date] || [];
-    resultMessagesArray.push(resultMessage)
+    resultMessagesArray.push(resultMessage);
 
     result[date] = resultMessagesArray;
   });
@@ -110,10 +110,10 @@ export const getChatsPageData = (user, chats, messages, currentChat) => {
         error: ''
       },
       attachButton: {
-        type: 'button',
+        type: 'button'
       },
       sendButton: {
-        type: 'submit',
+        type: 'submit'
       }
     }
   };

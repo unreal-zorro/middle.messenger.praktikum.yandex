@@ -12,7 +12,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'email',
           type: 'email',
           disabled: false,
-          placeholder: '',
           value: user.email,
           error: ''
         },
@@ -21,7 +20,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'login',
           type: 'text',
           disabled: false,
-          placeholder: '',
           value: user.login,
           error: ''
         },
@@ -30,7 +28,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'first_name',
           type: 'text',
           disabled: false,
-          placeholder: '',
           value: user.first_name,
           error: ''
         },
@@ -39,7 +36,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'second_name',
           type: 'text',
           disabled: false,
-          placeholder: '',
           value: user.second_name,
           error: ''
         },
@@ -48,7 +44,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'display_name',
           type: 'text',
           disabled: false,
-          placeholder: '',
           value: user.chat_name,
           error: ''
         },
@@ -57,7 +52,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'phone',
           type: 'tel',
           disabled: false,
-          placeholder: '',
           value: user.phone,
           error: ''
         }
@@ -85,7 +79,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'password',
           type: 'password',
           disabled: false,
-          placeholder: '',
           value: user.password,
           error: ''
         },
@@ -94,7 +87,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'new_password',
           type: 'password',
           disabled: false,
-          placeholder: '',
           value: '1234567891011121',
           error: ''
         },
@@ -103,7 +95,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'password_again',
           type: 'password',
           disabled: false,
-          placeholder: '',
           value: '1234567891011122',
           error: ''
         }
@@ -132,7 +123,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'email',
           type: 'email',
           disabled: true,
-          placeholder: '',
           value: user.email,
           error: ''
         },
@@ -141,7 +131,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'login',
           type: 'text',
           disabled: true,
-          placeholder: '',
           value: user.login,
           error: ''
         },
@@ -150,7 +139,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'first_name',
           type: 'text',
           disabled: true,
-          placeholder: '',
           value: user.first_name,
           error: ''
         },
@@ -159,7 +147,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'second_name',
           type: 'text',
           disabled: true,
-          placeholder: '',
           value: user.second_name,
           error: ''
         },
@@ -168,7 +155,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'chat_name',
           type: 'text',
           disabled: true,
-          placeholder: '',
           value: user.chat_name,
           error: ''
         },
@@ -177,7 +163,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'phone',
           type: 'tel',
           disabled: true,
-          placeholder: '',
           value: user.phone,
           error: ''
         },
@@ -186,7 +171,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'password',
           type: 'password',
           disabled: true,
-          placeholder: '',
           value: user.password,
           error: ''
         },
@@ -195,7 +179,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'new_password',
           type: 'password',
           disabled: true,
-          placeholder: '',
           value: '1234567891011121',
           error: ''
         },
@@ -204,7 +187,6 @@ export const getProfilePageData = (user, mode) => {
           name: 'password_again',
           type: 'password',
           disabled: true,
-          placeholder: '',
           value: '1234567891011122',
           error: ''
         }

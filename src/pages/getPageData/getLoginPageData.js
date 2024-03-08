@@ -7,8 +7,6 @@ export const getLoginPageData = (user) => {
         label: 'Логин',
         name: 'login',
         type: 'text',
-        disabled: '',
-        placeholder: '',
         value: user.login,
         error: ''
       },
@@ -16,8 +14,6 @@ export const getLoginPageData = (user) => {
         label: 'Пароль',
         name: 'password',
         type: 'password',
-        disabled: '',
-        placeholder: '',
         value: user.password,
         error: ''
       }

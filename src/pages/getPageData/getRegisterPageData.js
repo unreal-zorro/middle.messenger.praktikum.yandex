@@ -7,8 +7,6 @@ export const getRegisterPageData = (user) => {
         label: 'Почта',
         name: 'email',
         type: 'email',
-        disabled: '',
-        placeholder: '',
         value: user.email,
         error: ''
       },
@@ -16,8 +14,6 @@ export const getRegisterPageData = (user) => {
         label: 'Логин',
         name: 'login',
         type: 'text',
-        disabled: '',
-        placeholder: '',
         value: user.login,
         error: ''
       },
@@ -25,8 +21,6 @@ export const getRegisterPageData = (user) => {
         label: 'Имя',
         name: 'first_name',
         type: 'text',
-        disabled: '',
-        placeholder: '',
         value: user.first_name,
         error: ''
       },
@@ -34,8 +28,6 @@ export const getRegisterPageData = (user) => {
         label: 'Фамилия',
         name: 'second_name',
         type: 'text',
-        disabled: '',
-        placeholder: '',
         value: user.first_name,
         error: ''
       },
@@ -43,8 +35,6 @@ export const getRegisterPageData = (user) => {
         label: 'Телефон',
         name: 'phone',
         type: 'tel',
-        disabled: '',
-        placeholder: '',
         value: user.phone,
         error: ''
       },
@@ -52,8 +42,6 @@ export const getRegisterPageData = (user) => {
         label: 'Пароль',
         name: 'password',
         type: 'password',
-        disabled: '',
-        placeholder: '',
         value: user.password,
         error: 'Пароли не совпадают'
       },
@@ -61,8 +49,6 @@ export const getRegisterPageData = (user) => {
         label: 'Пароль (ещё раз)',
         name: 'password_again',
         type: 'password',
-        disabled: '',
-        placeholder: '',
         value: user.password,
         error: 'Пароли не совпадают'
       }
