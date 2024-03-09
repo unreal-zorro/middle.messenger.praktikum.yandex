@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "npm run build && node server.js",
-    "dev": "vite",
+    "dev": "vite --open",
     "build": "vite build --emptyOutDir",
     "preview": "vite preview"
   },
