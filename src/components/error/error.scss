@@ -1,0 +1,13 @@
+@import '../../styles/variables';
+
+.error {
+  font-size: $font-error;
+  color: $error;
+  visibility: hidden;
+  opacity: 0;
+
+  &_visible {
+    visibility: visible;
+    opacity: 1;
+  }
+}

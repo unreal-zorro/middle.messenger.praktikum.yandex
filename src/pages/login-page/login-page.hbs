@@ -1,0 +1,48 @@
+<main id={{ id }} class="login">
+  {{> Header header
+    className="login__header"
+    text=header
+  }}
+
+  {{#> Form className="login__form" }}
+    <div class="login__form-controls">
+      {{#each controls}}
+        <div class="login__form-control">
+          {{> InputField
+            className="login__input-field"
+            classNameLabel="login__label"
+            classNameInput="login__input"
+            classNameError="login__error"
+            name=this.name
+            label=this.label
+            type=this.type
+            disabled=this.disabled
+            placeholder=this.placeholder
+            value=this.value
+            error=this.error
+          }}
+        </div>
+      {{/each}}
+    </div>
+
+    {{#each buttons}}
+      {{#> Button
+        className="login__button"
+        type=this.type
+      }}
+        <a
+          class="login__link"
+          href={{ this.href }}
+        >
+          {{ this.text }}
+        </a>
+      {{/ Button }}
+    {{/each}}
+  {{/ Form }}
+
+  {{> Link link
+    className="login__footer"
+    href=link.href
+    text=link.text
+  }}
+</main>

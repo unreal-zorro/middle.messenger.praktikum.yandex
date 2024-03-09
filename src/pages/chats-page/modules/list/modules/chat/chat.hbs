@@ -1,0 +1,46 @@
+<li
+  class="chat{{#if className}} {{ className }}{{/if}}"
+  id="chat{{ this.id }}"
+>
+  {{> Avatar
+    className="chat__avatar avatar_no-edit"
+    imgSrc=this.avatar
+  }}
+
+  <div class="chat__content">
+    <div class="chat__info">
+      <h2 class="chat__name">
+        {{ this.title }}
+      </h2>
+      
+      {{> Text
+        className="chat__date"
+        text=this.date
+      }}
+    </div>
+
+    <div class="chat__message">
+      <p
+        class="chat__text"
+      >
+        {{#if this.sender}}<span class="chat__text_i-sender">Вы: </span>{{/if}}{{ text }}
+      </p>
+
+      {{#if this.count}}
+        {{> Text
+          className="chat__count"
+          text=this.count
+        }}
+      {{/if}}
+    </div>
+  </div>
+
+  <button
+    class="chat__settings-button button"
+    type="button"
+  >
+    <svg class="chat__settings-icon">
+      <use xlink:href="#icon-settings"></use>
+    </svg>
+  </button>
+</li>

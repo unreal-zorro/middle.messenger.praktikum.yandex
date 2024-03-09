@@ -1,0 +1,86 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.content {
+  padding: 10px 20px;
+  overflow: auto;
+
+  @include flex(column, flex-start, center);
+
+  &__chat {
+    max-height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid $border;
+    padding: 10px 0;
+  }
+
+  &__info {
+    @include flex(row, flex-start, center);
+  }
+
+  &__avatar {
+    margin-right: 10px;
+  }
+
+  &__title {
+    font-style: $font-button;
+    color: $main;
+  }
+
+  &__button {
+    min-width: $icon-size;
+    max-width: $icon-size;
+    height: $icon-size;
+    border-radius: 50%;
+    overflow: hidden;
+    align-self: center;
+    justify-self: center;
+    padding: 7px;
+
+    @include flex(row, center, center);
+
+    &:first-child {
+      grid-area: message-attach;
+    }
+
+    &:last-child {
+      grid-area: message-send;
+    }
+  }
+
+  &__icon {
+    width: 100%;
+    height: 100%;
+    fill: $light;
+  }
+
+  &__date {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    font-weight: 700;
+    color: $dark;
+  }
+
+  &__list {
+    width: 100%;
+
+    @include flex(column, flex-start, center);
+  }
+
+  &__message {
+    max-width: $chat-message-width;
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__text {
+    margin: auto;
+  }
+}

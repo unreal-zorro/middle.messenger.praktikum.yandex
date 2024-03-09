@@ -1,0 +1,8 @@
+<input
+  class="input{{#if className}} {{ className }}{{/if}}{{#if error}} input_error{{/if}}"
+  type={{ type }}
+  name={{ name }}
+  value="{{#if value}}{{ value }}{{/if}}"
+  placeholder="{{#if placeholder}}{{ placeholder }}{{/if}}"
+  {{#if disabled}}disabled{{/if}}
+/>

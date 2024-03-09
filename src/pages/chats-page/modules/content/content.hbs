@@ -1,0 +1,78 @@
+<section
+  class="content{{#if className}} {{ className }}{{/if}}"
+>
+  {{#if this.chat}}
+    <div class="content__chat">
+      <div class="content__info">
+        {{> Avatar this.chat
+          className="content__avatar avatar_no-edit"
+          imgSrc=this.chat.avatar
+        }}
+
+        {{> Text this.chat
+          className="content__title"
+          text=this.chat.title
+        }}
+      </div>
+
+      {{#> Button this.chat
+        className="content__button"
+        type="button"
+      }}
+        <svg class="content__icon">
+          <use xlink:href="#icon-triple"></use>
+        </svg>
+      {{/ Button }}
+    </div>
+
+    {{#if this.messages}}
+      {{#each this.messages}}
+        <ul class="content__list">
+          <li>
+            <p class="content__date">
+              {{ this.date }}
+            </p>
+
+            {{#each this.message}}
+              {{> Message
+                className="content__message"
+                check=this.check
+                name=this.name
+                text=this.text
+                time=this.time
+                check=this.check
+              }}
+            {{/each}}
+          </li>
+        </ul>
+      {{/each}}
+    {{else}}
+      {{> Text
+        className="content__text"
+        text="В выбранном чате отсутствуют сообщения"
+      }}
+    {{/if}}
+  {{else}}
+    {{> Text
+      className="content__text"
+      text="Выберите чат, чтобы отправить сообщение"
+    }}
+  {{/if}}
+
+  <svg class="spritesheet">
+    <symbol id="icon-triple" viewBox="0 0 20 20">
+      <title>triple</title>
+      <path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+    </symbol>
+
+    <symbol id="icon-checkmark" viewBox="0 0 512 512">
+      <title>checkmark</title>
+      <polyline points="464 128 240 384 144 288"
+        style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" />
+      <line x1="144" y1="384" x2="48" y2="288"
+        style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" />
+      <line x1="368" y1="128" x2="232" y2="284"
+        style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" />
+    </symbol>
+  </svg>
+</section>
