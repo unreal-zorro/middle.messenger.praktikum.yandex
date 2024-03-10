@@ -5,7 +5,7 @@ export const getProfilePageData = (user, mode) => {
     data = {
       id: 'profile-edit',
       avatar: user.avatar,
-      header: user.chat_name,
+      header: '',
       controls: [
         {
           label: 'Почта',
@@ -44,7 +44,7 @@ export const getProfilePageData = (user, mode) => {
           name: 'display_name',
           type: 'text',
           disabled: false,
-          value: user.chat_name,
+          value: user.display_name,
           error: ''
         },
         {
@@ -76,7 +76,7 @@ export const getProfilePageData = (user, mode) => {
       controls: [
         {
           label: 'Старый пароль',
-          name: 'password',
+          name: 'oldPassword',
           type: 'password',
           disabled: false,
           value: user.password,
@@ -84,7 +84,7 @@ export const getProfilePageData = (user, mode) => {
         },
         {
           label: 'Новый пароль',
-          name: 'new_password',
+          name: 'newPassword',
           type: 'password',
           disabled: false,
           value: '1234567891011121',
@@ -92,7 +92,7 @@ export const getProfilePageData = (user, mode) => {
         },
         {
           label: 'Повторите пароль ещё раз',
-          name: 'password_again',
+          name: 'newPassword_again',
           type: 'password',
           disabled: false,
           value: '1234567891011122',
@@ -116,7 +116,7 @@ export const getProfilePageData = (user, mode) => {
     data = {
       id: 'profile',
       avatar: user.avatar,
-      header: user.chat_name,
+      header: user.display_name,
       controls: [
         {
           label: 'Почта',
@@ -152,10 +152,10 @@ export const getProfilePageData = (user, mode) => {
         },
         {
           label: 'Имя в чате',
-          name: 'chat_name',
+          name: 'display_name',
           type: 'text',
           disabled: true,
-          value: user.chat_name,
+          value: user.display_name,
           error: ''
         },
         {
@@ -164,30 +164,6 @@ export const getProfilePageData = (user, mode) => {
           type: 'tel',
           disabled: true,
           value: user.phone,
-          error: ''
-        },
-        {
-          label: 'Старый пароль',
-          name: 'password',
-          type: 'password',
-          disabled: true,
-          value: user.password,
-          error: ''
-        },
-        {
-          label: 'Новый пароль',
-          name: 'new_password',
-          type: 'password',
-          disabled: true,
-          value: '1234567891011121',
-          error: ''
-        },
-        {
-          label: 'Повторите пароль ещё раз',
-          name: 'password_again',
-          type: 'password',
-          disabled: true,
-          value: '1234567891011122',
           error: ''
         }
       ],
