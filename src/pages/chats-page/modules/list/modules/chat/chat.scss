@@ -69,7 +69,7 @@
   }
 
   &__date {
-    width: 100px;
+    min-width: 100px;
     color: $main;
     font-size: $font-text;
     text-align: right;
