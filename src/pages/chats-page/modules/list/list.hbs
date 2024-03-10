@@ -4,8 +4,9 @@
   {{#if this.chats}}
     <ul class="list__list">
       {{#each this.chats}}
-        {{> Chat 
+        {{> Chat
           className="list__item"
+          active=this.active
         }}
       {{/each}}
     </ul>

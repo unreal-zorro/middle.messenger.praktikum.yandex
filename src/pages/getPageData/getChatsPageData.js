@@ -1,15 +1,74 @@
 const getChatsListPageData = (user, chats) => {
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const currentYear = currentDate.getFullYear();
+
+  const dateFormatter = new Intl.DateTimeFormat('ru', {
+    month: 'long',
+    day: 'numeric'
+  });
+
+  const shortDateFormatter = new Intl.DateTimeFormat('ru', {
+    weekday: 'short'
+  });
+
+  const longDateFormatter = new Intl.DateTimeFormat('ru', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+
+  const timeFormatter = new Intl.DateTimeFormat('ru', {
+    hour: 'numeric',
+    minute: 'numeric'
+  });
+
+  const weekDaysInMs = 7 * 24 * 60 * 60 * 1000;
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   return chats.map((chat) => {
     const isISendLastMessage = chat.message.sender === user.login;
+
+    const chatMessageDate = new Date(chat.message.date);
+
+    let formatter = dateFormatter;
+
+    const chatMessageYear = chatMessageDate.getFullYear();
+
+    if (currentYear !== chatMessageYear) {
+      formatter = longDateFormatter;
+    }
+
+    const dateDifference = new Date(currentDate.getTime() - chatMessageDate.getTime());
+
+    if (dateDifference.getTime() < weekDaysInMs) {
+      formatter = shortDateFormatter;
+
+      const chatMessageDay = chatMessageDate.getDate();
+
+      if (currentDay === chatMessageDay) {
+        formatter = timeFormatter;
+      }
+    }
+
+    let date = capitalizeFirstLetter(formatter.format(chatMessageDate));
+
+    if (formatter === longDateFormatter) {
+      date = date.slice(0, -3);
+    }
 
     return {
       id: chat.id,
       avatar: chat.avatar,
       title: chat.title,
-      date: chat.message.date,
+      date,
       text: chat.message.text,
       sender: isISendLastMessage,
-      count: chat.count
+      count: chat.count,
+      active: chat.active
     };
   });
 };
