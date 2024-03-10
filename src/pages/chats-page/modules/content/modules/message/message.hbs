@@ -20,23 +20,17 @@
     {{/if}}
   {{/each}}
 
-  {{#if check}}
-    <div class="message__info{{#if check}} message__info_active{{/if}}">
+  <div class="message__info{{#if check}} message__info_active{{/if}}">
+    {{#if check}}
       <div class="message__check">
         <svg class="message__icon">
           <use xlink:href="#icon-checkmark"></use>
         </svg>
       </div>
+    {{/if}}
 
-      <div class="message__time">
-        {{ time }}
-      </div>
+    <div class="message__time">
+      {{ time }}
     </div>
-  {{else}}
-    <div class="message__info{{#if check}} message__info_active{{/if}}">
-      <div class="message__time">
-        {{ time }}
-      </div>
-    </div>
-  {{/if}}
+  </div>
 </li>
