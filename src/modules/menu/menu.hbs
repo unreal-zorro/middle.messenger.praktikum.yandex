@@ -1,0 +1,18 @@
+<article class="menu{{#if className}} {{ className }}{{/if}}">
+  {{#each this.items}}
+    <div class="menu__item">
+      {{#> Button
+        className="menu__button"
+        type=this.type
+      }}
+        <svg class="menu__icon">
+          <use xlink:href="{{ this.href }}"></use>
+        </svg>
+
+        <span class="menu__text">
+          {{ this.text }}
+        </span>
+      {{/ Button }}
+    </div>
+  {{/each}}
+</article>
