@@ -1,0 +1,31 @@
+<article class="modal modal_visible{{#if className}} {{ className }}{{/if}}">
+  <div class="modal__content">
+    <h2 class="modal__header">
+      {{ this.title }}
+    </h2>
+
+    {{#> Form className="modal__form" }}
+      {{#if this.controls}}
+        <div class="modal__controls">
+          {{#each this.buttons}}
+            <div class="modal__control">
+              
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      <div class="modal__buttons">
+        {{#each this.buttons}}
+          {{#> Button
+            className="modal__button"
+            type=this.type
+            cancel=this.cancel
+          }}
+            {{ this.text }}
+          {{/ Button }}
+        {{/each}}
+      </div>
+    {{/ Form }}
+  </div>
+</article>
