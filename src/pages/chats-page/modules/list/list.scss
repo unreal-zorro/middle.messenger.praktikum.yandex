@@ -29,4 +29,10 @@
   &__text {
     margin: auto;
   }
+
+  &__chat-menu {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
 }

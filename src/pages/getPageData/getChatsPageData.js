@@ -1,3 +1,25 @@
+const getChatMenuData = (user, chats) => {
+  const items = [
+    {
+      type: 'button',
+      href: '#icon-rename',
+      text: 'Переименовать чат'
+    },
+    {
+      type: 'button',
+      href: '#icon-avatar',
+      text: 'Изменить аватар чата'
+    },
+    {
+      type: 'button',
+      href: '#icon-delete',
+      text: 'Удалить чат'
+    }
+  ];
+
+  return items;
+};
+
 const getChatsListPageData = (user, chats) => {
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
@@ -73,6 +95,45 @@ const getChatsListPageData = (user, chats) => {
   });
 };
 
+const getAttachMenuData = () => {
+  const items = [
+    {
+      type: 'button',
+      href: '#icon-photo',
+      text: 'Фото или видео'
+    },
+    {
+      type: 'button',
+      href: '#icon-file',
+      text: 'Файл'
+    },
+    {
+      type: 'button',
+      href: '#icon-location',
+      text: 'Локация'
+    }
+  ];
+
+  return items;
+};
+
+const getUserMenuData = () => {
+  const items = [
+    {
+      type: 'button',
+      href: '#icon-add',
+      text: 'Добавить пользователя'
+    },
+    {
+      type: 'button',
+      href: '#icon-delete',
+      text: 'Удалить пользователя'
+    }
+  ]
+  
+  return items;
+};
+
 export const getChatsContentPageData = (user, messagesArray, currentChat) => {
   const result = {};
 
@@ -137,7 +198,45 @@ export const getChatsContentPageData = (user, messagesArray, currentChat) => {
   };
 };
 
+const getUserDeleteModalData = () => {
+  const title = 'Вы уверены?';
+
+  const buttons = [
+    {
+      type: 'submit',
+      cancel: false,
+      text: 'Да'
+    },
+    {
+      type: 'button',
+      cancel: true,
+      text: 'Нет'
+    }
+  ]
+  
+  return {
+    title,
+    buttons
+  };
+};
+
 export const getChatsPageData = (user, chats, messages, currentChat) => {
+  const chatMenu = {
+    items: getChatMenuData()
+  };
+
+  const attachMenu = {
+    items: getAttachMenuData()
+  };
+
+  const userMenu = {
+    items: getUserMenuData()
+  };
+
+  const userDeleteModal = {
+    ...getUserDeleteModalData()
+  }
+
   return {
     id: 'chats',
     search: {
@@ -158,9 +257,15 @@ export const getChatsPageData = (user, chats, messages, currentChat) => {
       ]
     },
     list: {
-      chats: getChatsListPageData(user, chats)
+      chats: getChatsListPageData(user, chats),
+      chatMenu
     },
-    content: getChatsContentPageData(user, messages, currentChat),
+    content: {
+      ...getChatsContentPageData(user, messages, currentChat),
+      attachMenu,
+      userMenu,
+      userDeleteModal
+    },
     newMessage: {
       control: {
         name: 'message',

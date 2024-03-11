@@ -83,4 +83,16 @@
   &__text {
     margin: auto;
   }
+
+  &__user-menu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  &__attach-menu {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
 }
