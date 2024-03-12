@@ -6,5 +6,8 @@ export default defineConfig({
   publicDir: path.resolve(__dirname, './static'),
   build: {
     outDir: path.resolve(__dirname, './dist')
+  },
+  resolve: {
+    alias: [{ find: '@', replacement: '/src' }]
   }
 });

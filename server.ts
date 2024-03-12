@@ -1,4 +1,5 @@
 import express from 'express';
+import type { Request, Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -11,7 +12,7 @@ const root = path.join(__dirname, './dist');
 
 app.use(express.static(root));
 
-app.get('*', (req, res) => {
+app.get('*', (_req: Request, res: Response) => {
   res.sendFile('index.html', { root });
 });
 
