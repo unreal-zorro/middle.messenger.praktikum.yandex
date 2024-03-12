@@ -33,7 +33,9 @@
     // Сообщать об ошибках неиспользуемых параметров в функциях
     "noUnusedParameters": true,
     // Включить карты исходного кода
-    "sourceMap": true
+    "sourceMap": true,
+    // Дополнительные API, доступные в ESNext и определения DOM - window, document и т.д.
+    "lib": ["ESNext", "DOM"]
   },
   // чтобы работал esnext
   "ts-node": {
