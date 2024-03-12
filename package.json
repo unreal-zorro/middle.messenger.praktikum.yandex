@@ -16,7 +16,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:ts": "eslint \"**/*.{ts,tsx}\"",
-    "lint:ts:fix": "eslint \"**/*.{ts,tsx}\" --fix"
+    "lint:ts:fix": "eslint \"**/*.{ts,tsx}\" --fix",
+    "lint:scss": "npx stylelint \"**/*.scss\"",
+    "lint:scss:fix": "npx stylelint \"**/*.scss\" --fix"
   },
   "dependencies": {
     "express": "^4.18.3"
@@ -32,6 +34,8 @@
     "eslint-plugin-html": "^8.0.0",
     "handlebars": "^4.7.8",
     "sass": "^1.71.1",
+    "stylelint": "^16.2.1",
+    "stylelint-config-standard-scss": "^13.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2",
     "vite": "^5.1.4"
