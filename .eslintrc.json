@@ -1,0 +1,38 @@
+{
+  "root": true,
+  "extends": [
+    "airbnb",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "html",
+    "hbs"
+  ],
+  "rules": {
+    "max-len": [2, 100],
+    "@typescript-eslint/no-unused-vars": 2,
+    "import/prefer-default-export": "off",
+    "hbs/check-hbs-template-literals": 2,
+    // "import/extensions": [
+    //   "off",
+    //   "ignorePackages",
+    //   {
+    //     ".hbs?raw": "never"
+    //   }
+    // ],
+    "import/extensions": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".hbs?raw"],
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    },
+    "html/html-extensions": [".html", ".hbs"]
+  }
+}
