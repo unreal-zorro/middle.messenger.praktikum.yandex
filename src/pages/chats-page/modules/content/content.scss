@@ -1,5 +1,5 @@
-@import '../../../../styles/variables';
-@import '../../../../styles/mixins';
+@import '@/styles/variables';
+@import '@/styles/mixins';
 
 .content {
   padding: 10px 20px;
@@ -36,8 +36,7 @@
     height: $icon-size;
     border-radius: 50%;
     overflow: hidden;
-    align-self: center;
-    justify-self: center;
+    place-self: center center;
     padding: 7px;
 
     @include flex(row, center, center);

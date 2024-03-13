@@ -8,6 +8,6 @@ export default defineConfig({
     outDir: path.resolve(__dirname, './dist')
   },
   resolve: {
-    alias: [{ find: '@', replacement: '/src' }]
+    alias: [{ find: '@', replacement: path.resolve(__dirname, './src') }]
   }
 });

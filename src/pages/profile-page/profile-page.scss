@@ -1,5 +1,5 @@
-@import '../../styles/variables';
-@import '../../styles/mixins';
+@import '@/styles/variables';
+@import '@/styles/mixins';
 
 .profile {
   @include flex(column, center, center);
@@ -17,7 +17,7 @@
     margin-bottom: 20px;
 
     @include flex(column, center, center);
-    
+
     &-controls {
       width: 100%;
       margin-bottom: 20px;
@@ -27,7 +27,7 @@
       min-height: calc($input-height + 10px + $font-error);
       width: 100%;
       margin-bottom: 10px;
-  
+
       &:last-child {
         margin-bottom: 0;
       }
@@ -39,8 +39,7 @@
     grid-template-columns: $profile-label-width auto;
     grid-template-rows: $input-height auto;
     gap: 10px;
-    justify-items: start;
-    align-items: center;
+    place-items: center start;
   }
 
   &__label {
