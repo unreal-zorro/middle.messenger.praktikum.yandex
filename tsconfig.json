@@ -43,15 +43,7 @@
     "experimentalSpecifierResolution": "node"
   },
   // Массив имён файлов или шаблонов для включения в программу
-  "include": [
-    "*.ts",
-    "src/**/*.ts",
-  ],
+  "include": ["*.ts", "src/**/*.ts"],
   // Массив имён файлов или шаблонов для исключения из программы
-  "exclude": [
-    "node_modules",
-    "dist",
-    "docs",
-    "static"
-  ]
+  "exclude": ["node_modules", "dist", "docs", "static"]
 }

@@ -22,6 +22,7 @@ https://www.figma.com/file/ztRVwTa1FVh3I42YLFFOyE/Web-messenger?type=design&node
 ## Работа с ветками
 
 При разработке проекта используются следующие ветки в git:
+
 - `main` - стабильная ветка;
 - `sprint_i`, где i - номер спринта - ветка для разработки;
 - `deploy` - ветка для деплоя на хостинг в интернете.
@@ -70,25 +71,25 @@ https://cool-web-messenger.netlify.app - готовый проект на бес
 ## **Примеры использования**
 
 1. Страница логина:
-![Страница логина](./docs/login-page.png)
+   ![Страница логина](./docs/login-page.png)
 
 2. Страница регистрации:
-![Страница регистрации](./docs/register-page.png)
+   ![Страница регистрации](./docs/register-page.png)
 
 3. Страница чатов:
-![Страница чатов](./docs/chats-page.png)
+   ![Страница чатов](./docs/chats-page.png)
 
 4. Страница профиля:
-![Страница профиля](./docs/profile-page.png)
+   ![Страница профиля](./docs/profile-page.png)
 
 5. Страница изменения данных пользователя:
-![Страница изменения данных пользователя](./docs/profile-data-page.png)
+   ![Страница изменения данных пользователя](./docs/profile-data-page.png)
 
 6. Страница изменения пароля:
-![Страница изменения пароля](./docs/profile-password-page.png)
+   ![Страница изменения пароля](./docs/profile-password-page.png)
 
 7. Страница 404:
-![Страница 404](./docs/error404-page.png)
+   ![Страница 404](./docs/error404-page.png)
 
 8. Страница 500:
-![Страница 500](./docs/error500-page.png)
+   ![Страница 500](./docs/error500-page.png)

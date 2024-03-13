@@ -3,12 +3,14 @@ import Handlebars from 'handlebars';
 import * as Components from './components';
 import * as Modules from './modules';
 import * as Pages from './pages';
-import {
-  user, errors, chats, messages, currentChat
-} from './entities';
+import { user, errors, chats, messages, currentChat } from './entities';
 
 import {
-  getErrorPageData, getChatsPageData, getLoginPageData, getRegisterPageData, getProfilePageData
+  getErrorPageData,
+  getChatsPageData,
+  getLoginPageData,
+  getRegisterPageData,
+  getProfilePageData
 } from './pages';
 
 const pages: Record<string, string[]> = {
