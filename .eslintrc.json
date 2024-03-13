@@ -7,36 +7,29 @@
     "plugin:import/typescript"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint",
-    "html",
-    "hbs"
-  ],
+  "plugins": ["@typescript-eslint", "html", "hbs", "import"],
   "rules": {
     "max-len": [2, 100],
     "@typescript-eslint/no-unused-vars": 2,
     "import/prefer-default-export": "off",
     "hbs/check-hbs-template-literals": 2,
-    // "import/extensions": [
-    //   "off",
-    //   "ignorePackages",
-    //   {
-    //     ".hbs?raw": "never"
-    //   }
-    // ],
-    "import/extensions": 0,
-    "import/no-unresolved": "off",
-    "import/no-extraneous-dependencies": "off",
-    "comma-dangle": ["error", "never"]
+    "comma-dangle": ["error", "never"],
+    "import/no-unresolved": "error"
   },
   "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
     "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".hbs", ".hbs?raw"],
-        "moduleDirectory": ["node_modules", "src/"]
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./"
       }
     },
-    "html/html-extensions": [".html", ".hbs?raw"]
+    "html/html-extensions": [".html", ".hbs?raw"],
+    "react": {
+      "version": "999.999.999"
+    }
   },
   "env": {
     "browser": true,
