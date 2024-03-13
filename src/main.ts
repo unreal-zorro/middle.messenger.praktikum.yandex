@@ -11,7 +11,7 @@ import {
   getErrorPageData, getChatsPageData, getLoginPageData, getRegisterPageData, getProfilePageData
 } from './pages';
 
-const pages = {
+const pages: Record<string, string[]> = {
   login: [Pages.LoginPage],
   register: [Pages.LoginPage],
   error404: [Pages.ErrorPage],
@@ -28,11 +28,13 @@ Object.entries(Modules).forEach(([name, module]) => {
   Handlebars.registerPartial(name, module);
 });
 
-const navigate = (page, args = {}) => {
+const navigate = (page: string, args = {}) => {
   const [source] = pages[page];
   const template = Handlebars.compile(source);
   const root = document.querySelector('#root');
-  root.innerHTML = template(args);
+  if (root) {
+    root.innerHTML = template(args);
+  }
 };
 
 const contentLoadedHandler = () => {
