@@ -24,15 +24,22 @@
     //     ".hbs?raw": "never"
     //   }
     // ],
-    "import/extensions": 0
+    "import/extensions": 0,
+    "import/no-unresolved": "off",
+    "import/no-extraneous-dependencies": "off",
+    "comma-dangle": ["error", "never"]
   },
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".hbs?raw"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".hbs", ".hbs?raw"],
         "moduleDirectory": ["node_modules", "src/"]
       }
     },
-    "html/html-extensions": [".html", ".hbs"]
+    "html/html-extensions": [".html", ".hbs?raw"]
+  },
+  "env": {
+    "browser": true,
+    "node": true
   }
 }

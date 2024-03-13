@@ -3,16 +3,13 @@ import Handlebars from 'handlebars';
 import * as Components from './components';
 import * as Modules from './modules';
 import * as Pages from './pages';
-import { user } from './entities';
-import { errors } from './entities';
-import { chats } from './entities';
-import { messages } from './entities';
-import { currentChat } from './entities';
-import { getErrorPageData } from './pages';
-import { getChatsPageData } from './pages';
-import { getLoginPageData } from './pages';
-import { getRegisterPageData } from './pages';
-import { getProfilePageData } from './pages';
+import {
+  user, errors, chats, messages, currentChat
+} from './entities';
+
+import {
+  getErrorPageData, getChatsPageData, getLoginPageData, getRegisterPageData, getProfilePageData
+} from './pages';
 
 const pages = {
   login: [Pages.LoginPage],
@@ -39,7 +36,7 @@ const navigate = (page, args = {}) => {
 };
 
 const contentLoadedHandler = () => {
-  const pathname = window.location.pathname;
+  const { pathname } = window.location;
   let page = 'login';
   let data = {};
 

@@ -1,4 +1,4 @@
-const getChatMenuData = (user, chats) => {
+const getChatMenuData = () => {
   const items = [
     {
       type: 'button',
@@ -47,9 +47,7 @@ const getChatsListPageData = (user, chats) => {
 
   const weekDaysInMs = 7 * 24 * 60 * 60 * 1000;
 
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
   return chats.map((chat) => {
     const isISendLastMessage = chat.message.sender === user.login;
@@ -129,8 +127,8 @@ const getUserMenuData = () => {
       href: '#icon-delete',
       text: 'Удалить пользователя'
     }
-  ]
-  
+  ];
+
   return items;
 };
 
@@ -183,12 +181,12 @@ export const getChatsContentPageData = (user, messagesArray, currentChat) => {
 
   const messages = [];
 
-  for (const [date, message] of Object.entries(result)) {
+  Object.entries(result).forEach((item) => {
     messages.push({
-      date,
-      message
+      date: item[0],
+      message: item[1]
     });
-  }
+  });
 
   const chat = currentChat.id ? currentChat : null;
 
@@ -212,8 +210,8 @@ const getUserDeleteModalData = () => {
       cancel: true,
       text: 'Нет'
     }
-  ]
-  
+  ];
+
   return {
     title,
     buttons
@@ -235,7 +233,7 @@ export const getChatsPageData = (user, chats, messages, currentChat) => {
 
   const userDeleteModal = {
     ...getUserDeleteModalData()
-  }
+  };
 
   return {
     id: 'chats',
