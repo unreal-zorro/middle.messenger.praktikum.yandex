@@ -1,0 +1,9 @@
+# Ignore artifacts:
+dist
+docs
+static
+node_modules
+*.html
+*.scss
+*.hbs
+*.yml
