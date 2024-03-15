@@ -16,7 +16,17 @@
     "hbs/check-hbs-template-literals": 2,
     "comma-dangle": ["error", "never"],
     "import/no-unresolved": "error",
-    "import/no-extraneous-dependencies": "off"
+    "import/no-extraneous-dependencies": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "no-param-reassign": "off"
   },
   "settings": {
     "import/parsers": {
