@@ -29,7 +29,8 @@
     "no-param-reassign": "off",
     "no-undef": "off",
     "class-methods-use-this": "off",
-    "no-use-before-define": "off"
+    "no-use-before-define": "off",
+    "no-console": "off"
   },
   "settings": {
     "import/parsers": {

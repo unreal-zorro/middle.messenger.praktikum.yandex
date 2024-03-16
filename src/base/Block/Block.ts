@@ -4,9 +4,16 @@ import { EventBus } from '../EventBus';
 import type { Listener } from '../EventBus';
 
 export interface Props {
-  [key: string]: string | Listener | Record<string, Listener> | undefined | Block;
+  [key: string]:
+    | string
+    | boolean
+    | Listener
+    | Record<string, Listener>
+    | Record<string, boolean>
+    | undefined
+    | Block;
   events?: Record<string, Listener>;
-  settings?: Record<string, Listener>;
+  settings?: Record<string, boolean>;
   id?: string;
 }
 
@@ -14,9 +21,9 @@ export interface Children {
   [key: string]: Block;
 }
 
-export interface PropsAndChildren extends Children, Props {}
+type PropsAndChildren = Children | Props;
 
-export interface Events {
+interface Events {
   INIT: 'init';
   FLOW_CDM: 'flow:component-did-mount';
   FLOW_CDU: 'flow:component-did-update';
@@ -29,7 +36,12 @@ interface Meta {
 }
 
 export abstract class Block {
-  static EVENTS: Events;
+  static EVENTS: Events = {
+    INIT: 'init',
+    FLOW_CDM: 'flow:component-did-mount',
+    FLOW_CDU: 'flow:component-did-update',
+    FLOW_RENDER: 'flow:render'
+  };
 
   private _element: Nullable<HTMLElement | HTMLTemplateElement> = null;
 
@@ -144,7 +156,9 @@ export abstract class Block {
   }
 
   // Может переопределять пользователь, необязательно трогать
-  abstract componentDidUpdate(oldProps: Props, newProps: Props): boolean;
+  componentDidUpdate(oldProps: Props, newProps: Props): boolean {
+    return oldProps !== newProps;
+  }
 
   setProps = (nextProps: Props) => {
     if (!nextProps) {
@@ -163,15 +177,15 @@ export abstract class Block {
     this._removeEvents();
 
     if (this._element) {
-      this._element.innerHTML = '';
-      this._element.appendChild(block);
+      this._element.innerHTML = block as string;
+      // this._element.appendChild(block as Node);
     }
 
     this._addEvents();
   }
 
   // Может переопределять пользователь, необязательно трогать
-  protected abstract render(): DocumentFragment;
+  protected abstract render(): DocumentFragment | string;
 
   getContent(): HTMLElement | null {
     return this.element;
@@ -199,9 +213,11 @@ export abstract class Block {
 
   private _createDocumentElement(tagName: string): HTMLElement | HTMLTemplateElement {
     const element = document.createElement(tagName);
+
     if (this._id) {
       element.setAttribute('data-id', this._id);
     }
+
     return element;
   }
 
