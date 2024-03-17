@@ -4,7 +4,7 @@ import './style.scss';
 // import * as Modules from '@/modules';
 // import * as Pages from '@/pages';
 // import { user, errors, chats, messages, currentChat } from '@/entities';
-import { Button, Error, Input } from './components';
+import { Button, Error, Input, Label } from './components';
 import { render } from './utils';
 
 // import {
@@ -130,6 +130,18 @@ const contentLoadedHandler = () => {
       error.setProps({ error: true });
     }, 3000);
 
+    const label = new Label({
+      className: 'my-label',
+      for: 'user_name',
+      text: 'Имя пользователя',
+      settings: {
+        withInternalID: false
+      },
+      events: {
+        click: clickHandler
+      }
+    });
+
     const input = new Input({
       className: 'my-input',
       error: false,
@@ -150,9 +162,10 @@ const contentLoadedHandler = () => {
       input.setProps({ error: true });
     }, 3000);
 
-    render('#root', button);
-    render('#root', error);
+    render('#root', label);
     render('#root', input);
+    render('#root', error);
+    render('#root', button);
   } else {
     // navigate(page, data);
   }
