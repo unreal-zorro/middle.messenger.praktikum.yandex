@@ -23,20 +23,13 @@ export interface Children {
 
 type PropsAndChildren = Children | Props;
 
-interface Events {
-  INIT: 'init';
-  FLOW_CDM: 'flow:component-did-mount';
-  FLOW_CDU: 'flow:component-did-update';
-  FLOW_RENDER: 'flow:render';
-}
-
 interface Meta {
   tagName: string;
   props?: Props;
 }
 
 export abstract class Block {
-  static EVENTS: Events = {
+  static EVENTS = {
     INIT: 'init',
     FLOW_CDM: 'flow:component-did-mount',
     FLOW_CDU: 'flow:component-did-update',
@@ -55,8 +48,6 @@ export abstract class Block {
 
   private _id: Nullable<string> = null;
 
-  // private _template: Nullable<HandlebarsTemplates> = null;
-
   constructor(propsAndChildren: PropsAndChildren = {}) {
     const { children, props } = this._getChildren(propsAndChildren);
     this.children = children;
@@ -72,8 +63,6 @@ export abstract class Block {
     } else {
       this.props = this._makePropsProxy(props);
     }
-
-    // this._template = template;
 
     this.eventBus = () => eventBus;
     this._registerEvents(eventBus);
@@ -96,27 +85,6 @@ export abstract class Block {
     return { children, props };
   }
 
-  compile(template: HandlebarsTemplates, props: Props): DocumentFragment {
-    const propsAndStubs = { ...props };
-
-    Object.entries(this.children).forEach(([key, child]) => {
-      propsAndStubs[key] = `<div data-id="${child?._id}"></div>`;
-    });
-
-    const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
-    // const fragment = document.createElement('template') as HTMLTemplateElement;
-
-    fragment.innerHTML = Handlebars.compile(template)(propsAndStubs);
-
-    Object.values(this.children).forEach((child) => {
-      const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
-
-      stub?.replaceWith(child.getContent()!);
-    });
-
-    return fragment.content;
-  }
-
   private _registerEvents(eventBus: EventBus<Props>) {
     eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
@@ -127,43 +95,15 @@ export abstract class Block {
   private _createResources() {
     const tagName = this._meta?.tagName || 'div';
     this._element = this._createDocumentElement(tagName);
-
-    // this._element = this._createDocumentElement(template);
   }
 
   private _createDocumentElement(tagName: string): HTMLElement {
     const element = document.createElement(tagName);
-    // const element = document.createDocumentFragment();
-
-    // if (this._template) {
-    //   const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
-    //   fragment.innerHTML = Handlebars.compile(this._template)(this.props);
-    //   element.appendChild(fragment);
-    //   element = element.firstChild as HTMLElement;
-    // }
-
-    if (this._id) {
-      element.setAttribute('data-id', this._id);
-    }
 
     return element;
-
-    // const fragment = document.createElement('template') as HTMLTemplateElement;
-    // fragment.innerHTML = Handlebars.compile(template)(this.props);
-    // const element = fragment.content.firstChild as HTMLElement;
-
-    // if (this._id) {
-    //   element.setAttribute('data-id', this._id);
-    // }
-
-    // return element;
   }
 
   init() {
-    // if (this._template) {
-    //   this._createResources(this._template);
-    // }
-
     this._createResources();
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
@@ -211,83 +151,44 @@ export abstract class Block {
     return this._element;
   }
 
-  private _render() {
-    const propsAndStubs = { ...this.props };
+  compile(template: string, props: Props): Element | null {
+    const propsAndStubs = { ...props };
 
     Object.entries(this.children).forEach(([key, child]) => {
       propsAndStubs[key] = `<div data-id="${child?._id}"></div>`;
     });
 
     const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
-    // const fragment = document.createElement('template') as HTMLTemplateElement;
-
-    fragment.innerHTML = Handlebars.compile(this.render())(propsAndStubs);
-
-    const newElement = fragment.content.firstElementChild;
+    fragment.innerHTML = Handlebars.compile(template)(propsAndStubs);
 
     Object.values(this.children).forEach((child) => {
       const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
-
       stub?.replaceWith(child.getContent()!);
     });
+
+    return fragment.content.firstElementChild;
+  }
+
+  private _render() {
+    const newElement = this.compile(this.render(), this.props);
+
+    this._removeEvents();
 
     if (this._element) {
       this._element.replaceWith(newElement as HTMLElement);
       this._element = newElement as HTMLElement;
     }
 
+    if (this._element && this._id) {
+      this._element.setAttribute('data-id', this._id);
+    }
+
     this._addEvents();
-
-
-
-    // const block = this.render();
-    // this._removeEvents();
-
-    // if (this._element) {
-    //   const fragment = this._createDocumentElement('template');
-    //   fragment.innerHTML = Handlebars.compile(this.render())(this.props);
-    //   const newElement = fragment.content.firstElementChild;
-
-
-
-      // console.log('el before: ', this._element);
-
-      // this._element.innerHTML = block;
-      // console.log(block);
-      // const newElement = document.createElement('div');
-      // newElement.innerHTML = block;
-      // this._element = newElement.firstChild as HTMLElement;
-      // this._element = block as unknown as HTMLElement;
-
-      // const element = this._element.firstChild;
-
-      // console.log('element: ', element);
-
-      // this._element = null;
-      // const element = this._element.firstChild as HTMLElement;
-      // this._element.replaceWith(element);
-
-      // console.log(element)
-
-      // console.log('el after: ', this._element);
-
-      // this._element.appendChild(block as DocumentFragment as Node);
-      // this._element = this._element.firstChild as HTMLElement;
-
-      // this._element = block as DocumentFragment as HTMLElement;
-      // const element = this._element.firstChild as HTMLElement;
-      // this._element = element;
-    // }
-
-    // this._addEvents();
   }
 
   // Может переопределять пользователь, необязательно трогать
   protected render(): string {
-    // const template = Handlebars.compile('<div></div>');
-
-    // return template(this.props);
-    return '';
+    return '<div></div>';
   }
 
   getContent(): HTMLElement | null {

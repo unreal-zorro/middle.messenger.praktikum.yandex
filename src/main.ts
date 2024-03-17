@@ -4,7 +4,7 @@ import './style.scss';
 // import * as Modules from '@/modules';
 // import * as Pages from '@/pages';
 // import { user, errors, chats, messages, currentChat } from '@/entities';
-import { Button } from './components';
+import { Button, Error } from './components';
 import { render } from './utils';
 
 // import {
@@ -99,8 +99,8 @@ const contentLoadedHandler = () => {
 
     const button = new Button({
       className: 'my-btn',
-      type: 'button',
       cancel: false,
+      type: 'button',
       text: 'This is button',
       settings: {
         withInternalID: false
@@ -111,10 +111,27 @@ const contentLoadedHandler = () => {
     });
 
     setTimeout(() => {
-      button.setProps({text: 'Bye-bye'});
-    }, 3000)
+      button.setProps({ text: 'Bye-bye' });
+    }, 3000);
+
+    const error = new Error({
+      className: '',
+      error: false,
+      text: 'Error',
+      settings: {
+        withInternalID: false
+      },
+      events: {
+        click: clickHandler
+      }
+    });
+
+    setTimeout(() => {
+      error.setProps({ error: true });
+    }, 3000);
 
     render('#root', button);
+    render('#root', error);
   } else {
     // navigate(page, data);
   }
