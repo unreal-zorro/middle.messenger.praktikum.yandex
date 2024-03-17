@@ -1,5 +1,6 @@
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
+import { Error, Input, Label } from '@/components';
 import template from './input-field.hbs?raw';
 
 interface InputFieldProps extends Props {
@@ -20,6 +21,58 @@ interface InputFieldProps extends Props {
 export class InputField extends Block {
   constructor(props: InputFieldProps) {
     super(props);
+
+    this.children.labelChild = new Label({
+      className: this.props.classNameLabel as string,
+      for: this.props.name as string,
+      text: this.props.label as string,
+      settings: {
+        withInternalID: false
+      }
+    });
+
+    this.children.inputChild = new Input({
+      className: this.props.classNameInput as string,
+      error: this.props.error as boolean,
+      type: this.props.type as string,
+      name: this.props.name as string,
+      value: this.props.value as string,
+      placeholder: '',
+      disabled: this.props.disabled as boolean,
+      settings: {
+        withInternalID: false
+      }
+    });
+
+    this.children.errorChild = new Error({
+      className: this.props.classNameError as string,
+      error: this.props.error as boolean,
+      text: this.props.text as string,
+      settings: {
+        withInternalID: false
+      }
+    });
+  }
+
+  componentDidUpdate(oldProps: InputFieldProps, newProps: InputFieldProps): boolean {
+    if (oldProps.value !== newProps.value) {
+      this.children.inputChild.setProps({ value: newProps.value });
+    }
+
+    if (oldProps.disabled !== newProps.disabled) {
+      this.children.inputChild.setProps({ disabled: newProps.disabled });
+    }
+
+    if (oldProps.error !== newProps.error) {
+      this.children.inputChild.setProps({ error: newProps.error });
+      this.children.errorChild.setProps({ error: newProps.error });
+    }
+
+    if (oldProps.text !== newProps.text) {
+      this.children.errorChild.setProps({ text: newProps.text });
+    }
+
+    return true;
   }
 
   render(): string {

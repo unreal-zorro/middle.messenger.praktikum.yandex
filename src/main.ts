@@ -164,35 +164,35 @@ const contentLoadedHandler = () => {
     }, 3000);
 
     const inputField = new InputField({
-      className: ,
-      classNameLabel: ,
-      classNameInput: ,
-      classNameError: ,
-      name: ,
-      label: ,
-      type: ,
-      value: ,
-      placeholder: ,
-      disabled: ,
-      error: ,
-      text: ,
+      className: 'my-input-field',
+      classNameLabel: 'my-input-field-label',
+      classNameInput: 'my-input-field-input',
+      classNameError: 'my-input-field-error',
+      name: 'user_name',
+      label: 'Имя пользователя',
+      type: 'text',
+      value: 'User',
+      placeholder: '',
+      disabled: false,
+      error: false,
+      text: 'Введите имя пользователя',
       settings: {
         withInternalID: false
       },
       events: {
         click: clickHandler
-      },
-      children: {
-        label,
-        input,
-        error
       }
     });
 
-    render('#root', label);
-    render('#root', input);
-    render('#root', error);
-    render('#root', button);
+    setTimeout(() => {
+      inputField.setProps({ error: true });
+    }, 3000);
+
+    // render('#root', label);
+    // render('#root', input);
+    // render('#root', error);
+    // render('#root', button);
+    render('#root', inputField);
   } else {
     // navigate(page, data);
   }

@@ -1,5 +1,5 @@
 <div class="{{#if className}}{{ className }}{{/if}}">
-  {{> Label
+  {{!-- {{> Label
     className=classNameLabel
     for=name
     text=label
@@ -18,5 +18,8 @@
   {{> Error
     className=classNameError
     text=error
-  }}
+  }} --}}
+  {{{ labelChild }}}
+  {{{ inputChild }}}
+  {{{ errorChild }}}
 </div>
