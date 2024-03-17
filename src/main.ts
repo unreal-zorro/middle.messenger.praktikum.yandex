@@ -5,6 +5,7 @@ import './style.scss';
 // import * as Pages from '@/pages';
 // import { user, errors, chats, messages, currentChat } from '@/entities';
 import { Button, Error, Input, Label } from './components';
+import { InputField } from './modules';
 import { render } from './utils';
 
 // import {
@@ -161,6 +162,32 @@ const contentLoadedHandler = () => {
     setTimeout(() => {
       input.setProps({ error: true });
     }, 3000);
+
+    const inputField = new InputField({
+      className: ,
+      classNameLabel: ,
+      classNameInput: ,
+      classNameError: ,
+      name: ,
+      label: ,
+      type: ,
+      value: ,
+      placeholder: ,
+      disabled: ,
+      error: ,
+      text: ,
+      settings: {
+        withInternalID: false
+      },
+      events: {
+        click: clickHandler
+      },
+      children: {
+        label,
+        input,
+        error
+      }
+    });
 
     render('#root', label);
     render('#root', input);
