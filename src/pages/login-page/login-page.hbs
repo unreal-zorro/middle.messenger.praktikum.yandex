@@ -1,10 +1,14 @@
 <main id={{ id }} class="login">
-  {{> Header header
+  {{{ headerChild }}}
+  {{{ formChild }}}
+  {{{ linkChild }}}
+
+  {{!-- {{> Header header
     className="login__header"
     text=header
-  }}
+  }} --}}
 
-  {{#> Form className="login__form" }}
+  {{!-- {{#> Form className="login__form" }}
     <div class="login__form-controls">
       {{#each controls}}
         <div class="login__form-control">
@@ -38,11 +42,11 @@
         </a>
       {{/ Button }}
     {{/each}}
-  {{/ Form }}
+  {{/ Form }} --}}
 
-  {{> Link link
+  {{!-- {{> Link link
     className="login__footer"
     href=link.href
     text=link.text
-  }}
+  }} --}}
 </main>

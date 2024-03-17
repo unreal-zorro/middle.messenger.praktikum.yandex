@@ -56,20 +56,20 @@ export class InputField extends Block {
 
   componentDidUpdate(oldProps: InputFieldProps, newProps: InputFieldProps): boolean {
     if (oldProps.value !== newProps.value) {
-      this.children.inputChild.setProps({ value: newProps.value });
+      (this.children.inputChild as Block).setProps({ value: newProps.value });
     }
 
     if (oldProps.disabled !== newProps.disabled) {
-      this.children.inputChild.setProps({ disabled: newProps.disabled });
+      (this.children.inputChild as Block).setProps({ disabled: newProps.disabled });
     }
 
     if (oldProps.error !== newProps.error) {
-      this.children.inputChild.setProps({ error: newProps.error });
-      this.children.errorChild.setProps({ error: newProps.error });
+      (this.children.inputChild as Block).setProps({ error: newProps.error });
+      (this.children.inputChild as Block).setProps({ error: newProps.error });
     }
 
     if (oldProps.text !== newProps.text) {
-      this.children.errorChild.setProps({ text: newProps.text });
+      (this.children.inputChild as Block).setProps({ text: newProps.text });
     }
 
     return true;

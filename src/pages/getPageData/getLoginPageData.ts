@@ -1,4 +1,6 @@
-export const getLoginPageData = (user) => ({
+import { User } from "@/entities";
+
+export const getLoginPageData = (user: User) => ({
   id: 'login',
   header: 'Вход',
   controls: [

@@ -11,6 +11,8 @@ export interface Props {
     | Record<string, Listener>
     | Record<string, boolean>
     | undefined
+    | Record<string, string | undefined>
+    | Array<Record<string, string | undefined>>
     | Block;
   events?: Record<string, Listener>;
   settings?: Record<string, boolean>;
@@ -18,7 +20,7 @@ export interface Props {
 }
 
 export interface Children {
-  [key: string]: Block;
+  [key: string]: Block | Block[] | string;
 }
 
 type PropsAndChildren = Children | Props;
@@ -112,8 +114,16 @@ export abstract class Block {
     this.componentDidMount();
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
 
+    // Object.values(this.children).forEach((child) => {
+    //   child.dispatchComponentDidMount();
+    // });
+
     Object.values(this.children).forEach((child) => {
-      child.dispatchComponentDidMount();
+      if (Array.isArray(child)) {
+        child.forEach((oneChild) => (oneChild as Block).dispatchComponentDidMount());
+      } else {
+        (child as Block).dispatchComponentDidMount();
+      }
     });
   }
 
@@ -154,16 +164,38 @@ export abstract class Block {
   compile(template: string, props: Props): Element | null {
     const propsAndStubs = { ...props };
 
+    // Object.entries(this.children).forEach(([key, child]) => {
+    //   propsAndStubs[key] = `<div data-id="${child?._id}"></div>`;
+    // });
+
     Object.entries(this.children).forEach(([key, child]) => {
-      propsAndStubs[key] = `<div data-id="${child?._id}"></div>`;
+      if (Array.isArray(child)) {
+        Object.entries(child).forEach(([oneChildKey, oneChild]) => {
+          (propsAndStubs[key] as Children)[oneChildKey] = `<div data-id="${oneChild?._id}"></div>`;
+        });
+      } else {
+        propsAndStubs[key] = `<div data-id="${(child as Block)?._id}"></div>`;
+      }
     });
 
     const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
     fragment.innerHTML = Handlebars.compile(template)(propsAndStubs);
 
+    // Object.values(this.children).forEach((child) => {
+    //   const stub = fragment.content.querySelector(`[data-id="${(child as Block)._id}"]`);
+    //   stub?.replaceWith((child as Block).getContent()!);
+    // });
+
     Object.values(this.children).forEach((child) => {
-      const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
-      stub?.replaceWith(child.getContent()!);
+      if (Array.isArray(child)) {
+        Object.values(child).forEach((oneChild) => {
+          const stub = fragment.content.querySelector(`[data-id="${(oneChild as Block)._id}"]`);
+          stub?.replaceWith((oneChild as Block).getContent()!);
+        });
+      } else {
+        const stub = fragment.content.querySelector(`[data-id="${(child as Block)._id}"]`);
+        stub?.replaceWith((child as Block).getContent()!);
+      }
     });
 
     return fragment.content.firstElementChild;

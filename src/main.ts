@@ -1,3 +1,4 @@
+import { user } from './entities';
 import './style.scss';
 // import Handlebars from 'handlebars';
 // import * as Components from '@/components';
@@ -7,6 +8,7 @@ import './style.scss';
 import { Button, Error, Input, Label } from './components';
 import { InputField } from './modules';
 import { render } from './utils';
+import { LoginPage, getLoginPageData } from './pages';
 
 // import {
 //   getErrorPageData,
@@ -188,11 +190,24 @@ const contentLoadedHandler = () => {
       inputField.setProps({ error: true });
     }, 3000);
 
+    const data = getLoginPageData(user);
+
+    const loginPage = new LoginPage({
+      settings: {
+        withInternalID: false
+      },
+      events: {
+        click: clickHandler
+      },
+      ...data
+    });
+
     // render('#root', label);
     // render('#root', input);
     // render('#root', error);
     // render('#root', button);
-    render('#root', inputField);
+    // render('#root', inputField);
+    render('#root', loginPage);
   } else {
     // navigate(page, data);
   }
