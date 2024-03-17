@@ -1,4 +1,6 @@
-export const getRegisterPageData = (user) => ({
+import { User } from "@/entities";
+
+export const getRegisterPageData = (user: User) => ({
   id: 'register',
   header: 'Регистрация',
   controls: [
