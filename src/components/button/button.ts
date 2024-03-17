@@ -1,8 +1,7 @@
+import './button.scss';
 import Handlebars from 'handlebars';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { classNames, type Mods } from '@/utils';
-import cls from './button.module.scss';
 import buttonTemplate from './button.hbs?raw';
 
 interface ButtonProps extends Props {
@@ -14,26 +13,21 @@ interface ButtonProps extends Props {
 
 export class Button extends Block {
   constructor(props: ButtonProps) {
-    const { cancel, className } = props;
-
-    const mods: Mods = {
-      [cls.button_cancel]: cancel
-    };
-
-    super('', {
-      className: classNames(cls.button, mods, [className]),
-      ...props
-    });
+    super(props);
   }
 
-  componentDidUpdate(oldProps: ButtonProps, newProps: ButtonProps): boolean {
-    return oldProps !== newProps;
-  }
+  // componentDidUpdate(oldProps: ButtonProps, newProps: ButtonProps): boolean {
+  //   return oldProps !== newProps;
+  // }
 
-  render(): DocumentFragment | string {
-    const source: HandlebarsTemplates = buttonTemplate;
-    const template = Handlebars.compile(source);
+  render(): string {
+    return buttonTemplate;
 
-    return template(this.props);
+    // const source: HandlebarsTemplates = buttonTemplate;
+    // const template = Handlebars.compile(source);
+
+    // return template(this.props);
+
+    // return this.compile(buttonTemplate, this.props);
   }
 }

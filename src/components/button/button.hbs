@@ -2,5 +2,7 @@
   class="button{{#if className}} {{ className }}{{/if}}{{#if cancel}} button_cancel{{/if}}"
   type={{ type }}
 >
-  {{ text }}
+  {{#if text}}
+    {{ text }}
+  {{/if}}
 </button>

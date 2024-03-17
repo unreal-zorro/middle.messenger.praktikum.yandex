@@ -55,12 +55,14 @@ export abstract class Block {
 
   private _id: Nullable<string> = null;
 
-  constructor(tagName: string = 'div', propsAndChildren: PropsAndChildren = {}) {
+  // private _template: Nullable<HandlebarsTemplates> = null;
+
+  constructor(propsAndChildren: PropsAndChildren = {}) {
     const { children, props } = this._getChildren(propsAndChildren);
     this.children = children;
     const eventBus = new EventBus<Props>();
     this._meta = {
-      tagName,
+      tagName: 'div',
       props
     };
 
@@ -70,6 +72,8 @@ export abstract class Block {
     } else {
       this.props = this._makePropsProxy(props);
     }
+
+    // this._template = template;
 
     this.eventBus = () => eventBus;
     this._registerEvents(eventBus);
@@ -100,6 +104,7 @@ export abstract class Block {
     });
 
     const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
+    // const fragment = document.createElement('template') as HTMLTemplateElement;
 
     fragment.innerHTML = Handlebars.compile(template)(propsAndStubs);
 
@@ -122,9 +127,43 @@ export abstract class Block {
   private _createResources() {
     const tagName = this._meta?.tagName || 'div';
     this._element = this._createDocumentElement(tagName);
+
+    // this._element = this._createDocumentElement(template);
+  }
+
+  private _createDocumentElement(tagName: string): HTMLElement {
+    const element = document.createElement(tagName);
+    // const element = document.createDocumentFragment();
+
+    // if (this._template) {
+    //   const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
+    //   fragment.innerHTML = Handlebars.compile(this._template)(this.props);
+    //   element.appendChild(fragment);
+    //   element = element.firstChild as HTMLElement;
+    // }
+
+    if (this._id) {
+      element.setAttribute('data-id', this._id);
+    }
+
+    return element;
+
+    // const fragment = document.createElement('template') as HTMLTemplateElement;
+    // fragment.innerHTML = Handlebars.compile(template)(this.props);
+    // const element = fragment.content.firstChild as HTMLElement;
+
+    // if (this._id) {
+    //   element.setAttribute('data-id', this._id);
+    // }
+
+    // return element;
   }
 
   init() {
+    // if (this._template) {
+    //   this._createResources(this._template);
+    // }
+
     this._createResources();
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
@@ -173,19 +212,83 @@ export abstract class Block {
   }
 
   private _render() {
-    const block = this.render();
-    this._removeEvents();
+    const propsAndStubs = { ...this.props };
+
+    Object.entries(this.children).forEach(([key, child]) => {
+      propsAndStubs[key] = `<div data-id="${child?._id}"></div>`;
+    });
+
+    const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
+    // const fragment = document.createElement('template') as HTMLTemplateElement;
+
+    fragment.innerHTML = Handlebars.compile(this.render())(propsAndStubs);
+
+    const newElement = fragment.content.firstElementChild;
+
+    Object.values(this.children).forEach((child) => {
+      const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
+
+      stub?.replaceWith(child.getContent()!);
+    });
 
     if (this._element) {
-      this._element.innerHTML = block as string;
-      // this._element.appendChild(block as Node);
+      this._element.replaceWith(newElement as HTMLElement);
+      this._element = newElement as HTMLElement;
     }
 
     this._addEvents();
+
+
+
+    // const block = this.render();
+    // this._removeEvents();
+
+    // if (this._element) {
+    //   const fragment = this._createDocumentElement('template');
+    //   fragment.innerHTML = Handlebars.compile(this.render())(this.props);
+    //   const newElement = fragment.content.firstElementChild;
+
+
+
+      // console.log('el before: ', this._element);
+
+      // this._element.innerHTML = block;
+      // console.log(block);
+      // const newElement = document.createElement('div');
+      // newElement.innerHTML = block;
+      // this._element = newElement.firstChild as HTMLElement;
+      // this._element = block as unknown as HTMLElement;
+
+      // const element = this._element.firstChild;
+
+      // console.log('element: ', element);
+
+      // this._element = null;
+      // const element = this._element.firstChild as HTMLElement;
+      // this._element.replaceWith(element);
+
+      // console.log(element)
+
+      // console.log('el after: ', this._element);
+
+      // this._element.appendChild(block as DocumentFragment as Node);
+      // this._element = this._element.firstChild as HTMLElement;
+
+      // this._element = block as DocumentFragment as HTMLElement;
+      // const element = this._element.firstChild as HTMLElement;
+      // this._element = element;
+    // }
+
+    // this._addEvents();
   }
 
   // Может переопределять пользователь, необязательно трогать
-  protected abstract render(): DocumentFragment | string;
+  protected render(): string {
+    // const template = Handlebars.compile('<div></div>');
+
+    // return template(this.props);
+    return '';
+  }
 
   getContent(): HTMLElement | null {
     return this.element;
@@ -209,16 +312,6 @@ export abstract class Block {
         throw new Error('нет доступа');
       }
     });
-  }
-
-  private _createDocumentElement(tagName: string): HTMLElement | HTMLTemplateElement {
-    const element = document.createElement(tagName);
-
-    if (this._id) {
-      element.setAttribute('data-id', this._id);
-    }
-
-    return element;
   }
 
   private _addEvents(): void {
