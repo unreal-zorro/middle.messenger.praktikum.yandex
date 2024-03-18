@@ -74,11 +74,22 @@ const contentLoadedHandler: () => void = () => {
       page = errorPage;
       break;
     }
-    // case '/error500': {
-    //   data = getErrorPageData(errors.error500);
-    //   page = 'error500';
-    //   break;
-    // }
+    case '/error500': {
+      const data = getErrorPageData(errors.error500);
+
+      const errorPage = new ErrorPage({
+        settings: {
+          withInternalID: false
+        },
+        events: {
+          click: clickHandler
+        },
+        ...data
+      });
+
+      page = errorPage;
+      break;
+    }
     // case '/profile': {
     //   data = getProfilePageData(user);
     //   page = 'profile';
