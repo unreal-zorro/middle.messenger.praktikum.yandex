@@ -7,5 +7,6 @@ export { chats } from './chats';
 export type { Chat } from './chats';
 export { messages } from './messages';
 export type { Message } from './messages';
+export type { MessageContent } from './messages';
 export { currentChat } from './messages';
 export type { CurrentChat } from './messages';

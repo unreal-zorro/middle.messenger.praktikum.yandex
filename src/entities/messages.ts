@@ -1,4 +1,4 @@
-interface MessageContent {
+export interface MessageContent {
   isText?: boolean;
   isImage?: boolean;
   data: string;

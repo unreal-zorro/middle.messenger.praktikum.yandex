@@ -1,3 +1,5 @@
+import { Chat, CurrentChat, Message, MessageContent, User } from '@/entities';
+
 const getChatMenuData = () => {
   const items = [
     {
@@ -20,7 +22,7 @@ const getChatMenuData = () => {
   return items;
 };
 
-const getChatsListPageData = (user, chats) => {
+const getChatsListPageData = (user: User, chats: Chat[]) => {
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
   const currentYear = currentDate.getFullYear();
@@ -47,7 +49,8 @@ const getChatsListPageData = (user, chats) => {
 
   const weekDaysInMs = 7 * 24 * 60 * 60 * 1000;
 
-  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+  const capitalizeFirstLetter: (string: string) => string = (string) =>
+    string.charAt(0).toUpperCase() + string.slice(1);
 
   return chats.map((chat) => {
     const isISendLastMessage = chat.message.sender === user.login;
@@ -132,8 +135,14 @@ const getUserMenuData = () => {
   return items;
 };
 
-export const getChatsContentPageData = (user, messagesArray, currentChat) => {
-  const result = {};
+type ResultMessage = Record<string, string | number | boolean | MessageContent[]>;
+
+export const getChatsContentPageData = (
+  user: User,
+  messagesArray: Message[],
+  currentChat: CurrentChat
+) => {
+  const result: Record<string, string | ResultMessage[]> = {};
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -165,7 +174,7 @@ export const getChatsContentPageData = (user, messagesArray, currentChat) => {
     const date = dateFormatter.format(messageDate);
     const time = timeFormatter.format(messageDate);
 
-    const resultMessage = {
+    const resultMessage: ResultMessage = {
       id: message.id,
       name: message.display_name,
       time,
@@ -173,18 +182,19 @@ export const getChatsContentPageData = (user, messagesArray, currentChat) => {
       content: message.content
     };
 
-    const resultMessagesArray = result[date] || [];
+    // const resultMessagesArray: ResultMessage[] = result[date] || [];
+    const resultMessagesArray: ResultMessage[] = [];
     resultMessagesArray.push(resultMessage);
 
     result[date] = resultMessagesArray;
   });
 
-  const messages = [];
+  const messages: Array<Record<string, string>> = [];
 
   Object.entries(result).forEach((item) => {
     messages.push({
       date: item[0],
-      message: item[1]
+      message: item[1] as string
     });
   });
 
@@ -218,7 +228,12 @@ const getUserDeleteModalData = () => {
   };
 };
 
-export const getChatsPageData = (user, chats, messages, currentChat) => {
+export const getChatsPageData = (
+  user: User,
+  chats: Chat[],
+  messages: Message[],
+  currentChat: CurrentChat
+) => {
   const chatMenu = {
     items: getChatMenuData()
   };
