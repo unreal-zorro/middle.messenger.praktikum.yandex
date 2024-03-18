@@ -1,4 +1,4 @@
-// export { Avatar } from './avatar';
+export { Avatar } from './avatar';
 export { Button } from './button';
 export { Error } from './error';
 export { Header } from './header';

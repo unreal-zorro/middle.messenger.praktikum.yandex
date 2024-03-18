@@ -1,4 +1,8 @@
-export const getProfilePageData = (user, mode) => {
+import { User } from '@/entities';
+
+type Mode = 'edit' | 'password' | undefined;
+
+export const getProfilePageData = (user: User, mode: Mode) => {
   let data = {};
 
   if (mode === 'edit') {
