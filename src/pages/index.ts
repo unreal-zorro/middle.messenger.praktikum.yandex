@@ -1,11 +1,9 @@
 export { LoginPage } from './login-page';
-export { getLoginPageData } from './getPageData';
-export { getRegisterPageData } from './getPageData';
-// export { ErrorPage } from './error-page';
+export { ErrorPage } from './error-page';
 // export { ProfilePage } from './profile-page';
 // export { ChatsPage } from './chats-page';
-// export { getErrorPageData } from './getPageData';
+export { getErrorPageData } from './getPageData';
 // export { getChatsPageData } from './getPageData';
-// export { getLoginPageData } from './getPageData';
-// export { getRegisterPageData } from './getPageData';
+export { getLoginPageData } from './getPageData';
+export { getRegisterPageData } from './getPageData';
 // export { getProfilePageData } from './getPageData';

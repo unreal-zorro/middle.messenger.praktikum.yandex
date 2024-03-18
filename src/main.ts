@@ -1,7 +1,13 @@
-import { user } from './entities';
+import { user, errors } from './entities';
 import './style.scss';
 import { render } from './utils';
-import { LoginPage, getLoginPageData, getRegisterPageData } from './pages';
+import {
+  LoginPage,
+  ErrorPage,
+  getLoginPageData,
+  getRegisterPageData,
+  getErrorPageData
+} from './pages';
 import { Block } from './base';
 
 const navigate: (page: Nullable<Block>) => void = (page) => {
@@ -52,11 +58,22 @@ const contentLoadedHandler: () => void = () => {
       page = loginPage;
       break;
     }
-    // case '/error404': {
-    //   data = getErrorPageData(errors.error404);
-    //   page = 'error404';
-    //   break;
-    // }
+    case '/error404': {
+      const data = getErrorPageData(errors.error404);
+
+      const errorPage = new ErrorPage({
+        settings: {
+          withInternalID: false
+        },
+        events: {
+          click: clickHandler
+        },
+        ...data
+      });
+
+      page = errorPage;
+      break;
+    }
     // case '/error500': {
     //   data = getErrorPageData(errors.error500);
     //   page = 'error500';
