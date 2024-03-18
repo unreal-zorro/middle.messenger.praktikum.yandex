@@ -1,12 +1,14 @@
+interface ChatMessage {
+  date: string;
+  sender: string;
+  text: string;
+}
+
 export interface Chat {
   id: number;
   avatar: string;
   title: string;
-  message: {
-    date: string;
-    sender: string;
-    text: string;
-  },
+  message: ChatMessage,
   count: string;
   active: boolean;
 }
