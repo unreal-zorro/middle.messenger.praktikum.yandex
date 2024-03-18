@@ -1,4 +1,26 @@
-export const messages = [
+interface MessageContent {
+  isText?: boolean;
+  isImage?: boolean;
+  data: string;
+}
+
+export interface Message {
+  id: number;
+  login: string;
+  display_name: string;
+  date: string;
+  time: string;
+  check: boolean;
+  content: MessageContent[];
+}
+
+export interface CurrentChat {
+  id: number;
+  avatar: string;
+  title: string;
+}
+
+export const messages: Message[] = [
   {
     id: 1,
     login: 'vadim',
@@ -47,7 +69,7 @@ export const messages = [
   }
 ];
 
-export const currentChat = {
+export const currentChat: CurrentChat = {
   id: 3,
   avatar: '',
   title: 'Вадим'

@@ -1,4 +1,17 @@
-export const chats = [
+export interface Chat {
+  id: number;
+  avatar: string;
+  title: string;
+  message: {
+    date: string;
+    sender: string;
+    text: string;
+  },
+  count: string;
+  active: boolean;
+}
+
+export const chats: Chat[] = [
   {
     id: 1,
     avatar: '/images/avatar.png',
@@ -8,7 +21,7 @@ export const chats = [
       sender: 'andrew',
       text: 'Изображение'
     },
-    count: 2,
+    count: '2',
     active: false
   },
   {
