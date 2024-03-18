@@ -1,13 +1,14 @@
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { InputField } from '@/modules';
-import { Button, Error, Input, Link } from '@/components';
+import { Button, Link } from '@/components';
 import template from './profile-form.hbs?raw';
 
-interface ProfilePageFormControl extends Record<string, string | undefined> {
+interface ProfilePageFormControl extends Record<string, string | boolean | undefined> {
   label?: string;
   name?: string;
   type?: string;
+  disabled?: boolean;
   value?: string;
   error?: string;
 }
@@ -49,7 +50,7 @@ export class ProfileForm extends Block {
           type: control.type,
           value: control.value,
           placeholder: '',
-          disabled: false,
+          disabled: control.disabled,
           error: !!control.error,
           text: control.error,
           settings: {
@@ -73,28 +74,6 @@ export class ProfileForm extends Block {
           })
         })
     );
-
-    this.children.inputChild = new Input({
-      className: this.props.classNameInput as string,
-      error: this.props.error as boolean,
-      type: this.props.type as string,
-      name: this.props.name as string,
-      value: this.props.value as string,
-      placeholder: '',
-      disabled: this.props.disabled as boolean,
-      settings: {
-        withInternalID: false
-      }
-    });
-
-    this.children.errorChild = new Error({
-      className: this.props.classNameError as string,
-      error: this.props.error as boolean,
-      text: this.props.text as string,
-      settings: {
-        withInternalID: false
-      }
-    });
   }
 
   // componentDidUpdate(oldProps: LoginFormProps, newProps: LoginFormProps): boolean {

@@ -3,6 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Avatar, Header, Link } from '@/components';
 import template from './profile-page.hbs?raw';
+import { ProfileForm } from './modules';
 
 interface ProfilePageFormControl extends Record<string, string | boolean | undefined> {
   label?: string;
@@ -11,6 +12,12 @@ interface ProfilePageFormControl extends Record<string, string | boolean | undef
   disabled?: boolean;
   value?: string;
   error?: string;
+}
+
+interface ProfilePageButton extends Record<string, string | undefined> {
+  type?: string;
+  text?: string;
+  href?: string;
 }
 
 interface ProfilePageLink extends Record<string, string | undefined> {
@@ -47,18 +54,19 @@ export class ProfilePage extends Block {
       }
     });
 
-    this.children.formChild = new LoginForm({
-      className: 'login__form',
-      classNameFormControls: 'login__form-controls',
-      classNameFormControl: 'login__form-control',
-      classNameInputField: 'login__input-field',
-      classNameLabel: 'login__label',
-      classNameInput: 'login__input',
-      classNameError: 'login__error',
-      classNameButton: 'login__button',
-      classNameLink: 'login__link',
-      controls: this.props.controls as LoginPageFormControl[],
-      buttons: this.props.buttons as LoginPageButton[],
+    this.children.formChild = new ProfileForm({
+      className: 'profile__form',
+      classNameFormControls: 'profile__form-controls',
+      classNameFormControl: 'profile__form-control',
+      classNameInputField: 'profile__input-field',
+      classNameLabel: 'profile__label',
+      classNameInput: 'profile__input',
+      classNameError: 'profile__error',
+      classNameFormButtons: 'profile__buttons',
+      classNameButton: 'profile__button',
+      classNameLink: 'profile__link',
+      controls: this.props.controls as ProfilePageFormControl[],
+      buttons: this.props.buttons as ProfilePageButton[],
       settings: {
         withInternalID: false
       }

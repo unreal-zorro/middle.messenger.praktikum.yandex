@@ -1,6 +1,6 @@
 import { User } from '@/entities';
 
-type Mode = 'edit' | 'password' | undefined;
+type Mode = 'edit' | 'password' | 'view';
 
 export const getProfilePageData = (user: User, mode: Mode) => {
   let data = {};

@@ -1,7 +1,7 @@
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { InputField } from '@/modules';
-import { Button, Error, Input, Link } from '@/components';
+import { Button, Link } from '@/components';
 import template from './login-form.hbs?raw';
 
 interface LoginPageFormControl extends Record<string, string | undefined> {
@@ -72,28 +72,6 @@ export class LoginForm extends Block {
           })
         })
     );
-
-    this.children.inputChild = new Input({
-      className: this.props.classNameInput as string,
-      error: this.props.error as boolean,
-      type: this.props.type as string,
-      name: this.props.name as string,
-      value: this.props.value as string,
-      placeholder: '',
-      disabled: this.props.disabled as boolean,
-      settings: {
-        withInternalID: false
-      }
-    });
-
-    this.children.errorChild = new Error({
-      className: this.props.classNameError as string,
-      error: this.props.error as boolean,
-      text: this.props.text as string,
-      settings: {
-        withInternalID: false
-      }
-    });
   }
 
   // componentDidUpdate(oldProps: LoginFormProps, newProps: LoginFormProps): boolean {

@@ -6,7 +6,9 @@ import {
   ErrorPage,
   getLoginPageData,
   getRegisterPageData,
-  getErrorPageData
+  getErrorPageData,
+  getProfilePageData,
+  ProfilePage
 } from './pages';
 import { Block } from './base';
 
@@ -90,21 +92,54 @@ const contentLoadedHandler: () => void = () => {
       page = errorPage;
       break;
     }
-    // case '/profile': {
-    //   data = getProfilePageData(user);
-    //   page = 'profile';
-    //   break;
-    // }
-    // case '/profile/data': {
-    //   data = getProfilePageData(user, 'edit');
-    //   page = 'profile';
-    //   break;
-    // }
-    // case '/profile/password': {
-    //   data = getProfilePageData(user, 'password');
-    //   page = 'profile';
-    //   break;
-    // }
+    case '/profile': {
+      const data = getProfilePageData(user, 'view');
+
+      const profilePage = new ProfilePage({
+        settings: {
+          withInternalID: false
+        },
+        events: {
+          click: clickHandler
+        },
+        ...data
+      });
+
+      page = profilePage;
+      break;
+    }
+    case '/profile/data': {
+      const data = getProfilePageData(user, 'edit');
+
+      const profilePage = new ProfilePage({
+        settings: {
+          withInternalID: false
+        },
+        events: {
+          click: clickHandler
+        },
+        ...data
+      });
+
+      page = profilePage;
+      break;
+    }
+    case '/profile/password': {
+      const data = getProfilePageData(user, 'password');
+
+      const profilePage = new ProfilePage({
+        settings: {
+          withInternalID: false
+        },
+        events: {
+          click: clickHandler
+        },
+        ...data
+      });
+
+      page = profilePage;
+      break;
+    }
     // case '/chats': {
     //   data = getChatsPageData(user, chats, messages, currentChat);
     //   page = 'chats';
