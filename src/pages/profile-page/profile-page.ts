@@ -1,26 +1,49 @@
 import './profile-page.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { Header, Link } from '@/components';
+import { Avatar, Header, Link } from '@/components';
 import template from './profile-page.hbs?raw';
+
+interface ProfilePageFormControl extends Record<string, string | boolean | undefined> {
+  label?: string;
+  name?: string;
+  type?: string;
+  disabled?: boolean;
+  value?: string;
+  error?: string;
+}
+
+interface ProfilePageLink extends Record<string, string | undefined> {
+  text?: string;
+  href?: string;
+}
 
 interface ProfilePageProps extends Props {
   id?: string;
+  avatar?: string;
   header?: string;
-  controls?: LoginPageFormControl[];
-  buttons?: LoginPageButton[];
-  link?: LoginPageLink;
+  controls?: ProfilePageFormControl[];
+  link?: ProfilePageLink;
+  navLink?: ProfilePageLink;
 }
 
 export class ProfilePage extends Block {
   constructor(props: ProfilePageProps) {
     super(props);
 
+    this.children.avatarChild = new Avatar({
+      className: 'avatar_big profile__avatar',
+      imgSrc: this.props.avatar as string,
+      settings: {
+        withInternalID: false
+      }
+    });
+
     this.children.headerChild = new Header({
-      className: 'login__header',
+      className: 'profile__header',
       text: this.props.header as string,
       settings: {
-        withInternalID: true
+        withInternalID: false
       }
     });
 
@@ -42,11 +65,20 @@ export class ProfilePage extends Block {
     });
 
     this.children.linkChild = new Link({
-      className: 'login__footer',
-      href: (this.props.link as LoginPageLink)?.href as string,
-      text: (this.props.link as LoginPageLink)?.text as string,
+      className: 'profile__footer',
+      href: (this.props.link as ProfilePageLink)?.href as string,
+      text: (this.props.link as ProfilePageLink)?.text as string,
       settings: {
-        withInternalID: true
+        withInternalID: false
+      }
+    });
+
+    this.children.navLinkChild = new Link({
+      className: 'profile__nav',
+      href: (this.props.navLink as ProfilePageLink)?.href as string,
+      text: (this.props.navLink as ProfilePageLink)?.text as string,
+      settings: {
+        withInternalID: false
       }
     });
   }

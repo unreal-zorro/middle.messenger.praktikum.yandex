@@ -1,5 +1,11 @@
 <main id={{ id }} class="profile">
-  {{> Avatar avatar
+  {{{ avatarChild }}}
+  {{{ headerChild }}}
+  {{{ formChild }}}
+  {{{ linkChild }}}
+  {{{ navLinkChild }}}
+
+  {{!-- {{> Avatar avatar
     className="avatar_big profile__avatar"
     class="avatar_big profile__avatar{{#unless avatar}} {{ className }}{{/if}}{{#if error}} input_error{{/if}}"
     imgSrc=avatar
@@ -58,5 +64,5 @@
     className="profile__nav"
     href=navLink.href
     text=navLink.text
-  }}
+  }} --}}
 </main>

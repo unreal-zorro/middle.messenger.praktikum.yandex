@@ -12,7 +12,9 @@ export interface Props {
     | Record<string, boolean>
     | undefined
     | Record<string, string | undefined>
+    | Record<string, string | boolean | undefined>
     | Array<Record<string, string | undefined>>
+    | Array<Record<string, string | boolean | undefined>>
     | Block;
   events?: Record<string, Listener>;
   settings?: Record<string, boolean>;
