@@ -4,25 +4,31 @@
   {{#if this.chat}}
     <div class="content__chat">
       <div class="content__info">
-        {{> Avatar this.chat
+        {{{ avatar }}}
+
+        {{!-- {{> Avatar this.chat
           className="content__avatar avatar_no-edit"
           imgSrc=this.chat.avatar
-        }}
+        }} --}}
 
-        {{> Text this.chat
+        {{{ title }}}
+
+        {{!-- {{> Text this.chat
           className="content__title"
           text=this.chat.title
-        }}
+        }} --}}
       </div>
 
-      {{#> Button this.chat
+      {{{ button }}}
+
+      {{!-- {{#> Button this.chat
         className="content__button"
         type="button"
       }}
         <svg class="content__icon">
           <use xlink:href="#icon-triple"></use>
         </svg>
-      {{/ Button }}
+      {{/ Button }} --}}
     </div>
 
     {{#if this.messages}}
@@ -34,44 +40,56 @@
             </p>
 
             {{#each this.message}}
-              {{> Message
+              {{{ this }}}
+
+              {{!-- {{> Message
                 className="content__message"
                 check=this.check
                 name=this.name
                 text=this.text
                 time=this.time
                 check=this.check
-              }}
+              }} --}}
             {{/each}}
           </li>
         </ul>
       {{/each}}
     {{else}}
-      {{> Text
+      {{{ noMessagesText }}}
+
+      {{!-- {{> Text
         className="content__text"
         text="В выбранном чате отсутствуют сообщения"
-      }}
+      }} --}}
     {{/if}}
   {{else}}
-    {{> Text
+    {{{ noChatText }}}
+
+    {{!-- {{> Text
       className="content__text"
       text="Выберите чат, чтобы отправить сообщение"
-    }}
+    }} --}}
   {{/if}}
 
-  {{> Menu this.attachMenu
+  {{{ attachMenu }}}
+
+  {{!-- {{> Menu this.attachMenu
     className="content__attach-menu"
     items=this.attachMenu.items
-  }}
+  }} --}}
 
-  {{> Menu this.userMenu
+  {{{ userMenu }}}
+
+  {{!-- {{> Menu this.userMenu
     className="content__user-menu"
     items=this.userMenu.items
-  }}
+  }} --}}
 
-  {{> Modal this.userDeleteModal
+  {{!-- {{{ userDeleteModal }}} --}}
+
+  {{!-- {{> Modal this.userDeleteModal
     className="content__user-delete-modal"
-  }}
+  }} --}}
 
   <svg class="spritesheet">
     <symbol id="icon-triple" viewBox="0 0 20 20">
@@ -107,7 +125,7 @@
           c0-15.23-5.333-28.171-15.987-38.832c-10.66-10.656-23.603-15.986-38.831-15.986c-15.227,0-28.168,5.33-38.828,15.986
           c-10.656,10.66-15.986,23.601-15.986,38.832c0,15.225,5.327,28.169,15.986,38.826C99.742,232.211,112.683,237.541,127.91,237.541z
           "/>
-        <polygon points="210.134,319.765 164.452,274.088 73.092,365.447 73.092,420.267 475.085,420.267 475.085,292.36 356.315,173.587 
+        <polygon points="210.134,319.765 164.452,274.088 73.092,365.447 73.092,420.267 475.085,420.267 475.085,292.36 356.315,173.587
               "/>
     </symbol>
 
@@ -134,7 +152,7 @@
 
     <symbol id="icon-delete" viewBox="0 0 512 512">
       <title>delete</title>
-      <polygon points="479.996,95.997 416.004,32.003 256,192.007 95.997,32.003 32.004,95.997 192.008,256 32.004,416.004 
+      <polygon points="479.996,95.997 416.004,32.003 256,192.007 95.997,32.003 32.004,95.997 192.008,256 32.004,416.004
         95.997,479.996 256,319.992 416.004,479.996 479.996,416.004 319.992,256 "
       />
     </symbol>

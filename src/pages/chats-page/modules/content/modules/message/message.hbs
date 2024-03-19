@@ -5,20 +5,25 @@
     {{ name }}
   </h3>
 
-  {{#each this.content}}
-    {{#if this.isText}}
+  {{!-- {{#each this.content}} --}}
+
+  {{#each content}}
+    {{{ this }}}
+  {{/each}}
+
+    {{!-- {{#if this.isText}}
       <p class="message__text">
         {{ this.data }}
       </p>
-    {{/if}}
+    {{/if}} --}}
 
-    {{#if this.isImage}}
+    {{!-- {{#if this.isImage}}
       <img
         class="message__image"
         src={{ this.data }}
       />
-    {{/if}}
-  {{/each}}
+    {{/if}} --}}
+  {{!-- {{/each}} --}}
 
   <div class="message__info{{#if check}} message__info_active{{/if}}">
     {{#if check}}

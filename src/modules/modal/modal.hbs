@@ -4,12 +4,14 @@
       {{ this.title }}
     </h2>
 
-    {{#> Form className="modal__form" }}
+    <form
+      class="modal__form"
+    >
       {{#if this.controls}}
         <div class="modal__controls">
           {{#each this.buttons}}
             <div class="modal__control">
-              
+
             </div>
           {{/each}}
         </div>
@@ -26,6 +28,6 @@
           {{/ Button }}
         {{/each}}
       </div>
-    {{/ Form }}
+    </form>
   </div>
 </article>

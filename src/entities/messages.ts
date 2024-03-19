@@ -1,7 +1,8 @@
 export interface MessageContent {
+  messageId?: string | number;
   isText?: boolean;
   isImage?: boolean;
-  data: string;
+  data?: string;
 }
 
 export interface Message {
@@ -30,10 +31,12 @@ export const messages: Message[] = [
     check: true,
     content: [
       {
+        messageId: 1,
         isText: true,
         data: 'Привет! Смотри, тут всплыл интересный кусок лунной космической истории.'
       },
       {
+        messageId: 1,
         isText: true,
         data: 'Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так.'
       }
@@ -48,6 +51,7 @@ export const messages: Message[] = [
     check: true,
     content: [
       {
+        messageId: 2,
         isImage: true,
         data: '/images/camera.png'
       }
@@ -62,6 +66,7 @@ export const messages: Message[] = [
     check: true,
     content: [
       {
+        messageId: 3,
         isText: true,
         data: 'Круто!!!'
       }

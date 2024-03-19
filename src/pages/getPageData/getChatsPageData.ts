@@ -175,11 +175,11 @@ export const getChatsContentPageData = (
     const time = timeFormatter.format(messageDate);
 
     const resultMessage: ResultMessage = {
-      id: message.id,
+      id: String(message.id),
       name: message.display_name,
       time,
       check: isISendMessage,
-      content: message.content
+      content: message.content.map((item) => ({ messageId: String(item.messageId), ...item }))
     };
 
     // const resultMessagesArray: ResultMessage[] = result[date] || [];

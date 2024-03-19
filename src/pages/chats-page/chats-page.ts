@@ -1,14 +1,17 @@
 import './chats-page.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { List, NewMessage, Search } from './modules';
+import { Content, List, NewMessage, Search } from './modules';
 import type {
   NewMessageButton,
   NewMessageControl,
   SearchFormControl,
   SearchLink,
   ChatProps,
-  MenuItem
+  MenuItem,
+  CurrentChat,
+  OneMessage,
+  MessageContentItem
 } from './modules';
 import template from './chats-page.hbs?raw';
 
@@ -18,6 +21,12 @@ interface ChatsPageProps extends Props {
   navLinkSearch?: SearchLink;
   chats?: ChatProps[];
   chatMenuItems?: MenuItem[];
+  messages?: OneMessage[];
+  messageContent?: MessageContentItem[];
+  currentChatMessages?: CurrentChat;
+  attachMenu?: MenuItem[];
+  userMenu?: MenuItem[];
+  // userDeleteModal?: ;
   controlNewMessage?: NewMessageControl;
   attachButtonNewMessage?: NewMessageButton;
   sendButtonNewMessage?: NewMessageButton;
@@ -43,6 +52,22 @@ export class ChatsPage extends Block {
       chatMenuItems: this.props.chatMenuItems as Array<MenuItem>,
       controls: this.props.controlsSearch as Array<SearchFormControl>,
       navLink: this.props.navLinkSearch as SearchLink,
+      settings: {
+        withInternalID: false
+      }
+    });
+
+    this.children.search = new Content({
+      className: 'chats__content',
+      messages: this.props.messages as OneMessage[],
+      messageContent: this.props.messageContent as MessageContentItem[],
+      currentChat: this.props.currentChatMessages as CurrentChat,
+      attachMenuItems: this.props.attachMenu as MenuItem[],
+      userMenuItems: this.props.userMenu as MenuItem[],
+      // classNameModal: '',
+      // modalTitle: this.props.currentChatMessages as Array<MenuItem>,
+      // modalItems: this.props.currentChatMessages as Array<MenuItem>,
+
       settings: {
         withInternalID: false
       }
