@@ -1,7 +1,16 @@
 <section
   class="new-message{{#if className}} {{ className }}{{/if}}"
 >
-  {{#> Form className="new-message__form" }}
+  <form
+    class="new-message__form"
+  >
+    {{{ attachButtonChild }}}
+    {{{ inputChild }}}
+    {{{ errorChild }}}
+    {{{ sendButtonChild }}}
+  </form>
+
+  {{!-- {{#> Form className="new-message__form" }}
     {{#> Button attachButton
       className="new-message__button"
       type=attachButton.type
@@ -31,7 +40,7 @@
         <use xlink:href="#icon-send"></use>
       </svg>
     {{/ Button }}
-  {{/ Form}}
+  {{/ Form}} --}}
 
   <svg class="spritesheet">
     <symbol id="icon-attach" viewBox="0 0 12 12">

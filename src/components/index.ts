@@ -5,4 +5,6 @@ export { Header } from './header';
 export { Input } from './input';
 export { Label } from './label';
 export { Link } from './link';
+export { Span } from './span';
+export { Svg } from './svg';
 export { Text } from './text';

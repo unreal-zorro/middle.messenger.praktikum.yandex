@@ -1,13 +1,25 @@
 <section
   class="search{{#if className}} {{ className }}{{/if}}"
 >
-  {{> Link this.navLink
-    className="search__link"
-    href=this.navLink.href
-    text=this.navLink.text
-  }}
+  {{{ navLinkChild }}}
 
-  {{#> Form className="search__form" }}
+  <form
+    class="search__form {{#if className}}{{ className }}{{/if}}"
+  >
+    <div
+      class="search__form-controls"
+    >
+      {{#each controls}}
+        <div
+          class="search__form-control"
+        >
+          {{{ this }}}
+        </div>
+      {{/each}}
+    </div>
+  </form>
+
+  {{!-- {{#> Form className="search__form" }}
     <div class="search__form-controls">
       {{#each controls}}
         <div class="search__form-control">
@@ -31,7 +43,7 @@
         </div>
       {{/each}}
     </div>
-  {{/ Form }}
+  {{/ Form }} --}}
 
   <svg class="spritesheet">
     <symbol id="icon-search" viewBox="0 0 32 32">
