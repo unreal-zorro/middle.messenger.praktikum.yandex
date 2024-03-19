@@ -1,5 +1,13 @@
-<main main id={{ id }} class="chats">
-  {{> Search search
+<main
+  class="chats"
+  id={{ id }}
+>
+  {{{ search }}}
+  {{!-- {{{ list }}} --}}
+  {{!-- {{{ content }}} --}}
+  {{{ newMessage }}}
+
+  {{!-- {{> Search search
     className="chats__search"
   }}
 
@@ -15,5 +23,5 @@
 
   {{> NewMessage newMessage
     className="chats__new-message"
-  }}
+  }} --}}
 </main>

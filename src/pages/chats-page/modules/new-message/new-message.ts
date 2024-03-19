@@ -4,11 +4,11 @@ import type { Props } from '@/base/';
 import { Button, Input, Error, Svg } from '@/components';
 import template from './new-message.hbs?raw';
 
-interface NewMessageButton extends Record<string, string | undefined> {
+export interface NewMessageButton extends Record<string, string | undefined> {
   type?: string;
 }
 
-interface NewMessageControl extends Record<string, string | undefined> {
+export interface NewMessageControl extends Record<string, string | undefined> {
   name?: string;
   type?: string;
   placeholder?: string;
@@ -16,6 +16,7 @@ interface NewMessageControl extends Record<string, string | undefined> {
 }
 
 interface NewMessageProps extends Props {
+  className?: string;
   control?: NewMessageControl;
   attachButton?: NewMessageButton;
   sendButton?: NewMessageButton;

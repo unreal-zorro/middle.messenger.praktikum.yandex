@@ -10,7 +10,7 @@ interface MenuItem extends Record<string, string | undefined> {
   text?: string;
 }
 
-interface MenuProps extends Props {
+export interface MenuProps extends Props {
   className?: string;
   items?: MenuItem[];
 }

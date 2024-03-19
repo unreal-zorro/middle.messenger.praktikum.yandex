@@ -2,23 +2,13 @@ import './list.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Button, Input, Error, Svg } from '@/components';
+import { MenuProps } from '@/modules';
+import { ChatProps } from './modules';
 import template from './list.hbs?raw';
 
-interface NewMessageButton extends Record<string, string | undefined> {
-  type?: string;
-}
-
-interface NewMessageControl extends Record<string, string | undefined> {
-  name?: string;
-  type?: string;
-  placeholder?: string;
-  error?: string;
-}
-
 interface ListProps extends Props {
-  control?: NewMessageControl;
-  attachButton?: NewMessageButton;
-  sendButton?: NewMessageButton;
+  chats?: ChatProps[];
+  chatMenu?: MenuProps;
 }
 
 export class List extends Block {

@@ -262,7 +262,7 @@ export const getChatsPageData = (
           label: '',
           name: 'search',
           type: 'text',
-          disabled: '',
+          disabled: false,
           placeholder: 'Поиск',
           value: '',
           error: ''

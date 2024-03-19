@@ -1,4 +1,4 @@
-import { user, errors } from './entities';
+import { user, errors, chats, messages, currentChat } from './entities';
 import './style.scss';
 import { render } from './utils';
 import {
@@ -8,7 +8,9 @@ import {
   getRegisterPageData,
   getErrorPageData,
   getProfilePageData,
-  ProfilePage
+  ProfilePage,
+  getChatsPageData,
+  ChatsPage
 } from './pages';
 import { Block } from './base';
 
@@ -140,11 +142,27 @@ const contentLoadedHandler: () => void = () => {
       page = profilePage;
       break;
     }
-    // case '/chats': {
-    //   data = getChatsPageData(user, chats, messages, currentChat);
-    //   page = 'chats';
-    //   break;
-    // }
+    case '/chats': {
+      const data = getChatsPageData(user, chats, messages, currentChat);
+
+      const chatsPage = new ChatsPage({
+        settings: {
+          withInternalID: false
+        },
+        events: {
+          click: clickHandler
+        },
+        id: data.id,
+        controlsSearch: data.search.controls,
+        navLinkSearch: data.search.navLink,
+        controlNewMessage: data.newMessage.control,
+        attachButtonNewMessage: data.newMessage.attachButton,
+        sendButtonNewMessage: data.newMessage.sendButton
+      });
+
+      page = chatsPage;
+      break;
+    }
     default:
       break;
   }

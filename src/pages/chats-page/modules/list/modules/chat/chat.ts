@@ -18,7 +18,7 @@ interface ChatButton extends Record<string, string | undefined> {
   type?: string;
 }
 
-interface ChatProps extends Props {
+export interface ChatProps extends Props {
   id?: string;
   avatar?: string;
   title?: string;

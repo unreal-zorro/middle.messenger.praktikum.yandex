@@ -5,7 +5,7 @@ import { InputField } from '@/modules';
 import { Link } from '@/components';
 import template from './search.hbs?raw';
 
-interface SearchFormControl extends Record<string, string |boolean | undefined> {
+export interface SearchFormControl extends Record<string, string |boolean | undefined> {
   label?: string;
   name?: string;
   type?: string;
@@ -15,7 +15,7 @@ interface SearchFormControl extends Record<string, string |boolean | undefined> 
   error?: string;
 }
 
-interface SearchLink extends Record<string, string | undefined> {
+export interface SearchLink extends Record<string, string | undefined> {
   text?: string;
   href?: string;
 }
