@@ -1,4 +1,3 @@
-import './svg.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './svg.hbs?raw';
