@@ -1,62 +1,70 @@
 import './list.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { Button, Input, Error, Svg } from '@/components';
-import { MenuProps } from '@/modules';
-import { ChatProps } from './modules';
+import { Text } from '@/components';
+import { Menu } from '@/modules';
+import { Chat } from './modules';
 import template from './list.hbs?raw';
 
+export interface ChatProps extends Record<string, string | boolean | undefined> {
+  id?: string;
+  avatar?: string;
+  title?: string;
+  date?: string;
+  text?: string;
+  sender?: boolean;
+  count?: string;
+  active?: boolean;
+}
+
+export interface MenuItem extends Record<string, string | undefined> {
+  type?: string;
+  href?: string;
+  text?: string;
+}
+
 interface ListProps extends Props {
+  className?: string;
   chats?: ChatProps[];
-  chatMenu?: MenuProps;
+  classNameChatMenu?: string;
+  chatMenuItems?: MenuItem[];
 }
 
 export class List extends Block {
   constructor(props: ListProps) {
     super(props);
 
-    this.children.attachButtonChild = new Button({
-      className: 'new-message__button',
-      type: (this.props.attachButton as NewMessageButton)?.type,
-      settings: {
-        withInternalID: false
-      },
-      buttonChild: new Svg({
-        className: 'new-message__icon',
-        href: '#icon-attach'
-      })
-    });
+    this.children.chats = (this.props.chats as ChatProps[])?.map(
+      (chat) =>
+        new Chat({
+          id: chat.id,
+          avatar: chat.avatar,
+          title: chat.title,
+          date: chat.date,
+          text: chat.text,
+          sender: chat.sender,
+          count: chat.count,
+          active: chat.active,
+          settings: {
+            withInternalID: true
+          }
+        })
+    );
 
-    this.children.inputChild = new Input({
-      className: 'new-message__input',
-      type: (this.props.control as NewMessageControl)?.type,
-      name: (this.props.control as NewMessageControl)?.name,
-      placeholder: (this.props.control as NewMessageControl)?.placeholder,
-      error: !!(this.props.control as NewMessageControl)?.error,
+    this.children.text = new Text({
+      className: 'list__text',
+      text: 'Список чатов пуст',
       settings: {
         withInternalID: false
       }
     });
 
-    this.children.errorChild = new Error({
-      className: 'new-message__error',
-      error: !!(this.props.control as NewMessageControl)?.error,
-      text: (this.props.control as NewMessageControl)?.error,
+    this.children.menu = new Menu({
+      className: 'list__chat-menu',
+      items: this.props.chatMenuItems as MenuItem[],
       settings: {
         withInternalID: false
       }
-    });
-
-    this.children.sendButtonChild = new Button({
-      className: 'new-message__button',
-      type: (this.props.sendButton as NewMessageButton)?.type,
-      settings: {
-        withInternalID: false
-      },
-      buttonChild: new Svg({
-        className: 'new-message__icon',
-        href: '#icon-send'
-      })
     });
   }
 

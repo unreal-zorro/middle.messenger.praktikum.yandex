@@ -5,32 +5,32 @@ import { Button, Svg, Text } from '@/components';
 import { Avatar } from '@/modules';
 import template from './chat.hbs?raw';
 
-interface ChatAvatar extends Record<string, string | undefined> {
-  className?: string;
-  imgSrc?: string;
-}
+// interface ChatAvatar extends Record<string, string | undefined> {
+//   className?: string;
+//   imgSrc?: string;
+// }
 
-interface ChatText extends Record<string, string | undefined> {
-  text?: string;
-}
+// interface ChatText extends Record<string, string | undefined> {
+//   text?: string;
+// }
 
-interface ChatButton extends Record<string, string | undefined> {
-  type?: string;
-}
+// interface ChatButton extends Record<string, string | undefined> {
+//   type?: string;
+// }
 
-export interface ChatProps extends Props {
+interface ChatProps extends Props {
   id?: string;
   avatar?: string;
   title?: string;
   date?: string;
   text?: string;
-  sender?: string;
+  sender?: boolean;
   count?: string;
   active?: boolean;
-  avatarChild?: ChatAvatar;
-  dateChild?: ChatText;
-  countChild?: ChatText;
-  buttonChild?: ChatButton;
+  // avatarChild?: ChatAvatar;
+  // dateChild?: ChatText;
+  // countChild?: ChatText;
+  // buttonChild?: ChatButton;
 }
 
 export class Chat extends Block {

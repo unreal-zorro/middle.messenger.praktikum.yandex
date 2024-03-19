@@ -4,23 +4,24 @@
   {{#if this.chats}}
     <ul class="list__list">
       {{#each this.chats}}
-        {{> Chat
-          className="list__item"
-          active=this.active
-        }}
+        {{{ this }}}
       {{/each}}
     </ul>
   {{else}}
-    {{> Text
+    {{{ text }}}
+
+    {{!-- {{> Text
       className="list__text"
       text="Список чатов пуст"
-    }}
+    }} --}}
   {{/if}}
 
-  {{> Menu this.chatMenu
+  {{{ menu }}}
+
+  {{!-- {{> Menu this.chatMenu
     className="list__chat-menu"
     items=this.chatMenu.items
-  }}
+  }} --}}
 
   <svg class="spritesheet">
     <symbol id="icon-settings" viewBox="0 0 32 32">
@@ -30,7 +31,7 @@
 
     <symbol id="icon-delete" viewBox="0 0 512 512">
       <title>delete</title>
-      <polygon points="479.996,95.997 416.004,32.003 256,192.007 95.997,32.003 32.004,95.997 192.008,256 32.004,416.004 
+      <polygon points="479.996,95.997 416.004,32.003 256,192.007 95.997,32.003 32.004,95.997 192.008,256 32.004,416.004
         95.997,479.996 256,319.992 416.004,479.996 479.996,416.004 319.992,256 "
       />
     </symbol>

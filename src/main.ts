@@ -155,6 +155,8 @@ const contentLoadedHandler: () => void = () => {
         id: data.id,
         controlsSearch: data.search.controls,
         navLinkSearch: data.search.navLink,
+        chats: data.list.chats,
+        chatMenuItems: data.list.chatMenu.items,
         controlNewMessage: data.newMessage.control,
         attachButtonNewMessage: data.newMessage.attachButton,
         sendButtonNewMessage: data.newMessage.sendButton
