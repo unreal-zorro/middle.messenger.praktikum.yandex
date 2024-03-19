@@ -19,21 +19,21 @@ export class Menu extends Block {
   constructor(props: MenuProps) {
     super(props);
 
-    this.children.buttons = (this.props.items as MenuItem[])?.map(
-      (button) =>
+    this.children.items = (this.props.items as MenuItem[])?.map(
+      (item) =>
         new Button({
           className: 'menu__button',
-          type: button.type,
+          type: item.type,
           settings: {
             withInternalID: false
           },
           svgChild: new Svg({
             className: 'menu__icon',
-            href: button.href
+            href: item.href
           }),
           spanChild: new Span({
             className: 'menu__text',
-            text: button.text
+            text: item.text
           })
         })
     );
