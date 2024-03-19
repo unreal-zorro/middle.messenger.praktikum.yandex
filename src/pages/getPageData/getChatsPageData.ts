@@ -84,7 +84,7 @@ const getChatsListPageData = (user: User, chats: Chat[]) => {
     }
 
     return {
-      id: chat.id,
+      id: String(chat.id),
       avatar: chat.avatar,
       title: chat.title,
       date,
