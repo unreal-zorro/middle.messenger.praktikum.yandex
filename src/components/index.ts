@@ -1,7 +1,7 @@
-export { Avatar } from './avatar';
 export { Button } from './button';
 export { Error } from './error';
 export { Header } from './header';
+export { Image } from './image';
 export { Input } from './input';
 export { Label } from './label';
 export { Link } from './link';
