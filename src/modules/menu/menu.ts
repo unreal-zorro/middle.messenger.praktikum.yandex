@@ -25,13 +25,13 @@ export class Menu extends Block {
           className: 'menu__button',
           type: item.type,
           settings: {
-            withInternalID: false
+            withInternalID: true
           },
-          svgChild: new Svg({
+          buttonChild: new Svg({
             className: 'menu__icon',
             href: item.href
           }),
-          spanChild: new Span({
+          buttonChild2: new Span({
             className: 'menu__text',
             text: item.text
           })
