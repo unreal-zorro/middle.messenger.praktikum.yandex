@@ -37,7 +37,7 @@ export class InputField extends Block {
       type: this.props.type as string,
       name: this.props.name as string,
       value: this.props.value as string,
-      placeholder: '',
+      placeholder: this.props.placeholder as string,
       disabled: this.props.disabled as boolean,
       settings: {
         withInternalID: false
