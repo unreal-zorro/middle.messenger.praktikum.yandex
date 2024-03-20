@@ -23,7 +23,7 @@ interface ChatsPageProps extends Props {
   chatMenuItems?: MenuItem[];
   messages?: OneMessage[];
   messageContent?: MessageContentItem[];
-  currentChatMessages?: CurrentChat;
+  currentChat?: CurrentChat;
   attachMenu?: MenuItem[];
   userMenu?: MenuItem[];
   // userDeleteModal?: ;
@@ -61,7 +61,7 @@ export class ChatsPage extends Block {
       className: 'chats__content',
       messages: this.props.messages as OneMessage[],
       messageContent: this.props.messageContent as MessageContentItem[],
-      currentChat: this.props.currentChatMessages as CurrentChat,
+      currentChat: this.props.currentChat as CurrentChat,
       attachMenuItems: this.props.attachMenu as MenuItem[],
       userMenuItems: this.props.userMenu as MenuItem[],
       // classNameModal: '',

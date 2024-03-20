@@ -135,14 +135,18 @@ const getUserMenuData = () => {
   return items;
 };
 
-type ResultMessage = Record<string, string | number | boolean | MessageContent[]>;
+type ResultMessage = Record<string, string | number | boolean>;
+// type ResultMessageContent = Record<string, string | boolean>;
 
 export const getChatsContentPageData = (
   user: User,
   messagesArray: Message[],
   currentChat: CurrentChat
 ) => {
-  const result: Record<string, string | ResultMessage[]> = {};
+  // const result: Record<string, string | Record<string, ResultMessage[] | MessageContent[]>> = {};
+  const result: {
+    [key: string]: Record<string, ResultMessage[] | MessageContent[]>;
+  } = {};
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -178,27 +182,34 @@ export const getChatsContentPageData = (
       id: String(message.id),
       name: message.display_name,
       time,
-      check: isISendMessage,
-      content: message.content.map((item) => ({ messageId: String(item.messageId), ...item }))
+      check: isISendMessage
     };
+
+    const resultMessageContent: MessageContent[] = message.content;
 
     // const resultMessagesArray: ResultMessage[] = result[date] || [];
     const resultMessagesArray: ResultMessage[] = [];
+    // const resultMessageContentArray: MessageContent[] = [];
     resultMessagesArray.push(resultMessage);
+    // resultMessageContentArray = resultMessageContent;
 
-    result[date] = resultMessagesArray;
+    result[date] = {
+      message: resultMessagesArray,
+      content: resultMessageContent
+    };
   });
 
-  const messages: Array<Record<string, string>> = [];
+  const messages: Array<Record<string, string | ResultMessage[] | MessageContent[]>> = [];
 
-  Object.entries(result).forEach((item) => {
+  Object.entries(result).forEach(([key, value]) => {
     messages.push({
-      date: item[0],
-      message: item[1] as string
+      date: key,
+      message: value.message,
+      content: value.content
     });
   });
 
-  const chat = currentChat.id ? currentChat : null;
+  const chat = currentChat.id ? currentChat : undefined;
 
   return {
     messages,

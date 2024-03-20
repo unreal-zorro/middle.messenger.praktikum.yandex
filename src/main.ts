@@ -13,6 +13,7 @@ import {
   ChatsPage
 } from './pages';
 import { Block } from './base';
+import { CurrentChat } from './pages/chats-page/modules';
 
 const navigate: (page: Nullable<Block>) => void = (page) => {
   if (page) {
@@ -159,7 +160,15 @@ const contentLoadedHandler: () => void = () => {
         chatMenuItems: data.list.chatMenu.items,
         controlNewMessage: data.newMessage.control,
         attachButtonNewMessage: data.newMessage.attachButton,
-        sendButtonNewMessage: data.newMessage.sendButton
+        sendButtonNewMessage: data.newMessage.sendButton,
+
+
+        messages: data.content.messages?.map((item) => (item.message)),
+        messageContent: data.content.messages?.map((item) => (item.content)),
+        currentChat: data.content.chat as CurrentChat,
+        attachMenu: data.content.attachMenu.items,
+        userMenu: data.content.userMenu.items
+        // userDeleteModal?: ;
       });
 
       page = chatsPage;

@@ -1,5 +1,5 @@
 export interface MessageContent {
-  messageId?: string | number;
+  messageId?: string;
   isText?: boolean;
   isImage?: boolean;
   data?: string;
@@ -16,7 +16,7 @@ export interface Message {
 }
 
 export interface CurrentChat {
-  id: number;
+  id: string;
   avatar: string;
   title: string;
 }
@@ -31,12 +31,12 @@ export const messages: Message[] = [
     check: true,
     content: [
       {
-        messageId: 1,
+        messageId: '1',
         isText: true,
         data: 'Привет! Смотри, тут всплыл интересный кусок лунной космической истории.'
       },
       {
-        messageId: 1,
+        messageId: '1',
         isText: true,
         data: 'Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так.'
       }
@@ -51,7 +51,7 @@ export const messages: Message[] = [
     check: true,
     content: [
       {
-        messageId: 2,
+        messageId: '2',
         isImage: true,
         data: '/images/camera.png'
       }
@@ -66,7 +66,7 @@ export const messages: Message[] = [
     check: true,
     content: [
       {
-        messageId: 3,
+        messageId: '3',
         isText: true,
         data: 'Круто!!!'
       }
@@ -75,7 +75,7 @@ export const messages: Message[] = [
 ];
 
 export const currentChat: CurrentChat = {
-  id: 3,
+  id: '3',
   avatar: '',
   title: 'Вадим'
 };
