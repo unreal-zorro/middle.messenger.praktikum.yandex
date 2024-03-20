@@ -6,6 +6,7 @@ import type { Listener } from '../EventBus';
 export interface Props {
   [key: string]:
     | string
+    | string[]
     | boolean
     | Listener
     | Record<string, Listener>
@@ -63,7 +64,7 @@ export abstract class Block {
 
     if (props.settings?.withInternalID) {
       this._id = makeUUID();
-      this.props = this._makePropsProxy({ ...props, id: this._id });
+      this.props = this._makePropsProxy({ ...props, _id: this._id });
     } else {
       this.props = this._makePropsProxy(props);
     }
