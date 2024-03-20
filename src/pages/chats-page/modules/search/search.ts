@@ -53,8 +53,8 @@ export class Search extends Block {
 
     this.children.navLinkChild = new Link({
       className: 'search__link',
-      href: (this.props.link as SearchLink)?.href as string,
-      text: (this.props.link as SearchLink)?.text as string,
+      href: (this.props.navLink as SearchLink)?.href as string,
+      text: (this.props.navLink as SearchLink)?.text as string,
       settings: {
         withInternalID: false
       }

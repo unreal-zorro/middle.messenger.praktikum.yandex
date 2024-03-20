@@ -3,6 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Button, Svg, Text } from '@/components';
 import { Avatar, Menu } from '@/modules';
+// import type { MessageContent } from '@/entities';
 import { Message } from './modules';
 import template from './content.hbs?raw';
 
@@ -13,9 +14,12 @@ export interface MessageContentItem extends Record<string, string | boolean | un
   data?: string;
 }
 
+// export type MessageContentItem = MessageContent;
+
 export interface OneMessage extends Record<string, string | boolean | undefined> {
   id?: string;
   name?: string;
+  date?: string;
   time?: string;
   check?: boolean;
 }
@@ -40,6 +44,7 @@ export interface ModalItem extends Record<string, string | boolean | undefined> 
 
 interface ContentProps extends Props {
   className?: string;
+  date?: string[];
   messages?: OneMessage[];
   messageContent?: MessageContentItem[];
   currentChat?: CurrentChat;

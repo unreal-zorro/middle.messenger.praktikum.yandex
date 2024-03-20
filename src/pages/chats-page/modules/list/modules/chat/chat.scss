@@ -17,9 +17,9 @@
     border: 3px solid $border;
 
     &:hover {
-      scale: 1;
-      box-shadow: none;
-      cursor: auto;
+      scale: 1 !important;
+      box-shadow: none !important;
+      cursor: auto !important;
     }
   }
 

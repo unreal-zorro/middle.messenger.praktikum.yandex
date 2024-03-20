@@ -20,7 +20,8 @@ interface ChatsPageProps extends Props {
   controlsSearch?: SearchFormControl[];
   navLinkSearch?: SearchLink;
   chats?: ChatProps[];
-  chatMenuItems?: MenuItem[];
+  chatMenu?: MenuItem[];
+  date?: string[],
   messages?: OneMessage[];
   messageContent?: MessageContentItem[];
   currentChat?: CurrentChat;
@@ -38,27 +39,28 @@ export class ChatsPage extends Block {
 
     this.children.search = new Search({
       className: 'chats__search',
-      controls: this.props.controlsSearch as Array<SearchFormControl>,
+      controls: this.props.controlsSearch as SearchFormControl[],
       navLink: this.props.navLinkSearch as SearchLink,
       settings: {
         withInternalID: false
       }
     });
 
-    this.children.search = new List({
+    console.log(this.props.chatMenu);
+
+    this.children.list = new List({
       className: 'chats__list',
       chats: this.props.chats as Array<ChatProps>,
       classNameChatMenu: '',
-      chatMenuItems: this.props.chatMenuItems as Array<MenuItem>,
-      controls: this.props.controlsSearch as Array<SearchFormControl>,
-      navLink: this.props.navLinkSearch as SearchLink,
+      chatMenu: this.props.chatMenu as MenuItem[],
       settings: {
         withInternalID: false
       }
     });
 
-    this.children.search = new Content({
+    this.children.content = new Content({
       className: 'chats__content',
+      date: this.props.date as string[],
       messages: this.props.messages as OneMessage[],
       messageContent: this.props.messageContent as MessageContentItem[],
       currentChat: this.props.currentChat as CurrentChat,
@@ -75,7 +77,7 @@ export class ChatsPage extends Block {
 
     this.children.newMessage = new NewMessage({
       className: 'chats__new-message',
-      controls: this.props.controlNewMessage as NewMessageControl,
+      control: this.props.controlNewMessage as NewMessageControl,
       attachButton: this.props.attachButtonNewMessage as NewMessageButton,
       sendButton: this.props.sendButtonNewMessage as NewMessageButton,
       settings: {

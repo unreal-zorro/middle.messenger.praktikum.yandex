@@ -12,8 +12,7 @@
     display: grid;
     grid-template:
     'message-attach message-input message-send' $input-height
-    'message-empty1 message-error message-empty2' auto
-    $icon-size auto $icon-size;
+    'message-empty1 message-error message-empty2' auto / $icon-size auto $icon-size;
     gap: 10px;
   }
 

@@ -1,4 +1,5 @@
-import { Chat, CurrentChat, Message, MessageContent, User } from '@/entities';
+import type { MessageContent, Chat, CurrentChat, Message, User } from '@/entities';
+import type { OneMessage } from '../chats-page/modules';
 
 const getChatMenuData = () => {
   const items = [
@@ -135,7 +136,7 @@ const getUserMenuData = () => {
   return items;
 };
 
-type ResultMessage = Record<string, string | number | boolean>;
+type ResultMessage = OneMessage;
 // type ResultMessageContent = Record<string, string | boolean>;
 
 export const getChatsContentPageData = (
@@ -144,8 +145,12 @@ export const getChatsContentPageData = (
   currentChat: CurrentChat
 ) => {
   // const result: Record<string, string | Record<string, ResultMessage[] | MessageContent[]>> = {};
+  // const result: { [key: string]: Record<string, ResultMessage[] | MessageContent[]> } = {};
   const result: {
-    [key: string]: Record<string, ResultMessage[] | MessageContent[]>;
+    [key: string]: {
+      message: ResultMessage[];
+      content: MessageContent[];
+    };
   } = {};
 
   const currentDate = new Date();
@@ -179,19 +184,25 @@ export const getChatsContentPageData = (
     const time = timeFormatter.format(messageDate);
 
     const resultMessage: ResultMessage = {
-      id: String(message.id),
+      id: message.id,
       name: message.display_name,
+      date,
       time,
       check: isISendMessage
     };
 
-    const resultMessageContent: MessageContent[] = message.content;
-
     // const resultMessagesArray: ResultMessage[] = result[date] || [];
-    const resultMessagesArray: ResultMessage[] = [];
     // const resultMessageContentArray: MessageContent[] = [];
-    resultMessagesArray.push(resultMessage);
     // resultMessageContentArray = resultMessageContent;
+
+    const resultMessagesArray: ResultMessage[] = (result[date]?.message as ResultMessage[]) || [];
+    // resultMessagesArray.push(resultMessage);
+    resultMessagesArray.concat(result[date]?.message, resultMessage);
+
+    const resultMessageContent: MessageContent[] =
+      (result[date]?.content as MessageContent[]) || [];
+    // resultMessageContent.concat(resultMessageContent, message.content);
+    resultMessageContent.concat(result[date]?.content, message.content);
 
     result[date] = {
       message: resultMessagesArray,
@@ -245,9 +256,7 @@ export const getChatsPageData = (
   messages: Message[],
   currentChat: CurrentChat
 ) => {
-  const chatMenu = {
-    items: getChatMenuData()
-  };
+  const chatMenu = getChatMenuData();
 
   const attachMenu = {
     items: getAttachMenuData()

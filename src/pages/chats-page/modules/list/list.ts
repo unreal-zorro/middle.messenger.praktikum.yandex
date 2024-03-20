@@ -27,41 +27,46 @@ interface ListProps extends Props {
   className?: string;
   chats?: ChatProps[];
   classNameChatMenu?: string;
-  chatMenuItems?: MenuItem[];
+  chatMenu?: MenuItem[];
 }
 
 export class List extends Block {
   constructor(props: ListProps) {
     super(props);
 
-    this.children.chats = (this.props.chats as ChatProps[])?.map(
-      (chat) =>
-        new Chat({
-          id: chat.id,
-          avatar: chat.avatar,
-          title: chat.title,
-          date: chat.date,
-          text: chat.text,
-          sender: chat.sender,
-          count: chat.count,
-          active: chat.active,
-          settings: {
-            withInternalID: true
-          }
-        })
-    );
+    if (this.props.chats && (this.props.chats as ChatProps[])?.length) {
+      this.children.chats = (this.props.chats as ChatProps[])?.map(
+        (chat) =>
+          new Chat({
+            className: 'list__item',
+            id: chat.id,
+            avatar: chat.avatar,
+            title: chat.title,
+            date: chat.date,
+            text: chat.text,
+            sender: chat.sender,
+            count: chat.count,
+            active: chat.active,
+            settings: {
+              withInternalID: true
+            }
+          })
+      );
+    }
 
-    this.children.text = new Text({
-      className: 'list__text',
-      text: 'Список чатов пуст',
-      settings: {
-        withInternalID: false
-      }
-    });
+    if (!this.props.chats || !(this.props.chats as ChatProps[])?.length) {
+      this.children.text = new Text({
+        className: 'list__text',
+        text: 'Список чатов пуст',
+        settings: {
+          withInternalID: false
+        }
+      });
+    }
 
     this.children.menu = new Menu({
       className: 'list__chat-menu',
-      items: this.props.chatMenuItems as MenuItem[],
+      items: this.props.chatMenu as MenuItem[],
       settings: {
         withInternalID: false
       }

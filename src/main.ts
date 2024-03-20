@@ -1,5 +1,5 @@
-import { user, errors, chats, messages, currentChat } from './entities';
 import './style.scss';
+import { user, errors, chats, messages, currentChat } from './entities';
 import { render } from './utils';
 import {
   LoginPage,
@@ -13,7 +13,7 @@ import {
   ChatsPage
 } from './pages';
 import { Block } from './base';
-import { CurrentChat } from './pages/chats-page/modules';
+import { CurrentChat, MessageContentItem, OneMessage } from './pages/chats-page/modules';
 
 const navigate: (page: Nullable<Block>) => void = (page) => {
   if (page) {
@@ -157,14 +157,15 @@ const contentLoadedHandler: () => void = () => {
         controlsSearch: data.search.controls,
         navLinkSearch: data.search.navLink,
         chats: data.list.chats,
-        chatMenuItems: data.list.chatMenu.items,
+        chatMenu: data.list.chatMenu,
         controlNewMessage: data.newMessage.control,
         attachButtonNewMessage: data.newMessage.attachButton,
         sendButtonNewMessage: data.newMessage.sendButton,
-
-
-        messages: data.content.messages?.map((item) => (item.message)),
-        messageContent: data.content.messages?.map((item) => (item.content)),
+        date: data.content.messages?.map((item) => item.date) as string[],
+        messages: data.content.messages?.map((item) => item.message as OneMessage[])[0],
+        messageContent: data.content.messages?.map(
+          (item) => item.content as MessageContentItem[]
+        )[0],
         currentChat: data.content.chat as CurrentChat,
         attachMenu: data.content.attachMenu.items,
         userMenu: data.content.userMenu.items

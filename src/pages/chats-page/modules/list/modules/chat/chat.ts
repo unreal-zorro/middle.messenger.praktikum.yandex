@@ -19,6 +19,7 @@ import template from './chat.hbs?raw';
 // }
 
 interface ChatProps extends Props {
+  className?: string;
   id?: string;
   avatar?: string;
   title?: string;
@@ -53,13 +54,15 @@ export class Chat extends Block {
       }
     });
 
-    this.children.countChild = new Text({
-      className: 'chat__count',
-      text: this.props.count as string,
-      settings: {
-        withInternalID: false
-      }
-    });
+    if (this.props.count) {
+      this.children.countChild = new Text({
+        className: 'chat__count',
+        text: this.props.count as string,
+        settings: {
+          withInternalID: false
+        }
+      });
+    }
 
     this.children.buttonChild = new Button({
       className: 'chat__settings-button button',

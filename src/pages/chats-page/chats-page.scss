@@ -7,8 +7,7 @@
   grid-template:
     'search content' $chats-search-height
     'list content' auto
-    'list new-message' $chats-new-height
-    $chats-width auto;
+    'list new-message' calc($chats-new-height) / calc($chats-width) auto;
   place-self: stretch stretch;
   position: fixed;
   inset: 0;
