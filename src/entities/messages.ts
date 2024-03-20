@@ -1,4 +1,4 @@
-export interface MessageContent {
+export interface MessageContent extends Record<string, string | boolean | undefined> {
   messageId?: string;
   isText?: boolean;
   isImage?: boolean;
@@ -6,11 +6,10 @@ export interface MessageContent {
 }
 
 export interface Message {
-  id: number;
+  id: string;
   login: string;
   display_name: string;
   date: string;
-  time: string;
   check: boolean;
   content: MessageContent[];
 }
@@ -23,11 +22,10 @@ export interface CurrentChat {
 
 export const messages: Message[] = [
   {
-    id: 1,
+    id: '1',
     login: 'vadim',
     display_name: 'Вадим',
     date: '2024-06-19T11:56:00.000+03:00',
-    time: '11:56',
     check: true,
     content: [
       {
@@ -43,11 +41,10 @@ export const messages: Message[] = [
     ]
   },
   {
-    id: 2,
+    id: '2',
     login: 'vadim',
     display_name: 'Вадим',
     date: '2024-06-19T11:56:00.000+03:00',
-    time: '11:56',
     check: true,
     content: [
       {
@@ -58,11 +55,10 @@ export const messages: Message[] = [
     ]
   },
   {
-    id: 3,
+    id: '3',
     login: 'ivanivanov',
     display_name: 'Иван',
     date: '2024-06-19T12:00:00.000+03:00',
-    time: '12:00',
     check: true,
     content: [
       {
