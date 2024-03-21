@@ -87,7 +87,7 @@ export class Content extends Block {
     });
 
     if (this.props.dates && (this.props.dates as string[])?.length) {
-      this.children.messages = (this.props.dates as string[])?.map((dateItem) => {
+      this.children.dates = (this.props.dates as string[])?.map((dateItem) => {
         const messages: OneMessage[] = (this.props.messages as OneMessage[])?.filter(
           (messageItem) => dateItem === messageItem.date
         );
@@ -100,6 +100,7 @@ export class Content extends Block {
         });
 
         return new EqualDatesMessages({
+          className: 'content__list-item',
           date: dateItem,
           messages: messages as OneMessage[],
           messageContent,
@@ -109,32 +110,6 @@ export class Content extends Block {
         });
       });
     }
-
-    // console.log(this.children.messages);
-
-    // this.children.equalDatesMessages = (this.props.dates as string[])?.map(
-    //   (dateItem) =>
-    //     new EqualDatesMessages({
-    //       date: dateItem,
-    //       // messages: messages as OneMessage[],
-    //       // messageContent,
-    //       settings: {
-    //         withInternalID: true
-    //       }
-    //     })
-    // );
-
-    // if (this.props.dates && (this.props.dates as string[])?.length) {
-    //   this.children.equalDatesMessages = (this.props.dates as string[])?.map(
-    //     (dateItem) =>
-    //       new Text({
-    //         text: dateItem,
-    //         settings: {
-    //           withInternalID: true
-    //         }
-    //       })
-    //   );
-    // }
 
     if (!this.props.dates || !(this.props.dates as string[])?.length) {
       this.children.noMessagesText = new Text({
@@ -155,26 +130,6 @@ export class Content extends Block {
         }
       });
     }
-
-    // this.children.equalDatesMessages = (this.props.messages as OneMessage[])?.map(
-    //   (message) =>
-    //     new EqualDatesMessages({
-    //       id: message.id,
-    //       name: message.name,
-    //       time: message.time,
-    //       check: message.check,
-    //       content: (this.props.messageContent as MessageContent[])?.map((content) => {
-    //         if (message.id === content.messageId) {
-    //           return content;
-    //         }
-
-    //         return {};
-    //       }),
-    //       settings: {
-    //         withInternalID: true
-    //       }
-    //     })
-    // );
 
     // this.children.attachMenu = new Menu({
     //   className: 'content__attach-menu',

@@ -10,11 +10,11 @@
     {{{ button }}}
   </div>
 
-  {{#if this.messages}}
-    {{#each this.messages}}
+  <ul class="content__list">
+    {{#each dates}}
       {{{ this }}}
     {{/each}}
-  {{/if}}
+  </ul>
 
   {{{ noMessagesText }}}
   {{{ noChatText }}}

@@ -3,7 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Text } from '@/components';
 import template from './equalDatesMessages.hbs?raw';
-import { Message } from '../message';
+import { Message } from './modules';
 
 export interface OneMessage extends Record<string, string | boolean | undefined> {
   id?: string;
@@ -21,6 +21,7 @@ export interface MessageContent extends Record<string, string | boolean | undefi
 }
 
 interface EqualDatesMessagesProps extends Props {
+  className?: string,
   date?: string;
   messages?: OneMessage[];
   messageContent?: MessageContent[];

@@ -1,11 +1,9 @@
-<ul class="content__list">
-  <li>
-    {{{ date }}}
+<li
+  class="list-item{{#if className}} {{ className }}{{/if}}"
+>
+  {{{ date }}}
 
-    {{#each messages}}
-      {{{ this }}}
-    {{/each}}
-
-    {{{ messages }}}
-  </li>
-</ul>
+  {{#each messages}}
+    {{{ this }}}
+  {{/each}}
+</li>

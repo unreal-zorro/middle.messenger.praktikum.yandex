@@ -68,6 +68,14 @@
     width: 100%;
 
     @include flex(column, flex-start, center);
+
+    &-item {
+      border-bottom: 1px solid $border;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
   }
 
   &__message {
