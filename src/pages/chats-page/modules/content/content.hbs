@@ -1,95 +1,26 @@
 <section
   class="content{{#if className}} {{ className }}{{/if}}"
 >
-  {{#if this.chat}}
-    <div class="content__chat">
-      <div class="content__info">
-        {{{ avatar }}}
-
-        {{!-- {{> Avatar this.chat
-          className="content__avatar avatar_no-edit"
-          imgSrc=this.chat.avatar
-        }} --}}
-
-        {{{ title }}}
-
-        {{!-- {{> Text this.chat
-          className="content__title"
-          text=this.chat.title
-        }} --}}
-      </div>
-
-      {{{ button }}}
-
-      {{!-- {{#> Button this.chat
-        className="content__button"
-        type="button"
-      }}
-        <svg class="content__icon">
-          <use xlink:href="#icon-triple"></use>
-        </svg>
-      {{/ Button }} --}}
+  <div class="content__chat">
+    <div class="content__info">
+      {{{ avatar }}}
+      {{{ title }}}
     </div>
 
-    {{#if this.messages}}
-      {{#each this.messages}}
-        <ul class="content__list">
-          <li>
-            <p class="content__date">
-              {{ this.date }}
-            </p>
+    {{{ button }}}
+  </div>
 
-            {{#each this.message}}
-              {{{ this }}}
+  {{#each equalDatesMessages}}
+    {{{ this }}}
+  {{/each}}
 
-              {{!-- {{> Message
-                className="content__message"
-                check=this.check
-                name=this.name
-                text=this.text
-                time=this.time
-                check=this.check
-              }} --}}
-            {{/each}}
-          </li>
-        </ul>
-      {{/each}}
-    {{else}}
-      {{{ noMessagesText }}}
+  {{!-- {{{ equalDatesMessages }}} --}}
 
-      {{!-- {{> Text
-        className="content__text"
-        text="В выбранном чате отсутствуют сообщения"
-      }} --}}
-    {{/if}}
-  {{else}}
-    {{{ noChatText }}}
-
-    {{!-- {{> Text
-      className="content__text"
-      text="Выберите чат, чтобы отправить сообщение"
-    }} --}}
-  {{/if}}
+  {{{ noMessagesText }}}
+  {{{ noChatText }}}
 
   {{{ attachMenu }}}
-
-  {{!-- {{> Menu this.attachMenu
-    className="content__attach-menu"
-    items=this.attachMenu.items
-  }} --}}
-
   {{{ userMenu }}}
-
-  {{!-- {{> Menu this.userMenu
-    className="content__user-menu"
-    items=this.userMenu.items
-  }} --}}
-
-  {{!-- {{{ userDeleteModal }}} --}}
-
-  {{!-- {{> Modal this.userDeleteModal
-    className="content__user-delete-modal"
-  }} --}}
 
   <svg class="spritesheet">
     <symbol id="icon-triple" viewBox="0 0 20 20">

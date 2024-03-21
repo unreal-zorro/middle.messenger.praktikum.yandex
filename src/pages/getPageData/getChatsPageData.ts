@@ -137,21 +137,15 @@ const getUserMenuData = () => {
 };
 
 type ResultMessage = OneMessage;
-// type ResultMessageContent = Record<string, string | boolean>;
 
 export const getChatsContentPageData = (
   user: User,
   messagesArray: Message[],
   currentChat: CurrentChat
 ) => {
-  // const result: Record<string, string | Record<string, ResultMessage[] | MessageContent[]>> = {};
-  // const result: { [key: string]: Record<string, ResultMessage[] | MessageContent[]> } = {};
-  const result: {
-    [key: string]: {
-      message: ResultMessage[];
-      content: MessageContent[];
-    };
-  } = {};
+  const dateArray: Set<string> = new Set();
+  const messageArray: ResultMessage[] = [];
+  const messageContentArray: MessageContent[] = [];
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -191,39 +185,17 @@ export const getChatsContentPageData = (
       check: isISendMessage
     };
 
-    // const resultMessagesArray: ResultMessage[] = result[date] || [];
-    // const resultMessageContentArray: MessageContent[] = [];
-    // resultMessageContentArray = resultMessageContent;
-
-    const resultMessagesArray: ResultMessage[] = (result[date]?.message as ResultMessage[]) || [];
-    // resultMessagesArray.push(resultMessage);
-    resultMessagesArray.concat(result[date]?.message, resultMessage);
-
-    const resultMessageContent: MessageContent[] =
-      (result[date]?.content as MessageContent[]) || [];
-    // resultMessageContent.concat(resultMessageContent, message.content);
-    resultMessageContent.concat(result[date]?.content, message.content);
-
-    result[date] = {
-      message: resultMessagesArray,
-      content: resultMessageContent
-    };
-  });
-
-  const messages: Array<Record<string, string | ResultMessage[] | MessageContent[]>> = [];
-
-  Object.entries(result).forEach(([key, value]) => {
-    messages.push({
-      date: key,
-      message: value.message,
-      content: value.content
-    });
+    dateArray.add(date);
+    messageArray.push(resultMessage);
+    messageContentArray.push(...message.content);
   });
 
   const chat = currentChat.id ? currentChat : undefined;
 
   return {
-    messages,
+    dates: Array.from(dateArray),
+    messages: messageArray,
+    messageContent: messageContentArray,
     chat
   };
 };

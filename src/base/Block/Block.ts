@@ -123,7 +123,7 @@ export abstract class Block {
 
     Object.values(this.children).forEach((child) => {
       if (Array.isArray(child)) {
-        child.forEach((oneChild) => (oneChild as Block).dispatchComponentDidMount());
+        child.forEach((childItem) => (childItem as Block).dispatchComponentDidMount());
       } else {
         (child as Block).dispatchComponentDidMount();
       }
@@ -173,8 +173,9 @@ export abstract class Block {
 
     Object.entries(this.children).forEach(([key, child]) => {
       if (Array.isArray(child)) {
-        Object.entries(child).forEach(([oneChildKey, oneChild]) => {
-          (propsAndStubs[key] as Children)[oneChildKey] = `<div data-id="${oneChild?._id}"></div>`;
+        Object.entries(child).forEach(([childItemKey, childItem]) => {
+          (propsAndStubs[key] as Children)[childItemKey] =
+            `<div data-id="${childItem?._id}"></div>`;
         });
       } else {
         propsAndStubs[key] = `<div data-id="${(child as Block)?._id}"></div>`;
@@ -191,9 +192,9 @@ export abstract class Block {
 
     Object.values(this.children).forEach((child) => {
       if (Array.isArray(child)) {
-        Object.values(child).forEach((oneChild) => {
-          const stub = fragment.content.querySelector(`[data-id="${(oneChild as Block)._id}"]`);
-          stub?.replaceWith((oneChild as Block).getContent()!);
+        Object.values(child).forEach((childItem) => {
+          const stub = fragment.content.querySelector(`[data-id="${(childItem as Block)._id}"]`);
+          stub?.replaceWith((childItem as Block).getContent()!);
         });
       } else {
         const stub = fragment.content.querySelector(`[data-id="${(child as Block)._id}"]`);

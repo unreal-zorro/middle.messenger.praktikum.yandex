@@ -4,7 +4,7 @@ import type { Props } from '@/base/';
 import { Text, Image } from '@/components';
 import template from './message.hbs?raw';
 
-interface MessageContentItem extends Record<string, string | boolean | undefined> {
+interface MessageContent extends Record<string, string | boolean | undefined> {
   messageId?: string;
   isText?: boolean;
   isImage?: boolean;
@@ -12,18 +12,19 @@ interface MessageContentItem extends Record<string, string | boolean | undefined
 }
 
 interface MessageProps extends Props {
+  className?: string;
   id?: string;
   name?: string;
   time?: string;
   check?: boolean;
-  content?: MessageContentItem[];
+  content?: MessageContent[];
 }
 
 export class Message extends Block {
   constructor(props: MessageProps) {
     super(props);
 
-    this.children.content = (this.props.content as MessageContentItem[])?.map(
+    this.children.content = (this.props.content as MessageContent[])?.map(
       (item) => {
         if (item.isImage) {
           return new Image({

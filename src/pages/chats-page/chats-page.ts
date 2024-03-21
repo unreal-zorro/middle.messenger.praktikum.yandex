@@ -21,7 +21,7 @@ interface ChatsPageProps extends Props {
   navLinkSearch?: SearchLink;
   chats?: ChatProps[];
   chatMenu?: MenuItem[];
-  date?: string[],
+  dates?: string[],
   messages?: OneMessage[];
   messageContent?: MessageContentItem[];
   currentChat?: CurrentChat;
@@ -46,8 +46,6 @@ export class ChatsPage extends Block {
       }
     });
 
-    console.log(this.props.chatMenu);
-
     this.children.list = new List({
       className: 'chats__list',
       chats: this.props.chats as Array<ChatProps>,
@@ -60,7 +58,7 @@ export class ChatsPage extends Block {
 
     this.children.content = new Content({
       className: 'chats__content',
-      date: this.props.date as string[],
+      dates: this.props.dates as string[],
       messages: this.props.messages as OneMessage[],
       messageContent: this.props.messageContent as MessageContentItem[],
       currentChat: this.props.currentChat as CurrentChat,
