@@ -1,8 +1,7 @@
 import './chat.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { Button, Svg, Text } from '@/components';
-import { Avatar } from '@/modules';
+import { Avatar, Button, Svg, Text } from '@/components';
 import template from './chat.hbs?raw';
 
 // interface ChatAvatar extends Record<string, string | undefined> {

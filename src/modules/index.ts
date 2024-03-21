@@ -1,4 +1,3 @@
-export { Avatar } from './avatar';
 export { InputField } from './input-field';
 export { Form } from './form';
 export { Menu } from './menu';

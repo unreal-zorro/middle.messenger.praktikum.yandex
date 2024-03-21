@@ -2,16 +2,27 @@
   class="avatar{{#if className}} {{ className }}{{/if}}"
 >
   {{#if imgSrc}}
-    {{{ imageChild }}}
+    <img
+      src={{#if imgSrc}}{{ imgSrc }}{{/if}}
+      alt="avatar"
+      class="avatar__image"
+    />
   {{else}}
     <div class="avatar__empty-mask">
-      {{{ svgChild }}}
+      <svg class="avatar__empty-icon">
+        <use xlink:href="#icon-avatar"></use>
+      </svg>
     </div>
   {{/if}}
 
   <div class="avatar__mask">
-    {{{ svgMaskChild }}}
-    {{{ textChild }}}
+    <svg class="avatar__icon">
+      <use xlink:href="#icon-avatar"></use>
+    </svg>
+
+    <p class="avatar__text">
+      Поменять аватар
+    </p>
   </div>
 
   <svg class="spritesheet">

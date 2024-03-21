@@ -1,8 +1,7 @@
 import './content.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { Button, Svg, Text } from '@/components';
-import { Avatar } from '@/modules';
+import { Avatar, Button, Svg, Text } from '@/components';
 import { EqualDatesMessages } from './modules';
 import template from './content.hbs?raw';
 

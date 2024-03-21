@@ -1,8 +1,7 @@
 import './profile-page.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { Header, Link } from '@/components';
-import { Avatar } from '@/modules';
+import { Avatar, Header, Link } from '@/components';
 import template from './profile-page.hbs?raw';
 import { ProfileForm } from './modules';
 
