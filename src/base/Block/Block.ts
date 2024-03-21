@@ -175,7 +175,7 @@ export abstract class Block {
       if (Array.isArray(child)) {
         Object.entries(child).forEach(([childItemKey, childItem]) => {
           (propsAndStubs[key] as Children)[childItemKey] =
-            `<div data-id="${childItem?._id}"></div>`;
+            `<div data-id="${(childItem as Block)?._id}"></div>`;
         });
       } else {
         propsAndStubs[key] = `<div data-id="${(child as Block)?._id}"></div>`;

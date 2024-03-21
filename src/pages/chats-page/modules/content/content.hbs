@@ -10,17 +10,17 @@
     {{{ button }}}
   </div>
 
-  {{#each equalDatesMessages}}
-    {{{ this }}}
-  {{/each}}
-
-  {{!-- {{{ equalDatesMessages }}} --}}
+  {{#if this.messages}}
+    {{#each this.messages}}
+      {{{ this }}}
+    {{/each}}
+  {{/if}}
 
   {{{ noMessagesText }}}
   {{{ noChatText }}}
 
-  {{{ attachMenu }}}
-  {{{ userMenu }}}
+  {{!-- {{{ attachMenu }}}
+  {{{ userMenu }}} --}}
 
   <svg class="spritesheet">
     <symbol id="icon-triple" viewBox="0 0 20 20">
