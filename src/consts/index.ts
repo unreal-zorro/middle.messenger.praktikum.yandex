@@ -1,2 +1,1 @@
-export { ValidationRules } from './validationRules';
-export type { IValidationRules } from './validationRules';
+export { VALIDATION_RULES } from './validationRules';

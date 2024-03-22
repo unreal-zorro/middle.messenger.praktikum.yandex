@@ -17,7 +17,8 @@ export interface Props {
     | Array<Record<string, string | undefined>>
     | Array<Record<string, string | boolean | undefined>>
     | Block
-    | ((...args: string[]) => boolean);
+    | ((...args: string[]) => string)
+    | ((...args: Record<string, string>[]) => void);
   events?: Record<string, Listener>;
   settings?: Record<string, boolean>;
   id?: string;

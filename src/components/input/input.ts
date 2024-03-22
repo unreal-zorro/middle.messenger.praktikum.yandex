@@ -21,4 +21,16 @@ export class Input extends Block {
   render(): string {
     return template;
   }
+
+  componentDidUpdate(oldProps: InputProps, newProps: InputProps): boolean {
+    if (oldProps.error !== newProps.error) {
+      this.setProps({ error: newProps.error });
+    }
+
+    if (oldProps.value !== newProps.value) {
+      this.setProps({ value: newProps.value });
+    }
+
+    return true;
+  }
 }

@@ -8,6 +8,7 @@ interface ButtonProps extends Props {
   cancel?: boolean;
   type?: string;
   text?: string;
+  disabled?: boolean;
 }
 
 export class Button extends Block {
@@ -17,5 +18,13 @@ export class Button extends Block {
 
   render(): string {
     return template;
+  }
+
+  componentDidUpdate(oldProps: ButtonProps, newProps: ButtonProps): boolean {
+    if (oldProps.disabled !== newProps.disabled) {
+      this.setProps({ disabled: newProps.disabled });
+    }
+
+    return true;
   }
 }

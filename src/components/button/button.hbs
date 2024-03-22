@@ -1,6 +1,7 @@
 <button
   class="button{{#if className}} {{ className }}{{/if}}{{#if cancel}} button_cancel{{/if}}"
   type={{ type }}
+  {{#if disabled}}disabled{{/if}}
 >
   {{#if text}}
     {{ text }}

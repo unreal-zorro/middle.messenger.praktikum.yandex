@@ -1,8 +1,8 @@
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { InputField } from '@/modules';
-import { Button, Link } from '@/components';
-import { ValidationRules } from '@/consts';
+import { Button } from '@/components';
+import { VALIDATION_RULES } from '@/consts';
 import { Listener } from '@/base/EventBus';
 import template from './login-form.hbs?raw';
 
@@ -32,17 +32,61 @@ interface LoginFormProps extends Props {
   classNameLink?: string;
   controls?: LoginPageFormControl[];
   buttons?: LoginPageButton[];
+  submitHandler?: (...args: Record<string, string>[]) => void;
 }
 
 export class LoginForm extends Block {
   constructor(props: LoginFormProps) {
     super(props);
 
-    const blurHandler: ((...args: string[]) => boolean) = (name, value) => {
-      const { regExp } = ValidationRules[name];
+    const blurHandler: (...args: string[]) => string = (name, value) => {
+      const { regExp } = VALIDATION_RULES[name];
       const isValid = regExp.test(value);
 
-      return isValid;
+      if (!isValid) {
+        (this.children.buttons as Block[])?.map((button) =>
+          button.setProps({
+            disabled: true
+          })
+        );
+
+        const { message } = VALIDATION_RULES[name];
+        return message;
+      }
+
+      if (name === 'password') {
+        this._password = value;
+      }
+
+      if (name === 'password_again' && this._password !== value) {
+        (this.children.buttons as Block[])?.map((button) =>
+          button.setProps({
+            disabled: false
+          })
+        );
+
+        return 'Пароли не совпадают';
+      }
+
+      (this.children.buttons as Block[])?.map((button) =>
+        button.setProps({
+          disabled: false
+        })
+      );
+
+      if (name !== 'password_again') {
+        this._formData[name] = value;
+      }
+
+      return '';
+    };
+
+    const submitHandler: (event: SubmitEvent) => void = (event) => {
+      event.preventDefault();
+
+      if (this.props.submitHandler) {
+        (this.props.submitHandler as (...args: Record<string, string>[]) => string)(this._formData);
+      }
     };
 
     this.children.controls = (this.props.controls as LoginPageFormControl[])?.map(
@@ -72,38 +116,20 @@ export class LoginForm extends Block {
         new Button({
           className: this.props.classNameButton as string,
           type: button.type,
+          text: button.text,
           settings: {
             withInternalID: false
           },
-          buttonChild: new Link({
-            className: this.props.classNameLink as string,
-            href: button.href,
-            text: button.text
-          })
+          events: {
+            click: ((event: SubmitEvent) => submitHandler.call(this, event)) as Listener
+          }
         })
     );
   }
 
-  // componentDidUpdate(oldProps: LoginFormProps, newProps: LoginFormProps): boolean {
-  //   if (oldProps.value !== newProps.value) {
-  //     (this.children.inputChild as Block).setProps({ value: newProps.value });
-  //   }
+  _password = '';
 
-  //   if (oldProps.disabled !== newProps.disabled) {
-  //     (this.children.inputChild as Block).setProps({ disabled: newProps.disabled });
-  //   }
-
-  //   if (oldProps.error !== newProps.error) {
-  //     (this.children.inputChild as Block).setProps({ error: newProps.error });
-  //     (this.children.inputChild as Block).setProps({ error: newProps.error });
-  //   }
-
-  //   if (oldProps.text !== newProps.text) {
-  //     (this.children.inputChild as Block).setProps({ text: newProps.text });
-  //   }
-
-  //   return true;
-  // }
+  _formData: Record<string, string> = {};
 
   render(): string {
     return template;

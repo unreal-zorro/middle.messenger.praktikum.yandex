@@ -1,6 +1,4 @@
-import { User } from "@/entities";
-
-export const getRegisterPageData = (user: User) => ({
+export const getRegisterPageData = () => ({
   id: 'register',
   header: 'Регистрация',
   controls: [
@@ -8,57 +6,56 @@ export const getRegisterPageData = (user: User) => ({
       label: 'Почта',
       name: 'email',
       type: 'email',
-      value: user.email,
+      value: '',
       error: ''
     },
     {
       label: 'Логин',
       name: 'login',
       type: 'text',
-      value: user.login,
+      value: '',
       error: ''
     },
     {
       label: 'Имя',
       name: 'first_name',
       type: 'text',
-      value: user.first_name,
+      value: '',
       error: ''
     },
     {
       label: 'Фамилия',
       name: 'second_name',
       type: 'text',
-      value: user.first_name,
+      value: '',
       error: ''
     },
     {
       label: 'Телефон',
       name: 'phone',
       type: 'tel',
-      value: user.phone,
+      value: '',
       error: ''
     },
     {
       label: 'Пароль',
       name: 'password',
       type: 'password',
-      value: user.password,
-      error: 'Пароли не совпадают'
+      value: '',
+      error: ''
     },
     {
       label: 'Пароль (ещё раз)',
       name: 'password_again',
       type: 'password',
-      value: user.password,
-      error: 'Пароли не совпадают'
+      value: '',
+      error: ''
     }
   ],
   buttons: [
     {
       type: 'submit',
-      text: 'Зарегистрироваться',
-      href: '/chats'
+      text: 'Зарегистрироваться'
     }
   ],
   link: {

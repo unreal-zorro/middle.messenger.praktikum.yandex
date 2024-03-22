@@ -17,4 +17,13 @@ export class Error extends Block {
   render(): string {
     return template;
   }
+
+  componentDidUpdate(oldProps: ErrorProps, newProps: ErrorProps): boolean {
+    if (oldProps.error !== newProps.error || oldProps.text !== newProps.text) {
+      this.setProps({ error: newProps.error });
+      this.setProps({ text: newProps.text });
+    }
+
+    return true;
+  }
 }

@@ -2,6 +2,7 @@ import './login-page.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Header, Link } from '@/components';
+import { Listener } from '@/base/EventBus';
 import { LoginForm } from './modules';
 import template from './login-page.hbs?raw';
 
@@ -36,6 +37,10 @@ export class LoginPage extends Block {
   constructor(props: LoginPageProps) {
     super(props);
 
+    const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
+      console.log(`${this.props.id}: `, formData);
+    };
+
     this.children.headerChild = new Header({
       className: 'login__header',
       text: this.props.header as string,
@@ -56,8 +61,12 @@ export class LoginPage extends Block {
       classNameLink: 'login__link',
       controls: this.props.controls as LoginPageFormControl[],
       buttons: this.props.buttons as LoginPageButton[],
+      submitHandler,
       settings: {
         withInternalID: false
+      },
+      events: {
+        submit: (() => submitHandler.call(this)) as Listener
       }
     });
 
@@ -70,27 +79,6 @@ export class LoginPage extends Block {
       }
     });
   }
-
-  // componentDidUpdate(oldProps: LoginPageProps, newProps: LoginPageProps): boolean {
-  //   if (oldProps.value !== newProps.value) {
-  //     this.children.inputChild.setProps({ value: newProps.value });
-  //   }
-
-  //   if (oldProps.disabled !== newProps.disabled) {
-  //     this.children.inputChild.setProps({ disabled: newProps.disabled });
-  //   }
-
-  //   if (oldProps.error !== newProps.error) {
-  //     this.children.inputChild.setProps({ error: newProps.error });
-  //     this.children.errorChild.setProps({ error: newProps.error });
-  //   }
-
-  //   if (oldProps.text !== newProps.text) {
-  //     this.children.errorChild.setProps({ text: newProps.text });
-  //   }
-
-  //   return true;
-  // }
 
   render(): string {
     return template;

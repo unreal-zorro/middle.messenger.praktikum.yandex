@@ -1,6 +1,4 @@
-import { User } from "@/entities";
-
-export const getLoginPageData = (user: User) => ({
+export const getLoginPageData = () => ({
   id: 'login',
   header: 'Вход',
   controls: [
@@ -8,22 +6,21 @@ export const getLoginPageData = (user: User) => ({
       label: 'Логин',
       name: 'login',
       type: 'text',
-      value: user.login,
+      value: '',
       error: ''
     },
     {
       label: 'Пароль',
       name: 'password',
       type: 'password',
-      value: user.password,
+      value: '',
       error: ''
     }
   ],
   buttons: [
     {
       type: 'submit',
-      text: 'Войти',
-      href: '/chats'
+      text: 'Войти'
     }
   ],
   link: {

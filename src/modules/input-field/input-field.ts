@@ -1,6 +1,7 @@
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Error, Input, Label } from '@/components';
+import { Listener } from '@/base/EventBus';
 import template from './input-field.hbs?raw';
 
 interface InputFieldProps extends Props {
@@ -16,7 +17,7 @@ interface InputFieldProps extends Props {
   disabled?: boolean;
   error?: boolean;
   text?: string;
-  blurHandler?: ((...args: string[]) => boolean);
+  blurHandler?: (...args: string[]) => string;
 }
 
 export class InputField extends Block {
@@ -32,23 +33,18 @@ export class InputField extends Block {
 
     const blurHandler = (name: string, value: string) => {
       if (this.props.blurHandler) {
-        const isValid = (this.props.blurHandler as ((...args: string[]) => boolean))(name, value);
+        const isValid = (this.props.blurHandler as (...args: string[]) => string)(name, value);
 
-        if (!isValid) {
-          (this.children.errorChild as Block).setProps({
-            error: true,
-            text: this.props.text
-          });
-        }
+        (this.children.inputChild as Block).setProps({
+          error: !!isValid,
+          value
+        });
+
+        (this.children.errorChild as Block).setProps({
+          error: !!isValid,
+          text: isValid
+        });
       }
-
-      (this.children.inputChild as Block).setProps({
-        error: this.props.error as boolean
-      });
-      (this.children.errorChild as Block).setProps({
-        error: this.props.error as boolean,
-        text: this.props.text as string
-      });
     };
 
     this.children.labelChild = new Label({
@@ -72,13 +68,14 @@ export class InputField extends Block {
         withInternalID: false
       },
       events: {
-        focus: focusHandler,
-        blur: (event) => {
-          blurHandler(
-            ((event as FocusEvent)?.target as HTMLInputElement).name,
-            ((event as FocusEvent)?.target as HTMLInputElement).value
+        focus: () => focusHandler.call(this),
+        blur: ((event: Event) => {
+          blurHandler.call(
+            this,
+            (event?.target as HTMLInputElement).name,
+            (event?.target as HTMLInputElement).value
           );
-        }
+        }) as Listener
       }
     });
 

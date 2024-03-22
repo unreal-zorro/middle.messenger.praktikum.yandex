@@ -10,10 +10,6 @@
   background-color: $secondary;
   transition: all 0.3s;
 
-  & > a {
-    color: $light;
-  }
-
   &_cancel {
     background-color: $error;
   }
@@ -21,5 +17,11 @@
   &:hover {
     scale: 1.05;
     box-shadow: 4px 4px 4px 0 $gray;
+
+    &[disabled] {
+      scale: 1;
+      box-shadow: none;
+      cursor: auto;
+    }
   }
 }

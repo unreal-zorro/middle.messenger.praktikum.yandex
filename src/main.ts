@@ -25,21 +25,14 @@ const contentLoadedHandler: () => void = () => {
   const { pathname } = window.location;
   let page: Nullable<Block> = null;
 
-  const clickHandler = () => {
-    console.log('click');
-  };
-
   switch (pathname) {
     case '/':
     case '/index.html': {
-      const data = getLoginPageData(user);
+      const data = getLoginPageData();
 
       const loginPage = new LoginPage({
         settings: {
           withInternalID: false
-        },
-        events: {
-          // click: clickHandler
         },
         ...data
       });
@@ -48,14 +41,11 @@ const contentLoadedHandler: () => void = () => {
       break;
     }
     case '/register': {
-      const data = getRegisterPageData(user);
+      const data = getRegisterPageData();
 
       const loginPage = new LoginPage({
         settings: {
           withInternalID: false
-        },
-        events: {
-          // click: clickHandler
         },
         ...data
       });
@@ -70,9 +60,6 @@ const contentLoadedHandler: () => void = () => {
         settings: {
           withInternalID: false
         },
-        events: {
-          // click: clickHandler
-        },
         ...data
       });
 
@@ -85,9 +72,6 @@ const contentLoadedHandler: () => void = () => {
       const errorPage = new ErrorPage({
         settings: {
           withInternalID: false
-        },
-        events: {
-          // click: clickHandler
         },
         ...data
       });
@@ -102,9 +86,6 @@ const contentLoadedHandler: () => void = () => {
         settings: {
           withInternalID: false
         },
-        events: {
-          // click: clickHandler
-        },
         ...data
       });
 
@@ -117,9 +98,6 @@ const contentLoadedHandler: () => void = () => {
       const profilePage = new ProfilePage({
         settings: {
           withInternalID: false
-        },
-        events: {
-          // click: clickHandler
         },
         ...data
       });
@@ -134,9 +112,6 @@ const contentLoadedHandler: () => void = () => {
         settings: {
           withInternalID: false
         },
-        events: {
-          // click: clickHandler
-        },
         ...data
       });
 
@@ -149,9 +124,6 @@ const contentLoadedHandler: () => void = () => {
       const chatsPage = new ChatsPage({
         settings: {
           withInternalID: false
-        },
-        events: {
-          // click: clickHandler
         },
         id: data.id,
         controlsSearch: data.search.controls,
