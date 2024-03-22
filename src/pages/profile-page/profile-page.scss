@@ -13,7 +13,7 @@
   }
 
   &__form {
-    min-width: $profile-form-width;
+    width: $profile-form-width;
     margin-bottom: 20px;
 
     @include flex(column, center, center);

@@ -17,7 +17,7 @@ export const user: User = {
   first_name: 'Иван',
   second_name: 'Иванов',
   display_name: 'Иван',
-  phone: '+7 (909) 967-30-30',
-  password: '1234567891011121',
+  phone: '+79099673030',
+  password: 'D1234567891011121',
   avatar: ''
 };

@@ -2,8 +2,9 @@ import './profile-page.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Avatar, Header, Link } from '@/components';
-import template from './profile-page.hbs?raw';
+import type { Listener } from '@/base/EventBus';
 import { ProfileForm } from './modules';
+import template from './profile-page.hbs?raw';
 
 interface ProfilePageFormControl extends Record<string, string | boolean | undefined> {
   label?: string;
@@ -38,6 +39,10 @@ export class ProfilePage extends Block {
   constructor(props: ProfilePageProps) {
     super(props);
 
+    const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
+      console.log(`${this.props.id}: `, formData);
+    };
+
     this.children.avatarChild = new Avatar({
       className: 'avatar_big profile__avatar',
       imgSrc: this.props.avatar as string,
@@ -67,8 +72,12 @@ export class ProfilePage extends Block {
       classNameLink: 'profile__link',
       controls: this.props.controls as ProfilePageFormControl[],
       buttons: this.props.buttons as ProfilePageButton[],
+      submitHandler,
       settings: {
         withInternalID: false
+      },
+      events: {
+        submit: (() => submitHandler.call(this)) as Listener
       }
     });
 
@@ -90,27 +99,6 @@ export class ProfilePage extends Block {
       }
     });
   }
-
-  // componentDidUpdate(oldProps: LoginPageProps, newProps: LoginPageProps): boolean {
-  //   if (oldProps.value !== newProps.value) {
-  //     this.children.inputChild.setProps({ value: newProps.value });
-  //   }
-
-  //   if (oldProps.disabled !== newProps.disabled) {
-  //     this.children.inputChild.setProps({ disabled: newProps.disabled });
-  //   }
-
-  //   if (oldProps.error !== newProps.error) {
-  //     this.children.inputChild.setProps({ error: newProps.error });
-  //     this.children.errorChild.setProps({ error: newProps.error });
-  //   }
-
-  //   if (oldProps.text !== newProps.text) {
-  //     this.children.errorChild.setProps({ text: newProps.text });
-  //   }
-
-  //   return true;
-  // }
 
   render(): string {
     return template;

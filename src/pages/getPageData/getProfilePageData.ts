@@ -63,8 +63,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
       buttons: [
         {
           type: 'submit',
-          text: 'Сохранить',
-          href: '/profile'
+          text: 'Сохранить'
         }
       ],
       link: {},
@@ -83,7 +82,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'oldPassword',
           type: 'password',
           disabled: false,
-          value: user.password,
+          value: '',
           error: ''
         },
         {
@@ -91,7 +90,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'newPassword',
           type: 'password',
           disabled: false,
-          value: '1234567891011121',
+          value: '',
           error: ''
         },
         {
@@ -99,15 +98,14 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'newPassword_again',
           type: 'password',
           disabled: false,
-          value: '1234567891011122',
+          value: '',
           error: ''
         }
       ],
       buttons: [
         {
           type: 'submit',
-          text: 'Сохранить',
-          href: '/profile'
+          text: 'Сохранить'
         }
       ],
       link: {},
