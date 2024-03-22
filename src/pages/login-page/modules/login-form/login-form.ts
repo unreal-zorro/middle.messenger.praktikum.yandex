@@ -2,6 +2,8 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { InputField } from '@/modules';
 import { Button, Link } from '@/components';
+import { ValidationRules } from '@/consts';
+import { Listener } from '@/base/EventBus';
 import template from './login-form.hbs?raw';
 
 interface LoginPageFormControl extends Record<string, string | undefined> {
@@ -36,6 +38,10 @@ export class LoginForm extends Block {
   constructor(props: LoginFormProps) {
     super(props);
 
+    const blurHandler: Listener = (element) => {
+      console.log(`blurHandler: ${element}`);
+    };
+
     this.children.controls = (this.props.controls as LoginPageFormControl[])?.map(
       (control) =>
         new InputField({
@@ -51,6 +57,7 @@ export class LoginForm extends Block {
           disabled: false,
           error: !!control.error,
           text: control.error,
+          blurHandler,
           settings: {
             withInternalID: true
           }

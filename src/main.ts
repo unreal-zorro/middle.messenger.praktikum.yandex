@@ -39,7 +39,7 @@ const contentLoadedHandler: () => void = () => {
           withInternalID: false
         },
         events: {
-          click: clickHandler
+          // click: clickHandler
         },
         ...data
       });
@@ -55,7 +55,7 @@ const contentLoadedHandler: () => void = () => {
           withInternalID: false
         },
         events: {
-          click: clickHandler
+          // click: clickHandler
         },
         ...data
       });
@@ -71,7 +71,7 @@ const contentLoadedHandler: () => void = () => {
           withInternalID: false
         },
         events: {
-          click: clickHandler
+          // click: clickHandler
         },
         ...data
       });
@@ -87,7 +87,7 @@ const contentLoadedHandler: () => void = () => {
           withInternalID: false
         },
         events: {
-          click: clickHandler
+          // click: clickHandler
         },
         ...data
       });
@@ -103,7 +103,7 @@ const contentLoadedHandler: () => void = () => {
           withInternalID: false
         },
         events: {
-          click: clickHandler
+          // click: clickHandler
         },
         ...data
       });
@@ -119,7 +119,7 @@ const contentLoadedHandler: () => void = () => {
           withInternalID: false
         },
         events: {
-          click: clickHandler
+          // click: clickHandler
         },
         ...data
       });
@@ -135,7 +135,7 @@ const contentLoadedHandler: () => void = () => {
           withInternalID: false
         },
         events: {
-          click: clickHandler
+          // click: clickHandler
         },
         ...data
       });
@@ -151,7 +151,7 @@ const contentLoadedHandler: () => void = () => {
           withInternalID: false
         },
         events: {
-          click: clickHandler
+          // click: clickHandler
         },
         id: data.id,
         controlsSearch: data.search.controls,
