@@ -32,13 +32,11 @@ export class InputField extends Block {
       });
     };
 
-    const blurHandler = () => {
-      console.log('blur');
+    const blurHandler = (name: string, value: string) => {
+      console.log(`name: ${name}, value: ${value}`);
 
       if (this.props.blurHandler) {
-        const element = ((this.children.inputChild as Block).getContent() as HTMLElement)
-          .tagName;
-        (this.props.blurHandler as Listener<string>)(element ?? '');
+        (this.props.blurHandler as Listener<string>)(name, value);
       }
 
       (this.children.inputChild as Block).setProps({
@@ -72,7 +70,12 @@ export class InputField extends Block {
       },
       events: {
         focus: focusHandler,
-        blur: blurHandler
+        blur: (event) => {
+          blurHandler(
+            ((event as FocusEvent)?.target as HTMLInputElement).name,
+            ((event as FocusEvent)?.target as HTMLInputElement).value
+          );
+        }
       }
     });
 
