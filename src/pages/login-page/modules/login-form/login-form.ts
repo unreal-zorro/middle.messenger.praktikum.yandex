@@ -38,9 +38,11 @@ export class LoginForm extends Block {
   constructor(props: LoginFormProps) {
     super(props);
 
-    const blurHandler: Listener<string> = (name, value) => {
+    const blurHandler: ((...args: string[]) => boolean) = (name, value) => {
       const { regExp } = ValidationRules[name];
-      regExp.test(value);
+      const isValid = regExp.test(value);
+
+      return isValid;
     };
 
     this.children.controls = (this.props.controls as LoginPageFormControl[])?.map(
@@ -58,7 +60,7 @@ export class LoginForm extends Block {
           disabled: false,
           error: !!control.error,
           text: control.error,
-          blurHandler: blurHandler.bind(this),
+          blurHandler,
           settings: {
             withInternalID: true
           }

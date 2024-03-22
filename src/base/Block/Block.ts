@@ -16,7 +16,8 @@ export interface Props {
     | Record<string, string | boolean | undefined>
     | Array<Record<string, string | undefined>>
     | Array<Record<string, string | boolean | undefined>>
-    | Block;
+    | Block
+    | ((...args: string[]) => boolean);
   events?: Record<string, Listener>;
   settings?: Record<string, boolean>;
   id?: string;
@@ -34,7 +35,7 @@ interface Meta {
 }
 
 export abstract class Block {
-  static EVENTS = {
+  static readonly EVENTS = {
     INIT: 'init',
     FLOW_CDM: 'flow:component-did-mount',
     FLOW_CDU: 'flow:component-did-update',
@@ -98,7 +99,7 @@ export abstract class Block {
   }
 
   private _createResources() {
-    const tagName = this._meta?.tagName || 'div';
+    const tagName = this._meta?.tagName ?? 'div';
     this._element = this._createDocumentElement(tagName);
   }
 

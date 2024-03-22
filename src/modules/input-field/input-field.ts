@@ -1,7 +1,6 @@
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Error, Input, Label } from '@/components';
-import { Listener } from '@/base/EventBus';
 import template from './input-field.hbs?raw';
 
 interface InputFieldProps extends Props {
@@ -17,7 +16,7 @@ interface InputFieldProps extends Props {
   disabled?: boolean;
   error?: boolean;
   text?: string;
-  blurHandler?: Listener;
+  blurHandler?: ((...args: string[]) => boolean);
 }
 
 export class InputField extends Block {
@@ -25,7 +24,6 @@ export class InputField extends Block {
     super(props);
 
     const focusHandler = () => {
-      console.log('focus');
       (this.children.errorChild as Block).setProps({
         error: false,
         text: ''
@@ -33,10 +31,15 @@ export class InputField extends Block {
     };
 
     const blurHandler = (name: string, value: string) => {
-      console.log(`name: ${name}, value: ${value}`);
-
       if (this.props.blurHandler) {
-        (this.props.blurHandler as Listener<string>)(name, value);
+        const isValid = (this.props.blurHandler as ((...args: string[]) => boolean))(name, value);
+
+        if (!isValid) {
+          (this.children.errorChild as Block).setProps({
+            error: true,
+            text: this.props.text
+          });
+        }
       }
 
       (this.children.inputChild as Block).setProps({
