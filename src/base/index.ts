@@ -2,3 +2,4 @@ export { EventBus } from './EventBus';
 export { Block } from './Block';
 export type { Props } from './Block';
 export type { Children } from './Block';
+export { HTTPTransport } from './HTTPTransport';
