@@ -1,10 +1,10 @@
 import './chats-page.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { Content, List, NewMessage, Search } from './modules';
+import { Content, List, NewMessageForm, Search } from './modules';
 import type {
-  NewMessageButton,
-  NewMessageControl,
+  NewMessageFormButton,
+  NewMessageFormControl,
   SearchFormControl,
   SearchLink,
   ChatProps,
@@ -28,14 +28,18 @@ interface ChatsPageProps extends Props {
   attachMenu?: MenuItem[];
   userMenu?: MenuItem[];
   // userDeleteModal?: ;
-  controlNewMessage?: NewMessageControl;
-  attachButtonNewMessage?: NewMessageButton;
-  sendButtonNewMessage?: NewMessageButton;
+  controlNewMessage?: NewMessageFormControl;
+  attachButtonNewMessage?: NewMessageFormButton;
+  sendButtonNewMessage?: NewMessageFormButton;
 }
 
 export class ChatsPage extends Block {
   constructor(props: ChatsPageProps) {
     super(props);
+
+    const submitNewMessageHandler: (...args: Record<string, string>[]) => void = (formData) => {
+      console.log(formData);
+    };
 
     this.children.search = new Search({
       className: 'chats__search',
@@ -73,11 +77,11 @@ export class ChatsPage extends Block {
       }
     });
 
-    this.children.newMessage = new NewMessage({
-      className: 'chats__new-message',
-      control: this.props.controlNewMessage as NewMessageControl,
-      attachButton: this.props.attachButtonNewMessage as NewMessageButton,
-      sendButton: this.props.sendButtonNewMessage as NewMessageButton,
+    this.children.newMessageForm = new NewMessageForm({
+      control: this.props.controlNewMessage as NewMessageFormControl,
+      attachButton: this.props.attachButtonNewMessage as NewMessageFormButton,
+      sendButton: this.props.sendButtonNewMessage as NewMessageFormButton,
+      submitNewMessageHandler,
       settings: {
         withInternalID: false
       }
