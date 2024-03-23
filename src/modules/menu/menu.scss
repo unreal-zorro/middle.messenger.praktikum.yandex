@@ -8,6 +8,13 @@
   border-radius: 15px;
   background-color: $secondary;
   overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+
+  &_visible {
+    visibility: visible;
+    opacity: 1;
+  }
 
   &__item {
     width: 100%;
@@ -39,7 +46,7 @@
     overflow: hidden;
     position: relative;
     color: inherit;
-    
+
     @include flex(row, flex-start, center);
 
     &:hover {

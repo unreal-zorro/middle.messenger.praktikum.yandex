@@ -12,6 +12,9 @@ interface MenuItem extends Record<string, string | undefined> {
 
 export interface MenuProps extends Props {
   className?: string;
+  visible?: boolean;
+  top: string;
+  left: string;
   items?: MenuItem[];
 }
 
@@ -39,26 +42,27 @@ export class Menu extends Block {
     );
   }
 
-  // componentDidUpdate(oldProps: InputFieldProps, newProps: InputFieldProps): boolean {
-  //   if (oldProps.value !== newProps.value) {
-  //     (this.children.inputChild as Block).setProps({ value: newProps.value });
-  //   }
+  componentDidUpdate(oldProps: MenuProps, newProps: MenuProps): boolean {
+    if (oldProps.top !== newProps.top) {
+      this.setProps({ top: newProps.top });
+      this.setTop(newProps.top);
+    }
 
-  //   if (oldProps.disabled !== newProps.disabled) {
-  //     (this.children.inputChild as Block).setProps({ disabled: newProps.disabled });
-  //   }
+    if (oldProps.left !== newProps.left) {
+      this.setProps({ left: newProps.left });
+      this.setLeft(newProps.left);
+    }
 
-  //   if (oldProps.error !== newProps.error) {
-  //     (this.children.inputChild as Block).setProps({ error: newProps.error });
-  //     (this.children.inputChild as Block).setProps({ error: newProps.error });
-  //   }
+    return true;
+  }
 
-  //   if (oldProps.text !== newProps.text) {
-  //     (this.children.inputChild as Block).setProps({ text: newProps.text });
-  //   }
+  setTop(value: string): void {
+    this.getContent()!.style.top = value;
+  }
 
-  //   return true;
-  // }
+  setLeft(value: string): void {
+    this.getContent()!.style.left = value;
+  }
 
   render(): string {
     return template;
