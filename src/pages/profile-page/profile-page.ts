@@ -40,7 +40,7 @@ export class ProfilePage extends Block {
     super(props);
 
     const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
-      console.log(`${this.props.id}: `, formData);
+      console.log(formData);
     };
 
     this.children.avatarChild = new Avatar({

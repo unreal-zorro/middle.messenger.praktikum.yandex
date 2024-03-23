@@ -11,7 +11,7 @@ const REGEXPS = {
   EMAIL: /^[\w-]+(?:\.[\w-]+)*@[\w-]+(?:\.[a-z]+)+$/,
   PASSWORD: /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,40}$/,
   PHONE: /(^\++\d{9,15})|(^\d{10,15})/,
-  MESSAGE: /^.*$/
+  MESSAGE: /^(?!\s*$).+/
 };
 
 export const VALIDATION_RULES: ValidationRules = {
