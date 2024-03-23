@@ -169,18 +169,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           error: ''
         }
       ],
-      buttons: [
-        {
-          type: 'button',
-          text: 'Изменить данные',
-          href: '/profile/data'
-        },
-        {
-          type: 'button',
-          text: 'Изменить пароль',
-          href: '/profile/password'
-        }
-      ],
+      buttons: [],
       link: {
         text: 'Выйти',
         href: '/'

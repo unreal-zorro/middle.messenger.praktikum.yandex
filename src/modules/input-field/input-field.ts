@@ -17,6 +17,7 @@ interface InputFieldProps extends Props {
   disabled?: boolean;
   error?: boolean;
   text?: string;
+  focusHandler?: Listener;
   blurHandler?: (...args: string[]) => string;
 }
 
@@ -29,6 +30,10 @@ export class InputField extends Block {
         error: false,
         text: ''
       });
+
+      if (this.props.focusHandler) {
+        (this.props.focusHandler as Listener)();
+      }
     };
 
     const blurHandler = (name: string, value: string) => {

@@ -13,9 +13,11 @@
     {{/each}}
   </div>
 
-  <div class="{{#if classNameFormButtons}}{{ classNameFormButtons }}{{/if}}"></div>
-    {{#each buttons}}
-      {{{ this }}}
-    {{/each}}
-  </div>
+  {{#if this.buttons}}
+    <div class="{{#if ../classNameFormButtons}}{{ ../classNameFormButtons }}{{/if}}"></div>
+      {{#each this.buttons}}
+        {{{ this }}}
+      {{/each}}
+    </div>
+  {{/if}}
 </form>

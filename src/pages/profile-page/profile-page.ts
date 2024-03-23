@@ -1,7 +1,7 @@
 import './profile-page.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { Avatar, Header, Link } from '@/components';
+import { Avatar, Button, Header, Link } from '@/components';
 import type { Listener } from '@/base/EventBus';
 import { ProfileForm } from './modules';
 import template from './profile-page.hbs?raw';
@@ -18,7 +18,6 @@ interface ProfilePageFormControl extends Record<string, string | boolean | undef
 interface ProfilePageButton extends Record<string, string | undefined> {
   type?: string;
   text?: string;
-  href?: string;
 }
 
 interface ProfilePageLink extends Record<string, string | undefined> {
@@ -31,6 +30,7 @@ interface ProfilePageProps extends Props {
   avatar?: string;
   header?: string;
   controls?: ProfilePageFormControl[];
+  buttons?: ProfilePageButton[];
   link?: ProfilePageLink;
   navLink?: ProfilePageLink;
 }
@@ -80,6 +80,26 @@ export class ProfilePage extends Block {
         submit: (() => submitHandler.call(this)) as Listener
       }
     });
+
+    if (!this.props.buttons || !(this.props.buttons as ProfilePageButton[])?.length) {
+      this.children.changeDataButtonChild = new Button({
+        className: 'profile__button',
+        type: 'button',
+        text: 'Изменить данные',
+        settings: {
+          withInternalID: false
+        }
+      });
+
+      this.children.changePasswordButtonChild = new Button({
+        className: 'profile__button',
+        type: 'button',
+        text: 'Изменить пароль',
+        settings: {
+          withInternalID: false
+        }
+      });
+    }
 
     this.children.linkChild = new Link({
       className: 'profile__footer',

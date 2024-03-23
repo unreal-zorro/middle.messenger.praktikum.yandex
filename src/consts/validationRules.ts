@@ -6,12 +6,12 @@ interface ValidationRules {
 }
 
 const REGEXPS = {
-  NAME: /^([A-Z][(a-z)-]*)|^([А-Я][(а-я)-]*)/g,
-  LOGIN: /(?!^\d+$)^[a-zA-Z0-9_-]{3,20}$/g,
-  EMAIL: /^[\w-]+(?:\.[\w-]+)*@[\w-]+(?:\.[a-z]+)+$/g,
-  PASSWORD: /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,40}$/g,
-  PHONE: /(^\++\d{9,15})|(^\d{10,15})/g,
-  MESSAGE: /^.*$/g
+  NAME: /^([A-Z][(a-z)-]*)|^([А-Я][(а-я)-]*)/,
+  LOGIN: /(?!^\d+$)^[a-zA-Z0-9_-]{3,20}$/,
+  EMAIL: /^[\w-]+(?:\.[\w-]+)*@[\w-]+(?:\.[a-z]+)+$/,
+  PASSWORD: /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,40}$/,
+  PHONE: /(^\++\d{9,15})|(^\d{10,15})/,
+  MESSAGE: /^.*$/
 };
 
 export const VALIDATION_RULES: ValidationRules = {

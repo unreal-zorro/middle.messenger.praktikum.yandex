@@ -32,12 +32,21 @@ interface LoginFormProps extends Props {
   classNameLink?: string;
   controls?: LoginPageFormControl[];
   buttons?: LoginPageButton[];
+  focusHandler?: Listener;
   submitHandler?: (...args: Record<string, string>[]) => void;
 }
 
 export class LoginForm extends Block {
   constructor(props: LoginFormProps) {
     super(props);
+
+    const focusHandler = () => {
+      (this.children.buttons as Block[])?.map((button) =>
+        button.setProps({
+          disabled: true
+        })
+      );
+    };
 
     const blurHandler: (...args: string[]) => string = (name, value) => {
       const { regExp } = VALIDATION_RULES[name];
@@ -104,6 +113,7 @@ export class LoginForm extends Block {
           disabled: false,
           error: !!control.error,
           text: control.error,
+          focusHandler,
           blurHandler,
           settings: {
             withInternalID: true
@@ -117,6 +127,7 @@ export class LoginForm extends Block {
           className: this.props.classNameButton as string,
           type: button.type,
           text: button.text,
+          disabled: true,
           settings: {
             withInternalID: false
           },

@@ -18,7 +18,6 @@ interface ProfilePageFormControl extends Record<string, string | boolean | undef
 interface ProfilePageButton extends Record<string, string | undefined> {
   type?: string;
   text?: string;
-  href?: string;
 }
 
 interface ProfileFormProps extends Props {
@@ -34,12 +33,21 @@ interface ProfileFormProps extends Props {
   classNameLink?: string;
   controls?: ProfilePageFormControl[];
   buttons?: ProfilePageButton[];
+  focusHandler?: Listener;
   submitHandler?: (...args: Record<string, string>[]) => void;
 }
 
 export class ProfileForm extends Block {
   constructor(props: ProfileFormProps) {
     super(props);
+
+    const focusHandler = () => {
+      (this.children.buttons as Block[])?.map((button) =>
+        button.setProps({
+          disabled: true
+        })
+      );
+    };
 
     const blurHandler: (...args: string[]) => string = (name, value) => {
       const { regExp } = VALIDATION_RULES[name];
@@ -63,7 +71,7 @@ export class ProfileForm extends Block {
       if (name === 'newPassword_again' && this._password !== value) {
         (this.children.buttons as Block[])?.map((button) =>
           button.setProps({
-            disabled: false
+            disabled: true
           })
         );
 
@@ -106,6 +114,7 @@ export class ProfileForm extends Block {
           disabled: control.disabled,
           error: !!control.error,
           text: control.error,
+          focusHandler,
           blurHandler,
           settings: {
             withInternalID: true
@@ -119,6 +128,7 @@ export class ProfileForm extends Block {
           className: this.props.classNameButton as string,
           type: button.type,
           text: button.text,
+          disabled: true,
           settings: {
             withInternalID: false
           },
