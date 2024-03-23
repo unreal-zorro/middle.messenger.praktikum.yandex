@@ -71,27 +71,6 @@ export class NewMessage extends Block {
     });
   }
 
-  // componentDidUpdate(oldProps: LoginFormProps, newProps: LoginFormProps): boolean {
-  //   if (oldProps.value !== newProps.value) {
-  //     (this.children.inputChild as Block).setProps({ value: newProps.value });
-  //   }
-
-  //   if (oldProps.disabled !== newProps.disabled) {
-  //     (this.children.inputChild as Block).setProps({ disabled: newProps.disabled });
-  //   }
-
-  //   if (oldProps.error !== newProps.error) {
-  //     (this.children.inputChild as Block).setProps({ error: newProps.error });
-  //     (this.children.inputChild as Block).setProps({ error: newProps.error });
-  //   }
-
-  //   if (oldProps.text !== newProps.text) {
-  //     (this.children.inputChild as Block).setProps({ text: newProps.text });
-  //   }
-
-  //   return true;
-  // }
-
   render(): string {
     return template;
   }
