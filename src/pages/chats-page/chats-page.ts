@@ -1,6 +1,7 @@
 import './chats-page.scss';
 import { Block } from '@/base';
 import type { Props } from '@/base';
+import { VALIDATION_RULES } from '@/consts';
 import { Content, List, NewMessageForm, Search } from './modules';
 import type { NewMessageFormProps, SearchProps, ListProps, ContentProps } from './modules';
 import template from './chats-page.hbs?raw';
@@ -18,7 +19,18 @@ export class ChatsPage extends Block {
     super(props);
 
     const submitNewMessageHandler: (...args: Record<string, string>[]) => void = (formData) => {
-      console.log(formData);
+      let isValid = true;
+
+      Object.entries(formData).forEach(([key, value]) => {
+        const { regExp } = VALIDATION_RULES[key];
+        isValid = isValid && regExp.test(value);
+      });
+
+      if (isValid) {
+        console.log(formData);
+      } else {
+        console.log('Invalid form data');
+      }
     };
 
     this.children.search = new Search({

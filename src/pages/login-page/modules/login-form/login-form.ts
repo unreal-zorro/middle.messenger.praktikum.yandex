@@ -81,6 +81,16 @@ export class LoginForm extends Block {
     const submitHandler: (event: SubmitEvent) => void = (event) => {
       event.preventDefault();
 
+      (this.children.controls as InputField[]).forEach((control) => {
+        const element = control.getContent()?.querySelector('input') as HTMLInputElement;
+        const elementName = element?.getAttribute('name') as string;
+        const elementValue = element?.value;
+
+        if (elementName !== 'password_again') {
+          this._formData[elementName] = elementValue;
+        }
+      });
+
       if (this.props.submitHandler) {
         (this.props.submitHandler as (...args: Record<string, string>[]) => string)(this._formData);
       }

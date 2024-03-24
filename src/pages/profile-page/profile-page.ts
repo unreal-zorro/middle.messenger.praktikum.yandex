@@ -3,6 +3,7 @@ import { Block, Listener } from '@/base';
 import type { Props } from '@/base';
 import { Avatar, Button, Header, Link } from '@/components';
 import type { AvatarProps, ButtonProps, HeaderProps, LinkProps } from '@/components';
+import { VALIDATION_RULES } from '@/consts';
 import { ProfileForm } from './modules';
 import type { ProfileFormProps } from './modules';
 import template from './profile-page.hbs?raw';
@@ -22,7 +23,18 @@ export class ProfilePage extends Block {
     super(props);
 
     const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
-      console.log(formData);
+      let isValid = true;
+
+      Object.entries(formData).forEach(([key, value]) => {
+        const { regExp } = VALIDATION_RULES[key];
+        isValid = isValid && regExp.test(value);
+      });
+
+      if (isValid) {
+        console.log(formData);
+      } else {
+        console.log('Invalid form data');
+      }
     };
 
     this.children.avatarChild = new Avatar({
