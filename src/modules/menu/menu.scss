@@ -1,0 +1,70 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.menu {
+  min-width: $icon-size;
+  min-height: $icon-size;
+  border: none;
+  border-radius: 15px;
+  background-color: $secondary;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+
+  &_visible {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &__item {
+    width: 100%;
+    padding: 0 10px;
+    cursor: pointer;
+    fill: $light;
+    color: $light;
+    transition: all 0.3s;
+
+    &:hover {
+      scale: 1.05;
+      fill: $main;
+      color: $main;
+    }
+
+    &:first-child {
+      padding-top: 10px;
+    }
+
+    &:last-child {
+      padding-bottom: 10px;
+    }
+  }
+
+  &__button {
+    width: 100%;
+    height: $icon-size;
+    padding-left: 30px;
+    overflow: hidden;
+    position: relative;
+    color: inherit;
+
+    @include flex(row, flex-start, center);
+
+    &:hover {
+      scale: 1;
+      box-shadow: none;
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 7px;
+    left: 7px;
+    fill: inherit;
+  }
+
+  &__text {
+    font-size: $font-text;
+  }
+}

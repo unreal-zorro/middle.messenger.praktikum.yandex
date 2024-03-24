@@ -1,5 +1,5 @@
-@import '../../styles/variables';
-@import '../../styles/mixins';
+@import '@/styles/variables';
+@import '@/styles/mixins';
 
 .avatar {
   min-width: $avatar-normal-size;
@@ -29,16 +29,18 @@
 
   &__mask {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     visibility: hidden;
     opacity: 0;
     background: $dark-gray;
     padding: 20px;
 
     @include flex(column, space-between, center);
+  }
+
+  &_no-edit &__mask {
+    visibility: hidden;
+    opacity: 0;
   }
 
   &__text {
@@ -69,7 +71,7 @@
     scale: 1.05;
     cursor: pointer;
 
-    & > div {
+    & > .avatar__mask {
       visibility: visible;
       opacity: 1;
       transition: all 0.3s;
@@ -80,7 +82,7 @@
     scale: 1;
     cursor: auto;
 
-    & > div {
+    & > .avatar__mask {
       visibility: hidden;
       opacity: 0;
     }

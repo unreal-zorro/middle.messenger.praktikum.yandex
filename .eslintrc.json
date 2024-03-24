@@ -1,0 +1,55 @@
+{
+  "root": true,
+  "extends": [
+    "airbnb",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "html", "hbs", "import"],
+  "rules": {
+    "max-len": [2, 100],
+    "@typescript-eslint/no-unused-vars": 2,
+    "import/prefer-default-export": "off",
+    "hbs/check-hbs-template-literals": 2,
+    "comma-dangle": ["error", "never"],
+    "import/no-unresolved": "error",
+    "import/no-extraneous-dependencies": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "no-param-reassign": "off",
+    "no-undef": "off",
+    "class-methods-use-this": "off",
+    "no-use-before-define": "off",
+    "no-console": "off",
+    "no-useless-constructor": "off"
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./"
+      }
+    },
+    "html/html-extensions": [".html", ".hbs?raw"],
+    "react": {
+      "version": "999.999.999"
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}

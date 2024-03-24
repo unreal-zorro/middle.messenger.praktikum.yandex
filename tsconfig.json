@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    // Куда произв. сборка
+    "outDir": "./dist/",
+    // Нельзя использовать переменные без явного указания типа
+    "noImplicitAny": true,
+    // modules
+    "module": "esNext",
+    // Куда компилировать
+    "target": "es5",
+    // js and ts
+    "allowJs": true,
+    // Строгий режим
+    "strict": true,
+    // Разрешение модулей
+    "moduleResolution": "Node",
+    // Базовый url для абсолютного импорта
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    // common js -> esm
+    "esModuleInterop": true,
+    // Звёздочка * as ... -> ...
+    "allowSyntheticDefaultImports": true,
+    // Делает обработку null и undefined более явной
+    "strictNullChecks": true,
+    // Указывает TypeScript предупреждать, если есть определённый код,
+    // который не может быть правильно интерпретирован процессом транспиляции одного файла
+    "isolatedModules": true,
+    // Сообщить об ошибках неиспользуемых локальных переменных
+    "noUnusedLocals": true,
+    // Сообщать об ошибках неиспользуемых параметров в функциях
+    "noUnusedParameters": true,
+    // Включить карты исходного кода
+    "sourceMap": true,
+    // Дополнительные API, доступные в ESNext и определения DOM - window, document и т.д.
+    "lib": ["ESNext", "DOM"]
+  },
+  // чтобы работал esnext
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  // Массив имён файлов или шаблонов для включения в программу
+  "include": ["*.ts", "src/**/*.ts"],
+  // Массив имён файлов или шаблонов для исключения из программы
+  "exclude": ["node_modules", "dist", "docs", "static"]
+}

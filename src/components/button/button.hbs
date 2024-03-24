@@ -1,6 +1,12 @@
 <button
-  class="button{{#if className}} {{ className }}{{/if}}"
+  class="button{{#if className}} {{ className }}{{/if}}{{#if cancel}} button_cancel{{/if}}"
   type={{ type }}
+  {{#if disabled}}disabled{{/if}}
 >
-  {{> @partial-block }}
+  {{#if text}}
+    {{ text }}
+  {{/if}}
+
+  {{{ buttonChild }}}
+  {{{ buttonChild2 }}}
 </button>

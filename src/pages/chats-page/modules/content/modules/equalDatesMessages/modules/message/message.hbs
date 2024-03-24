@@ -1,0 +1,25 @@
+<div
+  class="message{{#if className}} {{ className }}{{/if}}{{#if check}} message_our{{else}} message_their{{/if}}"
+>
+  <h3 class="message__name">
+    {{ name }}
+  </h3>
+
+  {{#each content}}
+    {{{ this }}}
+  {{/each}}
+
+  <div class="message__info{{#if check}} message__info_active{{/if}}">
+    {{#if check}}
+      <div class="message__check">
+        <svg class="message__icon">
+          <use xlink:href="#icon-checkmark"></use>
+        </svg>
+      </div>
+    {{/if}}
+
+    <div class="message__time">
+      {{ time }}
+    </div>
+  </div>
+</div>

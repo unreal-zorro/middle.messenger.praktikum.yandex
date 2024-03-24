@@ -2,16 +2,16 @@
 $main: #50BD1D;
 $secondary: #B1DD22;
 $accent: #F4F6F3;
-$error: #FF0000;
-$light: #FFFFFF;
-$dark: #000000;
+$error: #F00;
+$light: #FFF;
+$dark: #000;
 $border: #0B8C2F;
 $gray: rgba($dark, 0.25);
 $dark-gray: rgba($dark, 0.5);
 $bold-gray: rgba($dark, 0.75);
 
 // fonts
-$font: Roboto, sans-serif;
+$font: roboto, sans-serif;
 $font-error: 12px;
 $font-text: 16px;
 $font-button: 20px;

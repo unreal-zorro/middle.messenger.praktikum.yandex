@@ -1,0 +1,23 @@
+<form
+  class="{{#if className}}{{ className }}{{/if}}"
+>
+  <div
+    class="{{#if classNameFormControls}}{{ classNameFormControls }}{{/if}}"
+  >
+    {{#each controls}}
+      <div
+        class="{{#if ../classNameFormControl}}{{ ../classNameFormControl }}{{/if}}"
+      >
+        {{{ this }}}
+      </div>
+    {{/each}}
+  </div>
+
+  {{#if this.buttons}}
+    <div class="{{#if ../classNameFormButtons}}{{ ../classNameFormButtons }}{{/if}}"></div>
+      {{#each this.buttons}}
+        {{{ this }}}
+      {{/each}}
+    </div>
+  {{/if}}
+</form>
