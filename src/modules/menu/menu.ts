@@ -40,6 +40,9 @@ export class Menu extends Block {
           })
         })
     );
+
+    this.setTop(this.props.top as string);
+    this.setLeft(this.props.left as string);
   }
 
   componentDidUpdate(oldProps: MenuProps, newProps: MenuProps): boolean {

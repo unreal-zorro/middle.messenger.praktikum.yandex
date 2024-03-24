@@ -10,7 +10,7 @@ interface MenuItem extends Record<string, string | undefined> {
   text?: string;
 }
 
-interface ModalProps extends Props {
+export interface ModalProps extends Props {
   className?: string;
   items?: MenuItem[];
 }

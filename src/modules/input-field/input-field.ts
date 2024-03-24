@@ -4,7 +4,7 @@ import { Error, Input, Label } from '@/components';
 import { Listener } from '@/base/EventBus';
 import template from './input-field.hbs?raw';
 
-interface InputFieldProps extends Props {
+export interface InputFieldProps extends Props {
   className?: string;
   classNameLabel?: string;
   classNameInput?: string;
