@@ -1,38 +1,20 @@
 import './profile-page.scss';
-import { Block } from '@/base/';
-import type { Props } from '@/base/';
+import { Block, Listener } from '@/base';
+import type { Props } from '@/base';
 import { Avatar, Button, Header, Link } from '@/components';
-import type { Listener } from '@/base/EventBus';
+import type { AvatarProps, ButtonProps, HeaderProps, LinkProps } from '@/components';
 import { ProfileForm } from './modules';
+import type { ProfileFormProps } from './modules';
 import template from './profile-page.hbs?raw';
-
-interface ProfilePageFormControl extends Record<string, string | boolean | undefined> {
-  label?: string;
-  name?: string;
-  type?: string;
-  disabled?: boolean;
-  value?: string;
-  error?: string;
-}
-
-interface ProfilePageButton extends Record<string, string | undefined> {
-  type?: string;
-  text?: string;
-}
-
-interface ProfilePageLink extends Record<string, string | undefined> {
-  text?: string;
-  href?: string;
-}
 
 interface ProfilePageProps extends Props {
   id?: string;
   avatar?: string;
   header?: string;
-  controls?: ProfilePageFormControl[];
-  buttons?: ProfilePageButton[];
-  link?: ProfilePageLink;
-  navLink?: ProfilePageLink;
+  controls?: ProfileFormProps[];
+  buttons?: ButtonProps[];
+  link?: LinkProps;
+  navLink?: LinkProps;
 }
 
 export class ProfilePage extends Block {
@@ -45,7 +27,7 @@ export class ProfilePage extends Block {
 
     this.children.avatarChild = new Avatar({
       className: 'avatar_big profile__avatar',
-      imgSrc: this.props.avatar as string,
+      imgSrc: (this.props.avatar as AvatarProps)?.imgSrc as string,
       settings: {
         withInternalID: false
       }
@@ -53,7 +35,7 @@ export class ProfilePage extends Block {
 
     this.children.headerChild = new Header({
       className: 'profile__header',
-      text: this.props.header as string,
+      text: (this.props.header as HeaderProps)?.text as string,
       settings: {
         withInternalID: false
       }
@@ -70,8 +52,8 @@ export class ProfilePage extends Block {
       classNameFormButtons: 'profile__buttons',
       classNameButton: 'profile__button',
       classNameLink: 'profile__link',
-      controls: this.props.controls as ProfilePageFormControl[],
-      buttons: this.props.buttons as ProfilePageButton[],
+      controls: this.props.controls as ProfileFormProps[],
+      buttons: this.props.buttons as ButtonProps[],
       submitHandler,
       settings: {
         withInternalID: false
@@ -81,7 +63,7 @@ export class ProfilePage extends Block {
       }
     });
 
-    if (!this.props.buttons || !(this.props.buttons as ProfilePageButton[])?.length) {
+    if (!this.props.buttons || !(this.props.buttons as ButtonProps[])?.length) {
       this.children.changeDataButtonChild = new Button({
         className: 'profile__button',
         type: 'button',
@@ -103,8 +85,8 @@ export class ProfilePage extends Block {
 
     this.children.linkChild = new Link({
       className: 'profile__footer',
-      href: (this.props.link as ProfilePageLink)?.href as string,
-      text: (this.props.link as ProfilePageLink)?.text as string,
+      href: (this.props.link as LinkProps)?.href as string,
+      text: (this.props.link as LinkProps)?.text as string,
       settings: {
         withInternalID: false
       }
@@ -112,8 +94,8 @@ export class ProfilePage extends Block {
 
     this.children.navLinkChild = new Link({
       className: 'profile__nav',
-      href: (this.props.navLink as ProfilePageLink)?.href as string,
-      text: (this.props.navLink as ProfilePageLink)?.text as string,
+      href: (this.props.navLink as LinkProps)?.href as string,
+      text: (this.props.navLink as LinkProps)?.text as string,
       settings: {
         withInternalID: false
       }

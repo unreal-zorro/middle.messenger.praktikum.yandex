@@ -1,26 +1,13 @@
-import { Block } from '@/base/';
+import { Block, Listener } from '@/base/';
 import type { Props } from '@/base/';
 import { InputField } from '@/modules';
+import type { InputFieldProps } from '@/modules';
 import { Button } from '@/components';
+import type { ButtonProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
-import { Listener } from '@/base/EventBus';
 import template from './profile-form.hbs?raw';
 
-interface ProfilePageFormControl extends Record<string, string | boolean | undefined> {
-  label?: string;
-  name?: string;
-  type?: string;
-  disabled?: boolean;
-  value?: string;
-  error?: string;
-}
-
-interface ProfilePageButton extends Record<string, string | undefined> {
-  type?: string;
-  text?: string;
-}
-
-interface ProfileFormProps extends Props {
+export interface ProfileFormProps extends Props {
   className?: string;
   classNameFormControls?: string;
   classNameFormControl?: string;
@@ -31,8 +18,8 @@ interface ProfileFormProps extends Props {
   classNameFormButtons?: string;
   classNameButton?: string;
   classNameLink?: string;
-  controls?: ProfilePageFormControl[];
-  buttons?: ProfilePageButton[];
+  controls?: InputFieldProps[];
+  buttons?: ButtonProps[];
   focusHandler?: Listener;
   submitHandler?: (...args: Record<string, string>[]) => void;
 }
@@ -99,7 +86,7 @@ export class ProfileForm extends Block {
       }
     };
 
-    this.children.controls = (this.props.controls as ProfilePageFormControl[])?.map(
+    this.children.controls = (this.props.controls as InputFieldProps[])?.map(
       (control) =>
         new InputField({
           className: this.props.classNameInputField as string,
@@ -112,8 +99,8 @@ export class ProfileForm extends Block {
           value: control.value,
           placeholder: '',
           disabled: control.disabled,
-          error: !!control.error,
-          text: control.error,
+          error: control.error,
+          text: control.text,
           focusHandler,
           blurHandler,
           settings: {
@@ -122,7 +109,7 @@ export class ProfileForm extends Block {
         })
     );
 
-    this.children.buttons = (this.props.buttons as ProfilePageButton[])?.map(
+    this.children.buttons = (this.props.buttons as ButtonProps[])?.map(
       (button) =>
         new Button({
           className: this.props.classNameButton as string,

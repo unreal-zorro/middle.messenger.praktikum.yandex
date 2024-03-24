@@ -9,7 +9,7 @@ export const getRegisterPageData = () => ({
       name: 'email',
       type: 'email',
       value: '',
-      error: '',
+      error: false,
       text: ''
     },
     {
@@ -17,7 +17,7 @@ export const getRegisterPageData = () => ({
       name: 'login',
       type: 'text',
       value: '',
-      error: '',
+      error: false,
       text: ''
     },
     {
@@ -25,7 +25,7 @@ export const getRegisterPageData = () => ({
       name: 'first_name',
       type: 'text',
       value: '',
-      error: '',
+      error: false,
       text: ''
     },
     {
@@ -33,7 +33,7 @@ export const getRegisterPageData = () => ({
       name: 'second_name',
       type: 'text',
       value: '',
-      error: '',
+      error: false,
       text: ''
     },
     {
@@ -41,7 +41,7 @@ export const getRegisterPageData = () => ({
       name: 'phone',
       type: 'tel',
       value: '',
-      error: '',
+      error: false,
       text: ''
     },
     {
@@ -49,7 +49,7 @@ export const getRegisterPageData = () => ({
       name: 'password',
       type: 'password',
       value: '',
-      error: '',
+      error: false,
       text: ''
     },
     {
@@ -57,7 +57,7 @@ export const getRegisterPageData = () => ({
       name: 'password_again',
       type: 'password',
       value: '',
-      error: '',
+      error: false,
       text: ''
     }
   ],

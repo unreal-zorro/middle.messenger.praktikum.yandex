@@ -99,7 +99,7 @@ export class LoginForm extends Block {
           value: control.value,
           placeholder: '',
           disabled: false,
-          error: !!control.error,
+          error: control.error,
           text: control.text,
           focusHandler,
           blurHandler,

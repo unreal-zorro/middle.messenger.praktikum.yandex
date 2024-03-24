@@ -8,8 +8,12 @@ export const getProfilePageData = (user: User, mode: Mode) => {
   if (mode === 'edit') {
     data = {
       id: 'profile-edit',
-      avatar: user.avatar,
-      header: '',
+      avatar: {
+        imgSrc: user.avatar
+      },
+      header: {
+        text: ''
+      },
       controls: [
         {
           label: 'Почта',
@@ -17,7 +21,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'email',
           disabled: false,
           value: user.email,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Логин',
@@ -25,7 +30,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'text',
           disabled: false,
           value: user.login,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Имя',
@@ -33,7 +39,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'text',
           disabled: false,
           value: user.first_name,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Фамилия',
@@ -41,7 +48,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'text',
           disabled: false,
           value: user.second_name,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Имя в чате',
@@ -49,7 +57,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'text',
           disabled: false,
           value: user.display_name,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Телефон',
@@ -57,7 +66,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'tel',
           disabled: false,
           value: user.phone,
-          error: ''
+          error: false,
+          text: ''
         }
       ],
       buttons: [
@@ -75,7 +85,12 @@ export const getProfilePageData = (user: User, mode: Mode) => {
   } else if (mode === 'password') {
     data = {
       id: 'profile-password',
-      avatar: user.avatar,
+      avatar: {
+        imgSrc: user.avatar
+      },
+      header: {
+        text: ''
+      },
       controls: [
         {
           label: 'Старый пароль',
@@ -83,7 +98,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'password',
           disabled: false,
           value: '',
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Новый пароль',
@@ -91,7 +107,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'password',
           disabled: false,
           value: '',
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Повторите пароль ещё раз',
@@ -99,7 +116,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'password',
           disabled: false,
           value: '',
-          error: ''
+          error: false,
+          text: ''
         }
       ],
       buttons: [
@@ -117,8 +135,12 @@ export const getProfilePageData = (user: User, mode: Mode) => {
   } else {
     data = {
       id: 'profile',
-      avatar: user.avatar,
-      header: user.display_name,
+      avatar: {
+        imgSrc: user.avatar
+      },
+      header: {
+        text: user.display_name
+      },
       controls: [
         {
           label: 'Почта',
@@ -126,7 +148,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'email',
           disabled: true,
           value: user.email,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Логин',
@@ -134,7 +157,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'text',
           disabled: true,
           value: user.login,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Имя',
@@ -142,7 +166,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'text',
           disabled: true,
           value: user.first_name,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Фамилия',
@@ -150,7 +175,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'text',
           disabled: true,
           value: user.second_name,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Имя в чате',
@@ -158,7 +184,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'text',
           disabled: true,
           value: user.display_name,
-          error: ''
+          error: false,
+          text: ''
         },
         {
           label: 'Телефон',
@@ -166,7 +193,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           type: 'tel',
           disabled: true,
           value: user.phone,
-          error: ''
+          error: false,
+          text: ''
         }
       ],
       buttons: [],
