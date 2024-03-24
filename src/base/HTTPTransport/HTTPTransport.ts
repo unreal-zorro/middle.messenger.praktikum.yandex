@@ -24,22 +24,21 @@ type Options = {
 
 type OptionsWithoutMethod = Omit<Options, 'method'>;
 
+type HTTPMethod = (url: string, options?: OptionsWithoutMethod) => Promise<XMLHttpRequest>;
+
 export class HTTPTransport {
-  get: (url: string, options: OptionsWithoutMethod) => Promise<XMLHttpRequest> = (
-    url,
-    options = {}
-  ) => {
+  get: HTTPMethod = (url, options = {}) => {
     const urlWithQuery = url + queryStringify(options?.data);
     return this.request(urlWithQuery, { ...options, method: METHODS.GET }, options.timeout);
   };
 
-  put = (url: string, options: OptionsWithoutMethod = {}) =>
+  put: HTTPMethod = (url, options = {}) =>
     this.request(url, { ...options, method: METHODS.PUT }, options.timeout);
 
-  post = (url: string, options: OptionsWithoutMethod = {}) =>
+  post: HTTPMethod = (url, options = {}) =>
     this.request(url, { ...options, method: METHODS.POST }, options.timeout);
 
-  delete = (url: string, options: OptionsWithoutMethod = {}) =>
+  delete: HTTPMethod = (url, options = {}) =>
     this.request(url, { ...options, method: METHODS.DELETE }, options.timeout);
 
   request: (url: string, options: Options, timeout?: number) => Promise<XMLHttpRequest> = (
@@ -59,7 +58,7 @@ export class HTTPTransport {
 
       xhr.onload = () => resolve(xhr);
 
-      const handleError = (event: Event) => reject(new Error(`Error: ${event}`));
+      const handleError = (event: Event) => reject(new Error(`Error: ${event.type}`));
 
       xhr.timeout = timeout;
 
