@@ -13,6 +13,7 @@
     "dev": "vite --open",
     "build": "vite build --emptyOutDir",
     "preview": "vite preview",
+    "ts": "npx tsc --noEmit",
     "prettier": "npx prettier --check .",
     "prettier:fix": "npx prettier --write .",
     "lint:ts": "eslint \"**/*.{ts,tsx}\"",
