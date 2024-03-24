@@ -1,26 +1,14 @@
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { InputField } from '@/modules';
+import type { InputFieldProps } from '@/modules';
 import { Button } from '@/components';
+import type { ButtonProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
 import { Listener } from '@/base/EventBus';
 import template from './login-form.hbs?raw';
 
-interface LoginPageFormControl extends Record<string, string | undefined> {
-  label?: string;
-  name?: string;
-  type?: string;
-  value?: string;
-  error?: string;
-}
-
-interface LoginPageButton extends Record<string, string | undefined> {
-  type?: string;
-  text?: string;
-  href?: string;
-}
-
-interface LoginFormProps extends Props {
+export interface LoginFormProps extends Props {
   className?: string;
   classNameFormControls?: string;
   classNameFormControl?: string;
@@ -30,8 +18,8 @@ interface LoginFormProps extends Props {
   classNameError?: string;
   classNameButton?: string;
   classNameLink?: string;
-  controls?: LoginPageFormControl[];
-  buttons?: LoginPageButton[];
+  controls?: InputFieldProps[];
+  buttons?: ButtonProps[];
   focusHandler?: Listener;
   submitHandler?: (...args: Record<string, string>[]) => void;
 }
@@ -98,7 +86,7 @@ export class LoginForm extends Block {
       }
     };
 
-    this.children.controls = (this.props.controls as LoginPageFormControl[])?.map(
+    this.children.controls = (this.props.controls as InputFieldProps[])?.map(
       (control) =>
         new InputField({
           className: this.props.classNameInputField as string,
@@ -112,7 +100,7 @@ export class LoginForm extends Block {
           placeholder: '',
           disabled: false,
           error: !!control.error,
-          text: control.error,
+          text: control.text,
           focusHandler,
           blurHandler,
           settings: {
@@ -121,7 +109,7 @@ export class LoginForm extends Block {
         })
     );
 
-    this.children.buttons = (this.props.buttons as LoginPageButton[])?.map(
+    this.children.buttons = (this.props.buttons as ButtonProps[])?.map(
       (button) =>
         new Button({
           className: this.props.classNameButton as string,

@@ -1,55 +1,64 @@
 export const getRegisterPageData = () => ({
   id: 'register',
-  header: 'Регистрация',
+  header: {
+    text: 'Регистрация'
+  },
   controls: [
     {
       label: 'Почта',
       name: 'email',
       type: 'email',
       value: '',
-      error: ''
+      error: '',
+      text: ''
     },
     {
       label: 'Логин',
       name: 'login',
       type: 'text',
       value: '',
-      error: ''
+      error: '',
+      text: ''
     },
     {
       label: 'Имя',
       name: 'first_name',
       type: 'text',
       value: '',
-      error: ''
+      error: '',
+      text: ''
     },
     {
       label: 'Фамилия',
       name: 'second_name',
       type: 'text',
       value: '',
-      error: ''
+      error: '',
+      text: ''
     },
     {
       label: 'Телефон',
       name: 'phone',
       type: 'tel',
       value: '',
-      error: ''
+      error: '',
+      text: ''
     },
     {
       label: 'Пароль',
       name: 'password',
       type: 'password',
       value: '',
-      error: ''
+      error: '',
+      text: ''
     },
     {
       label: 'Пароль (ещё раз)',
       name: 'password_again',
       type: 'password',
       value: '',
-      error: ''
+      error: '',
+      text: ''
     }
   ],
   buttons: [

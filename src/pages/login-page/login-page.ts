@@ -1,36 +1,18 @@
 import './login-page.scss';
-import { Block } from '@/base/';
+import { Block, Listener } from '@/base/';
 import type { Props } from '@/base/';
 import { Header, Link } from '@/components';
-import { Listener } from '@/base/EventBus';
+import type { ButtonProps, HeaderProps, LinkProps } from '@/components';
 import { LoginForm } from './modules';
+import type { LoginFormProps } from './modules';
 import template from './login-page.hbs?raw';
-
-interface LoginPageFormControl extends Record<string, string | undefined> {
-  label?: string;
-  name?: string;
-  type?: string;
-  value?: string;
-  error?: string;
-}
-
-interface LoginPageButton extends Record<string, string | undefined> {
-  type?: string;
-  text?: string;
-  href?: string;
-}
-
-interface LoginPageLink extends Record<string, string | undefined> {
-  text?: string;
-  href?: string;
-}
 
 interface LoginPageProps extends Props {
   id?: string;
-  header?: string;
-  controls?: LoginPageFormControl[];
-  buttons?: LoginPageButton[];
-  link?: LoginPageLink;
+  header?: HeaderProps;
+  controls?: LoginFormProps[];
+  buttons?: ButtonProps[];
+  link?: LinkProps;
 }
 
 export class LoginPage extends Block {
@@ -43,7 +25,7 @@ export class LoginPage extends Block {
 
     this.children.headerChild = new Header({
       className: 'login__header',
-      text: this.props.header as string,
+      text: (this.props.header as HeaderProps)?.text as string,
       settings: {
         withInternalID: true
       }
@@ -59,8 +41,8 @@ export class LoginPage extends Block {
       classNameError: 'login__error',
       classNameButton: 'login__button',
       classNameLink: 'login__link',
-      controls: this.props.controls as LoginPageFormControl[],
-      buttons: this.props.buttons as LoginPageButton[],
+      controls: this.props.controls as LoginFormProps[],
+      buttons: this.props.buttons as ButtonProps[],
       submitHandler,
       settings: {
         withInternalID: false
@@ -72,8 +54,8 @@ export class LoginPage extends Block {
 
     this.children.linkChild = new Link({
       className: 'login__footer',
-      href: (this.props.link as LoginPageLink)?.href as string,
-      text: (this.props.link as LoginPageLink)?.text as string,
+      href: (this.props.link as LinkProps)?.href as string,
+      text: (this.props.link as LinkProps)?.text as string,
       settings: {
         withInternalID: true
       }

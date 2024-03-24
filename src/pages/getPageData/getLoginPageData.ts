@@ -1,20 +1,24 @@
 export const getLoginPageData = () => ({
   id: 'login',
-  header: 'Вход',
+  header: {
+    text: 'Вход'
+  },
   controls: [
     {
       label: 'Логин',
       name: 'login',
       type: 'text',
       value: '',
-      error: ''
+      error: false,
+      text: ''
     },
     {
       label: 'Пароль',
       name: 'password',
       type: 'password',
       value: '',
-      error: ''
+      error: false,
+      text: ''
     }
   ],
   buttons: [
