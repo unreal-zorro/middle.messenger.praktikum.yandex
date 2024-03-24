@@ -1,24 +1,10 @@
 import './chat.scss';
 import { Block } from '@/base/';
-import type { Props } from '@/base/';
+import type { Listener, Props } from '@/base';
 import { Avatar, Button, Svg, Text } from '@/components';
-import { Listener } from '@/base/EventBus';
 import template from './chat.hbs?raw';
 
-// interface ChatAvatar extends Record<string, string | undefined> {
-//   className?: string;
-//   imgSrc?: string;
-// }
-
-// interface ChatText extends Record<string, string | undefined> {
-//   text?: string;
-// }
-
-// interface ChatButton extends Record<string, string | undefined> {
-//   type?: string;
-// }
-
-interface ChatProps extends Props {
+export interface ChatProps extends Props {
   className?: string;
   id?: string;
   avatar?: string;
@@ -28,10 +14,6 @@ interface ChatProps extends Props {
   sender?: boolean;
   count?: string;
   active?: boolean;
-  // avatarChild?: ChatAvatar;
-  // dateChild?: ChatText;
-  // countChild?: ChatText;
-  // buttonChild?: ChatButton;
   clickHandler?: Listener;
 }
 
@@ -102,26 +84,21 @@ export class Chat extends Block {
     });
   }
 
-  // componentDidUpdate(oldProps: LoginFormProps, newProps: LoginFormProps): boolean {
-  //   if (oldProps.value !== newProps.value) {
-  //     (this.children.inputChild as Block).setProps({ value: newProps.value });
-  //   }
+  componentDidUpdate(oldProps: ChatProps, newProps: ChatProps): boolean {
+    if (oldProps.avatar !== newProps.avatar) {
+      (this.children.avatarChild as Avatar).setProps({ value: newProps.avatar });
+    }
 
-  //   if (oldProps.disabled !== newProps.disabled) {
-  //     (this.children.inputChild as Block).setProps({ disabled: newProps.disabled });
-  //   }
+    if (oldProps.date !== newProps.date) {
+      (this.children.dateChild as Text).setProps({ error: newProps.date });
+    }
 
-  //   if (oldProps.error !== newProps.error) {
-  //     (this.children.inputChild as Block).setProps({ error: newProps.error });
-  //     (this.children.inputChild as Block).setProps({ error: newProps.error });
-  //   }
+    if (oldProps.count !== newProps.count) {
+      (this.children.countChild as Text).setProps({ text: newProps.count });
+    }
 
-  //   if (oldProps.text !== newProps.text) {
-  //     (this.children.inputChild as Block).setProps({ text: newProps.text });
-  //   }
-
-  //   return true;
-  // }
+    return true;
+  }
 
   render(): string {
     return template;

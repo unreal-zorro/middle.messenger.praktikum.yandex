@@ -1,2 +1,2 @@
 export { List } from './list';
-export type { ChatProps, MenuItem } from './list';
+export type { ListProps } from './list';

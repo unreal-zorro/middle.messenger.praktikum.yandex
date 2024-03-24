@@ -20,7 +20,9 @@ const getChatMenuData = () => {
     }
   ];
 
-  return items;
+  return {
+    items
+  };
 };
 
 const getChatsListPageData = (user: User, chats: Chat[]) => {
@@ -116,7 +118,9 @@ const getAttachMenuData = () => {
     }
   ];
 
-  return items;
+  return {
+    items
+  };
 };
 
 const getUserMenuData = () => {
@@ -133,7 +137,9 @@ const getUserMenuData = () => {
     }
   ];
 
-  return items;
+  return {
+    items
+  };
 };
 
 type ResultMessage = OneMessage;
