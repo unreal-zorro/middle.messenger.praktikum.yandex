@@ -2,28 +2,14 @@ import './equalDatesMessages.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Text } from '@/components';
-import template from './equalDatesMessages.hbs?raw';
 import { Message } from './modules';
+import type { MessageProps, MessageContent } from './modules';
+import template from './equalDatesMessages.hbs?raw';
 
-export interface OneMessage extends Record<string, string | boolean | undefined> {
-  id?: string;
-  name?: string;
+export interface EqualDatesMessagesProps extends Props {
+  className?: string;
   date?: string;
-  time?: string;
-  check?: boolean;
-}
-
-export interface MessageContent extends Record<string, string | boolean | undefined> {
-  messageId?: string;
-  isText?: boolean;
-  isImage?: boolean;
-  data?: string;
-}
-
-interface EqualDatesMessagesProps extends Props {
-  className?: string,
-  date?: string;
-  messages?: OneMessage[];
+  messages?: MessageProps[];
   messageContent?: MessageContent[];
 }
 
@@ -40,23 +26,23 @@ export class EqualDatesMessages extends Block {
         }
       });
 
-      this.children.messages = (this.props.messages as OneMessage[])
-        ?.map((message) => {
-          const messageContent: MessageContent[] = (this.props.messageContent as MessageContent[])
-            ?.filter((content) => message.id === content.messageId);
+      this.children.messages = (this.props.messages as MessageProps[])?.map((message) => {
+        const messageContent: MessageContent[] = (
+          this.props.messageContent as MessageContent[]
+        )?.filter((content) => message.id === content.messageId);
 
-          return new Message({
-            className: 'content__message',
-            id: message.id,
-            name: message.name,
-            time: message.time,
-            check: message.check,
-            content: messageContent as MessageContent[],
-            settings: {
-              withInternalID: true
-            }
-          });
+        return new Message({
+          className: 'content__message',
+          id: message.id,
+          name: message.name,
+          time: message.time,
+          check: message.check,
+          content: messageContent,
+          settings: {
+            withInternalID: true
+          }
         });
+      });
     }
   }
 

@@ -1,16 +1,13 @@
 import './chats-page.scss';
 import { Block } from '@/base';
 import type { Props } from '@/base';
-import type { MenuProps } from '@/modules';
 import { Content, List, NewMessageForm, Search } from './modules';
 import type {
   NewMessageFormProps,
   SearchFormControl,
   SearchLink,
   ListProps,
-  CurrentChat,
-  OneMessage,
-  MessageContentItem
+  ContentProps
 } from './modules';
 import template from './chats-page.hbs?raw';
 
@@ -19,12 +16,7 @@ interface ChatsPageProps extends Props {
   controlsSearch?: SearchFormControl[];
   navLinkSearch?: SearchLink;
   list?: ListProps;
-  dates?: string[];
-  messages?: OneMessage[];
-  messageContent?: MessageContentItem[];
-  currentChat?: CurrentChat;
-  attachMenu?: MenuProps;
-  userMenu?: MenuProps;
+  content?: ContentProps;
   newMessage?: NewMessageFormProps;
 }
 
@@ -57,12 +49,12 @@ export class ChatsPage extends Block {
 
     this.children.content = new Content({
       className: 'chats__content',
-      dates: this.props.dates as string[],
-      messages: this.props.messages as OneMessage[],
-      messageContent: this.props.messageContent as MessageContentItem[],
-      currentChat: this.props.currentChat as CurrentChat,
-      attachMenuItems: (this.props.attachMenu as MenuProps).items,
-      userMenuItems: (this.props.userMenu as MenuProps).items,
+      dates: (this.props.content as ContentProps).dates,
+      messages: (this.props.content as ContentProps).messages,
+      messageContent: (this.props.content as ContentProps).messageContent,
+      currentChat: (this.props.content as ContentProps).currentChat,
+      attachMenuItems: (this.props.content as ContentProps).attachMenu,
+      userMenuItems: (this.props.content as ContentProps).userMenu,
 
       settings: {
         withInternalID: false

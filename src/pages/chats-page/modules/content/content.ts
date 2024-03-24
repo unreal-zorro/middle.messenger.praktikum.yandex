@@ -1,61 +1,35 @@
 import './content.scss';
-import { Block } from '@/base/';
-import type { Props } from '@/base/';
+import { Block } from '@/base';
+import type { Listener, Props } from '@/base';
+import type { CurrentChat } from '@/entities';
 import { Avatar, Button, Svg, Text } from '@/components';
+import { Menu } from '@/modules';
+import type { MenuProps } from '@/modules';
 import { EqualDatesMessages } from './modules';
+import type { MessageContent, MessageProps } from './modules';
 import template from './content.hbs?raw';
 
-export interface MessageContent extends Record<string, string | boolean | undefined> {
-  messageId?: string;
-  isText?: boolean;
-  isImage?: boolean;
-  data?: string;
-}
-
-export interface OneMessage extends Record<string, string | boolean | undefined> {
-  id?: string;
-  name?: string;
-  date?: string;
-  time?: string;
-  check?: boolean;
-}
-
-export interface CurrentChat extends Record<string, string | undefined> {
-  id?: string;
-  avatar?: string;
-  title?: string;
-}
-
-export interface MenuItem extends Record<string, string | undefined> {
-  type?: string;
-  href?: string;
-  text?: string;
-}
-
-export interface ModalItem extends Record<string, string | boolean | undefined> {
-  type?: string;
-  cancel?: boolean;
-  text?: string;
-}
-
-interface ContentProps extends Props {
+export interface ContentProps extends Props {
   className?: string;
   dates?: string[];
-  messages?: OneMessage[];
+  messages?: MessageProps[];
   messageContent?: MessageContent[];
   currentChat?: CurrentChat;
   classNameAttachMenu?: string;
-  attachMenuItems?: MenuItem[];
+  attachMenu?: MenuProps;
   classNameUserMenu?: string;
-  userMenuItems?: MenuItem[];
-  classNameModal?: string;
-  // modalTitle?: string;
-  // modalItems?: ModalItem[];
+  userMenu?: MenuProps;
 }
 
 export class Content extends Block {
   constructor(props: ContentProps) {
     super(props);
+
+    const clickHandler: Listener = () => {
+      const currentChat = (this.props.currentChat as CurrentChat);
+
+      console.log(`currentChat id = ${currentChat.id}`);
+    };
 
     this.children.avatar = new Avatar({
       className: 'content__avatar avatar_no-edit',
@@ -79,6 +53,11 @@ export class Content extends Block {
       settings: {
         withInternalID: false
       },
+      events: {
+        click: ((event: Event) => {
+          clickHandler.call(this, event?.target as HTMLButtonElement);
+        }) as Listener
+      },
       buttonChild: new Svg({
         className: 'content__icon',
         href: '#icon-triple'
@@ -87,7 +66,7 @@ export class Content extends Block {
 
     if (this.props.dates && (this.props.dates as string[])?.length) {
       this.children.dates = (this.props.dates as string[])?.map((dateItem) => {
-        const messages: OneMessage[] = (this.props.messages as OneMessage[])?.filter(
+        const messages: MessageProps[] = (this.props.messages as MessageProps[])?.filter(
           (messageItem) => dateItem === messageItem.date
         );
         const messageContent: MessageContent[] = [];
@@ -101,7 +80,7 @@ export class Content extends Block {
         return new EqualDatesMessages({
           className: 'content__list-item',
           date: dateItem,
-          messages: messages as OneMessage[],
+          messages,
           messageContent,
           settings: {
             withInternalID: true
@@ -130,21 +109,21 @@ export class Content extends Block {
       });
     }
 
-    // this.children.attachMenu = new Menu({
-    //   className: 'content__attach-menu',
-    //   items: this.props.attachMenuItems as MenuItem[],
-    //   settings: {
-    //     withInternalID: false
-    //   }
-    // });
+    this.children.attachMenu = new Menu({
+      className: 'content__attach-menu',
+      items: (this.props.attachMenuItems as MenuProps).items,
+      settings: {
+        withInternalID: false
+      }
+    });
 
-    // this.children.userMenu = new Menu({
-    //   className: 'content__user-menu',
-    //   items: this.props.userMenuItems as MenuItem[],
-    //   settings: {
-    //     withInternalID: false
-    //   }
-    // });
+    this.children.userMenu = new Menu({
+      className: 'content__user-menu',
+      items: (this.props.userMenuItems as MenuProps).items,
+      settings: {
+        withInternalID: false
+      }
+    });
   }
 
   render(): string {

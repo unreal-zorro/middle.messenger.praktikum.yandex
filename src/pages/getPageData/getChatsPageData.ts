@@ -1,5 +1,5 @@
 import type { MessageContent, Chat, CurrentChat, Message, User } from '@/entities';
-import type { OneMessage } from '../chats-page/modules';
+import type { MessageProps } from '../chats-page/modules';
 
 const getChatMenuData = () => {
   const items = [
@@ -142,15 +142,13 @@ const getUserMenuData = () => {
   };
 };
 
-type ResultMessage = OneMessage;
-
 export const getChatsContentPageData = (
   user: User,
   messagesArray: Message[],
   currentChat: CurrentChat
 ) => {
   const dateArray: Set<string> = new Set();
-  const messageArray: ResultMessage[] = [];
+  const messageArray: MessageProps[] = [];
   const messageContentArray: MessageContent[] = [];
 
   const currentDate = new Date();
@@ -183,7 +181,7 @@ export const getChatsContentPageData = (
     const date = dateFormatter.format(messageDate);
     const time = timeFormatter.format(messageDate);
 
-    const resultMessage: ResultMessage = {
+    const resultMessage: MessageProps = {
       id: message.id,
       name: message.display_name,
       date,
@@ -202,7 +200,7 @@ export const getChatsContentPageData = (
     dates: Array.from(dateArray),
     messages: messageArray,
     messageContent: messageContentArray,
-    chat
+    currentChat: chat
   };
 };
 
@@ -236,14 +234,8 @@ export const getChatsPageData = (
 ) => {
   const chatMenu = getChatMenuData();
 
-  const attachMenu = {
-    items: getAttachMenuData()
-  };
-
-  const userMenu = {
-    items: getUserMenuData()
-  };
-
+  const attachMenu = getAttachMenuData();
+  const userMenu = getUserMenuData();
   const userDeleteModal = {
     ...getUserDeleteModalData()
   };

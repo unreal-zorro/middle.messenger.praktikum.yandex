@@ -15,9 +15,9 @@ export interface Message {
 }
 
 export interface CurrentChat {
-  id: string;
-  avatar: string;
-  title: string;
+  id?: string;
+  avatar?: string;
+  title?: string;
 }
 
 export const messages: Message[] = [

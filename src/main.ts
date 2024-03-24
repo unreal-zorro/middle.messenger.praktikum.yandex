@@ -13,7 +13,6 @@ import {
   ChatsPage
 } from './pages';
 import { Block } from './base';
-import { CurrentChat } from './pages/chats-page/modules';
 
 const navigate: (page: Nullable<Block>) => void = (page) => {
   if (page) {
@@ -129,13 +128,8 @@ const contentLoadedHandler: () => void = () => {
         controlsSearch: data.search.controls,
         navLinkSearch: data.search.navLink,
         list: data.list,
-        newMessage: data.newMessage,
-        dates: data.content.dates,
-        messages: data.content.messages,
-        messageContent: data.content.messageContent,
-        currentChat: data.content.chat as CurrentChat,
-        attachMenu: data.content.attachMenu.items,
-        userMenu: data.content.userMenu.items
+        content: data.content,
+        newMessage: data.newMessage
       });
 
       page = chatsPage;
