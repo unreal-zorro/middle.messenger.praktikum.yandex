@@ -3,7 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './link.hbs?raw';
 
-interface LinkProps extends Props {
+export interface LinkProps extends Props {
   className?: string;
   href?: string;
   text?: string;

@@ -3,7 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './avatar.hbs?raw';
 
-interface AvatarProps extends Props {
+export interface AvatarProps extends Props {
   className?: string;
   imgSrc?: string;
 }

@@ -2,7 +2,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './image.hbs?raw';
 
-interface ImageProps extends Props {
+export interface ImageProps extends Props {
   className?: string;
   src?: string;
   alt?: string;

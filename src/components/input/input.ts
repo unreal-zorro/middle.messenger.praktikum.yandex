@@ -3,7 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './input.hbs?raw';
 
-interface InputProps extends Props {
+export interface InputProps extends Props {
   className?: string;
   error?: boolean;
   type?: string;

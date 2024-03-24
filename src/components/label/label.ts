@@ -3,7 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './label.hbs?raw';
 
-interface LabelProps extends Props {
+export interface LabelProps extends Props {
   className?: string;
   for?: string;
   text?: string;

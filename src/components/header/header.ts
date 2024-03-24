@@ -3,7 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './header.hbs?raw';
 
-interface HeaderProps extends Props {
+export interface HeaderProps extends Props {
   className?: string;
   text?: string;
 }

@@ -3,7 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './button.hbs?raw';
 
-interface ButtonProps extends Props {
+export interface ButtonProps extends Props {
   className?: string;
   cancel?: boolean;
   type?: string;

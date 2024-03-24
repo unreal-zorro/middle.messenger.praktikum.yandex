@@ -2,7 +2,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './svg.hbs?raw';
 
-interface SvgProps extends Props {
+export interface SvgProps extends Props {
   className?: string;
   href?: string;
 }

@@ -2,7 +2,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './span.hbs?raw';
 
-interface SpanProps extends Props {
+export interface SpanProps extends Props {
   className?: string;
   text?: string;
 }

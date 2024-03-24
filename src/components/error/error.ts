@@ -3,7 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import template from './error.hbs?raw';
 
-interface ErrorProps extends Props {
+export interface ErrorProps extends Props {
   className?: string;
   error?: boolean;
   text?: string;
