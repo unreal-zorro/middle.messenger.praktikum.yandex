@@ -8,7 +8,7 @@ export interface Chat {
   id: number;
   avatar: string;
   title: string;
-  message: ChatMessage,
+  message: ChatMessage;
   count: string;
   active: boolean;
 }
