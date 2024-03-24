@@ -21,22 +21,11 @@ export class Chat extends Block {
   constructor(props: ChatProps) {
     super(props);
 
-    const clickHandler = (element: HTMLButtonElement) => {
+    const clickHandler = () => {
       if (this.props.clickHandler) {
-        const {
-          left: chatLeft,
-          right: chatRight,
-          top: chatTop,
-          bottom: chatBottom
-        } = element.getBoundingClientRect();
+        const chatId = this.props.id;
 
-        (this.props.clickHandler as Listener)(
-          Number(this.props.id),
-          chatLeft,
-          chatRight,
-          chatTop,
-          chatBottom
-        );
+        (this.props.clickHandler as Listener)(chatId);
       }
     };
 
@@ -77,9 +66,7 @@ export class Chat extends Block {
         href: '#icon-settings'
       }),
       events: {
-        click: ((event: Event) => {
-          clickHandler.call(this, event?.target as HTMLButtonElement);
-        }) as Listener
+        click: (() => clickHandler.call(this)) as Listener
       }
     });
   }

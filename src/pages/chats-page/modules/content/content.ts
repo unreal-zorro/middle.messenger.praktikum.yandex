@@ -26,9 +26,9 @@ export class Content extends Block {
     super(props);
 
     const clickHandler: Listener = () => {
-      const currentChat = (this.props.currentChat as CurrentChat);
+      const currentChat = this.props.currentChat as CurrentChat;
 
-      console.log(`currentChat id = ${currentChat.id}`);
+      console.log(`content currentChat id = ${currentChat.id}`);
     };
 
     this.children.avatar = new Avatar({

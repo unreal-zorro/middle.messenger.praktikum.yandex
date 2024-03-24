@@ -19,8 +19,8 @@ export class List extends Block {
   constructor(props: ListProps) {
     super(props);
 
-    const chatClickHandler: Listener<number> = () => {
-      console.log('click');
+    const chatClickHandler: Listener<number> = (id: number) => {
+      console.log(`list currentChat id = ${id}`);
     };
 
     if (this.props.chats && (this.props.chats as ChatProps[])?.length) {

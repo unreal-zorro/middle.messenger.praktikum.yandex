@@ -71,7 +71,7 @@ export const messages: Message[] = [
 ];
 
 export const currentChat: CurrentChat = {
-  id: '3',
+  id: '4',
   avatar: '',
   title: 'Вадим'
 };
