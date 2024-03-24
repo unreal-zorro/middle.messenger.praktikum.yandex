@@ -2,19 +2,12 @@ import './chats-page.scss';
 import { Block } from '@/base';
 import type { Props } from '@/base';
 import { Content, List, NewMessageForm, Search } from './modules';
-import type {
-  NewMessageFormProps,
-  SearchFormControl,
-  SearchLink,
-  ListProps,
-  ContentProps
-} from './modules';
+import type { NewMessageFormProps, SearchProps, ListProps, ContentProps } from './modules';
 import template from './chats-page.hbs?raw';
 
 interface ChatsPageProps extends Props {
   id?: string;
-  controlsSearch?: SearchFormControl[];
-  navLinkSearch?: SearchLink;
+  search?: SearchProps;
   list?: ListProps;
   content?: ContentProps;
   newMessage?: NewMessageFormProps;
@@ -30,8 +23,8 @@ export class ChatsPage extends Block {
 
     this.children.search = new Search({
       className: 'chats__search',
-      controls: this.props.controlsSearch as SearchFormControl[],
-      navLink: this.props.navLinkSearch as SearchLink,
+      controls: (this.props.search as SearchProps).controls,
+      navLink: (this.props.search as SearchProps).navLink,
       settings: {
         withInternalID: false
       }

@@ -1,5 +1,5 @@
 export { Search } from './search';
-export type { SearchFormControl, SearchLink } from './search';
+export type { SearchProps } from './search';
 export { List } from './list';
 export type { ListProps } from './list';
 export { Content } from './content';

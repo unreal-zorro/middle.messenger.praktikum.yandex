@@ -125,8 +125,7 @@ const contentLoadedHandler: () => void = () => {
           withInternalID: false
         },
         id: data.id,
-        controlsSearch: data.search.controls,
-        navLinkSearch: data.search.navLink,
+        search: data.search,
         list: data.list,
         content: data.content,
         newMessage: data.newMessage

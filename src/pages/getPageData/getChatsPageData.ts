@@ -1,5 +1,5 @@
 import type { MessageContent, Chat, CurrentChat, Message, User } from '@/entities';
-import type { MessageProps } from '../chats-page/modules';
+import { MessageProps } from '../chats-page/modules/content';
 
 const getChatMenuData = () => {
   const items = [
@@ -255,7 +255,8 @@ export const getChatsPageData = (
           disabled: false,
           placeholder: 'Поиск',
           value: '',
-          error: ''
+          error: false,
+          text: ''
         }
       ]
     },

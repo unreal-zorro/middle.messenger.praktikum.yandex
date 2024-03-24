@@ -1,2 +1,2 @@
 export { Search } from './search';
-export type { SearchFormControl, SearchLink } from './search';
+export type { SearchProps } from './search';
