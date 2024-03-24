@@ -3,23 +3,7 @@ import { v4 as makeUUID } from 'uuid';
 import { EventBus } from '../EventBus';
 import type { Listener } from '../EventBus';
 
-export interface Props {
-  [key: string]:
-    | string
-    | string[]
-    | boolean
-    | Listener
-    | Record<string, Listener>
-    | Record<string, boolean>
-    | undefined
-    | Record<string, string | undefined>
-    | Record<string, string | boolean | undefined>
-    | Array<Record<string, string | undefined>>
-    | Array<Record<string, string | boolean | undefined>>
-    | Block
-    | ((...args: string[]) => string)
-    | ((...args: number[]) => string)
-    | ((...args: Record<string, string>[]) => void);
+export interface Props extends Record<string, unknown> {
   events?: Record<string, Listener>;
   settings?: Record<string, boolean>;
   id?: string;
@@ -120,13 +104,9 @@ export abstract class Block {
     this.componentDidMount();
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
 
-    // Object.values(this.children).forEach((child) => {
-    //   child.dispatchComponentDidMount();
-    // });
-
     Object.values(this.children).forEach((child) => {
       if (Array.isArray(child)) {
-        child.forEach((childItem) => (childItem as Block).dispatchComponentDidMount());
+        child.forEach((childItem) => childItem.dispatchComponentDidMount());
       } else {
         (child as Block).dispatchComponentDidMount();
       }
@@ -170,15 +150,11 @@ export abstract class Block {
   compile(template: string, props: Props): Element | null {
     const propsAndStubs = { ...props };
 
-    // Object.entries(this.children).forEach(([key, child]) => {
-    //   propsAndStubs[key] = `<div data-id="${child?._id}"></div>`;
-    // });
-
     Object.entries(this.children).forEach(([key, child]) => {
       if (Array.isArray(child)) {
         Object.entries(child).forEach(([childItemKey, childItem]) => {
           (propsAndStubs[key] as Children)[childItemKey] =
-            `<div data-id="${(childItem as Block)?._id}"></div>`;
+            `<div data-id="${childItem?._id}"></div>`;
         });
       } else {
         propsAndStubs[key] = `<div data-id="${(child as Block)?._id}"></div>`;
@@ -188,16 +164,11 @@ export abstract class Block {
     const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
     fragment.innerHTML = Handlebars.compile(template)(propsAndStubs);
 
-    // Object.values(this.children).forEach((child) => {
-    //   const stub = fragment.content.querySelector(`[data-id="${(child as Block)._id}"]`);
-    //   stub?.replaceWith((child as Block).getContent()!);
-    // });
-
     Object.values(this.children).forEach((child) => {
       if (Array.isArray(child)) {
         Object.values(child).forEach((childItem) => {
-          const stub = fragment.content.querySelector(`[data-id="${(childItem as Block)._id}"]`);
-          stub?.replaceWith((childItem as Block).getContent()!);
+          const stub = fragment.content.querySelector(`[data-id="${childItem._id}"]`);
+          stub?.replaceWith(childItem.getContent()!);
         });
       } else {
         const stub = fragment.content.querySelector(`[data-id="${(child as Block)._id}"]`);
