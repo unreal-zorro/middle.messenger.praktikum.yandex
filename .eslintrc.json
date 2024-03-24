@@ -1,19 +1,12 @@
 {
   "root": true,
-  "extends": [
-    "airbnb",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-    "prettier"
-  ],
+  "extends": ["airbnb", "prettier"],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "html", "hbs", "import"],
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "max-len": [2, 100],
     "@typescript-eslint/no-unused-vars": 2,
     "import/prefer-default-export": "off",
-    "hbs/check-hbs-template-literals": 2,
     "comma-dangle": ["error", "never"],
     "import/no-unresolved": "error",
     "import/no-extraneous-dependencies": "off",
