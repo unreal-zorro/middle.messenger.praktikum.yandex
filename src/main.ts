@@ -130,16 +130,13 @@ const contentLoadedHandler: () => void = () => {
         navLinkSearch: data.search.navLink,
         chats: data.list.chats,
         chatMenu: data.list.chatMenu,
-        controlNewMessage: data.newMessage.control,
-        attachButtonNewMessage: data.newMessage.attachButton,
-        sendButtonNewMessage: data.newMessage.sendButton,
+        newMessage: data.newMessage,
         dates: data.content.dates,
         messages: data.content.messages,
         messageContent: data.content.messageContent,
         currentChat: data.content.chat as CurrentChat,
         attachMenu: data.content.attachMenu.items,
         userMenu: data.content.userMenu.items
-        // userDeleteModal?: ;
       });
 
       page = chatsPage;

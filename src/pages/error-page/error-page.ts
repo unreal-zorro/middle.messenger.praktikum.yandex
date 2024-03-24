@@ -7,8 +7,8 @@ import template from './error-page.hbs?raw';
 
 interface ErrorPageProps extends Props {
   id?: string;
-  header?: string;
-  text?: string;
+  header?: HeaderProps;
+  text?: TextProps;
   link?: LinkProps;
 }
 

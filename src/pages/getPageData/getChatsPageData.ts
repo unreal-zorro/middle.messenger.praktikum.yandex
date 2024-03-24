@@ -272,11 +272,15 @@ export const getChatsPageData = (
       userDeleteModal
     },
     newMessage: {
-      control: {
-        name: 'message',
+      input: {
         type: 'text',
+        name: 'message',
         placeholder: 'Введите сообщение',
-        error: ''
+        error: false
+      },
+      error: {
+        error: false,
+        text: ''
       },
       attachButton: {
         type: 'button'

@@ -44,15 +44,7 @@ export class List extends Block {
       const indent = 5;
       const menu = this.children.menu as Menu;
 
-      // console.log((this.children.menu as Block).getContent()!.getBoundingClientRect());
-
-      // (this.children.menu as Menu).setTop('200');
-
-      // console.log((this.children.menu as Block).getContent()!.getBoundingClientRect());
-
       if (menu) {
-        // menu.style.top = '0px';
-        // menu.style.left = '0px';
 
         const { left, right, top, bottom, height } = menu.getContent()!.getBoundingClientRect();
 
@@ -63,20 +55,20 @@ export class List extends Block {
           topCoord = chatTop - height - indent;
         }
 
-        // menu.style.top = `${topCoord + window.scrollY}px`;
-        // menu.style.left = `${leftCoord + window.scrollX}px`;
-        // menu.style.top = `100px`;
-        // menu.style.left = `300px`;
+        const menuTop = `${topCoord + window.scrollY}px`;
+        const menuLeft = `${leftCoord + window.scrollX}px`;
 
-        menu.setTop(`${topCoord + window.scrollY}px`);
-        menu.setLeft(`${leftCoord + window.scrollX}px`);
+        menu.setTop(menuTop);
+        menu.setLeft(menuLeft);
 
-        (this.children.menu as Block).setProps({
-          visible: true
+        menu.setProps({
+          visible: true,
+          top: menuTop,
+          left: menuLeft
         });
 
-        console.log(`${topCoord + window.scrollY}px`);
-        console.log(`${leftCoord + window.scrollX}px`);
+        console.log(menu.getContent()!.getBoundingClientRect().top);
+        console.log(menu.getContent()!.getBoundingClientRect().left);
       }
     };
 
@@ -115,8 +107,8 @@ export class List extends Block {
       className: 'list__chat-menu',
       items: this.props.chatMenu as MenuItem[],
       visible: false,
-      top: '0',
-      left: '0',
+      top: '10px',
+      left: '10px',
       settings: {
         withInternalID: false
       }

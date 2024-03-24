@@ -3,8 +3,7 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Content, List, NewMessageForm, Search } from './modules';
 import type {
-  NewMessageFormButton,
-  NewMessageFormControl,
+  NewMessageFormProps,
   SearchFormControl,
   SearchLink,
   ChatProps,
@@ -21,16 +20,13 @@ interface ChatsPageProps extends Props {
   navLinkSearch?: SearchLink;
   chats?: ChatProps[];
   chatMenu?: MenuItem[];
-  dates?: string[],
+  dates?: string[];
   messages?: OneMessage[];
   messageContent?: MessageContentItem[];
   currentChat?: CurrentChat;
   attachMenu?: MenuItem[];
   userMenu?: MenuItem[];
-  // userDeleteModal?: ;
-  controlNewMessage?: NewMessageFormControl;
-  attachButtonNewMessage?: NewMessageFormButton;
-  sendButtonNewMessage?: NewMessageFormButton;
+  newMessage?: NewMessageFormProps;
 }
 
 export class ChatsPage extends Block {
@@ -68,9 +64,6 @@ export class ChatsPage extends Block {
       currentChat: this.props.currentChat as CurrentChat,
       attachMenuItems: this.props.attachMenu as MenuItem[],
       userMenuItems: this.props.userMenu as MenuItem[],
-      // classNameModal: '',
-      // modalTitle: this.props.currentChatMessages as Array<MenuItem>,
-      // modalItems: this.props.currentChatMessages as Array<MenuItem>,
 
       settings: {
         withInternalID: false
@@ -78,9 +71,10 @@ export class ChatsPage extends Block {
     });
 
     this.children.newMessageForm = new NewMessageForm({
-      control: this.props.controlNewMessage as NewMessageFormControl,
-      attachButton: this.props.attachButtonNewMessage as NewMessageFormButton,
-      sendButton: this.props.sendButtonNewMessage as NewMessageFormButton,
+      input: (this.props.newMessage as NewMessageFormProps)?.input,
+      error: (this.props.newMessage as NewMessageFormProps)?.error,
+      attachButton: (this.props.newMessage as NewMessageFormProps)?.attachButton,
+      sendButton: (this.props.newMessage as NewMessageFormProps)?.sendButton,
       submitNewMessageHandler,
       settings: {
         withInternalID: false

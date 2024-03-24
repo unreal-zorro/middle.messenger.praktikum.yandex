@@ -1,27 +1,17 @@
 import './new-message-form.scss';
 import { Block } from '@/base/';
-import type { Props } from '@/base/';
+import type { Props, Listener } from '@/base';
 import { Button, Input, Error, Svg } from '@/components';
-import { Listener } from '@/base/EventBus';
+import type { ButtonProps, InputProps, ErrorProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
 import template from './new-message-form.hbs?raw';
 
-export interface NewMessageFormButton extends Record<string, string | undefined> {
-  type?: string;
-}
-
-export interface NewMessageFormControl extends Record<string, string | undefined> {
-  name?: string;
-  type?: string;
-  placeholder?: string;
-  error?: string;
-}
-
-interface NewMessageFormProps extends Props {
+export interface NewMessageFormProps extends Props {
   className?: string;
-  control?: NewMessageFormControl;
-  attachButton?: NewMessageFormButton;
-  sendButton?: NewMessageFormButton;
+  input?: InputProps;
+  error?: ErrorProps;
+  attachButton?: ButtonProps;
+  sendButton?: ButtonProps;
   submitNewMessageHandler?: (...args: Record<string, string>[]) => void;
 }
 
@@ -75,7 +65,7 @@ export class NewMessageForm extends Block {
 
     this.children.attachButtonChild = new Button({
       className: 'new-message-form__button',
-      type: (this.props.attachButton as NewMessageFormButton)?.type,
+      type: (this.props.attachButton as ButtonProps)?.type,
       settings: {
         withInternalID: false
       },
@@ -87,10 +77,10 @@ export class NewMessageForm extends Block {
 
     this.children.inputChild = new Input({
       className: 'new-message-form__input',
-      type: (this.props.control as NewMessageFormControl)?.type,
-      name: (this.props.control as NewMessageFormControl)?.name,
-      placeholder: (this.props.control as NewMessageFormControl)?.placeholder,
-      error: !!(this.props.control as NewMessageFormControl)?.error,
+      type: (this.props.input as InputProps)?.type,
+      name: (this.props.input as InputProps)?.name,
+      placeholder: (this.props.input as InputProps)?.placeholder,
+      error: !!(this.props.input as InputProps)?.error,
       events: {
         focus: () => focusHandler.call(this),
         blur: ((event: Event) => {
@@ -108,8 +98,8 @@ export class NewMessageForm extends Block {
 
     this.children.errorChild = new Error({
       className: 'new-message-form__error',
-      error: !!(this.props.control as NewMessageFormControl)?.error,
-      text: (this.props.control as NewMessageFormControl)?.error,
+      error: (this.props.error as ErrorProps)?.error,
+      text: (this.props.error as ErrorProps)?.text,
       settings: {
         withInternalID: false
       }
@@ -117,7 +107,7 @@ export class NewMessageForm extends Block {
 
     this.children.sendButtonChild = new Button({
       className: 'new-message-form__button',
-      type: (this.props.sendButton as NewMessageFormButton)?.type,
+      type: (this.props.sendButton as ButtonProps)?.type,
       disabled: true,
       settings: {
         withInternalID: false
