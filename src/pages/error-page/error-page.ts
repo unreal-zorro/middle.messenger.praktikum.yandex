@@ -2,18 +2,14 @@ import './error-page.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Header, Link, Text } from '@/components';
+import type { HeaderProps, LinkProps, TextProps } from '@/components';
 import template from './error-page.hbs?raw';
-
-interface ErrorPageLink extends Record<string, string | undefined> {
-  text?: string;
-  href?: string;
-}
 
 interface ErrorPageProps extends Props {
   id?: string;
   header?: string;
   text?: string;
-  link?: ErrorPageLink;
+  link?: LinkProps;
 }
 
 export class ErrorPage extends Block {
@@ -22,7 +18,7 @@ export class ErrorPage extends Block {
 
     this.children.headerChild = new Header({
       className: 'error-page__header',
-      text: this.props.header as string,
+      text: (this.props.header as HeaderProps)?.text as string,
       settings: {
         withInternalID: false
       }
@@ -30,7 +26,7 @@ export class ErrorPage extends Block {
 
     this.children.textChild = new Text({
       className: 'error-page__text',
-      text: this.props.text as string,
+      text: (this.props.text as TextProps)?.text as string,
       settings: {
         withInternalID: false
       }
@@ -38,8 +34,8 @@ export class ErrorPage extends Block {
 
     this.children.linkChild = new Link({
       className: 'error-page__link',
-      href: (this.props.link as ErrorPageProps)?.href as string,
-      text: (this.props.link as ErrorPageProps)?.text as string,
+      href: (this.props.link as LinkProps)?.href as string,
+      text: (this.props.link as LinkProps)?.text as string,
       settings: {
         withInternalID: false
       }
