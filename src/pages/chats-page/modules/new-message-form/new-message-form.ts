@@ -56,6 +56,11 @@ export class NewMessageForm extends Block {
     const submitHandler: (event: SubmitEvent) => void = (event) => {
       event.preventDefault();
 
+      const element = (this.children.inputChild as Input).getContent() as HTMLInputElement;
+      const elementName = element?.getAttribute('name') as string;
+      const elementValue = element?.value;
+      this._formData[elementName] = elementValue;
+
       if (this.props.submitNewMessageHandler) {
         (this.props.submitNewMessageHandler as (...args: Record<string, string>[]) => string)(
           this._formData

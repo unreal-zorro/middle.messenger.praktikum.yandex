@@ -2,6 +2,7 @@ import './login-page.scss';
 import { Block, Listener } from '@/base/';
 import type { Props } from '@/base/';
 import { Header, Link } from '@/components';
+import { VALIDATION_RULES } from '@/consts';
 import type { ButtonProps, HeaderProps, LinkProps } from '@/components';
 import { LoginForm } from './modules';
 import type { LoginFormProps } from './modules';
@@ -20,7 +21,18 @@ export class LoginPage extends Block {
     super(props);
 
     const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
-      console.log(formData);
+      let isValid = true;
+
+      Object.entries(formData).forEach(([key, value]) => {
+        const { regExp } = VALIDATION_RULES[key];
+        isValid = isValid && regExp.test(value);
+      });
+
+      if (isValid) {
+        console.log(formData);
+      } else {
+        console.log('Invalid form data');
+      }
     };
 
     this.children.headerChild = new Header({
