@@ -20,6 +20,10 @@ export class List extends Block {
     super(props);
 
     const chatClickHandler: Listener<number> = (id: number) => {
+      if ((this.children.chatMenu as Menu)) {
+        (this.children.chatMenu as Menu).hide();
+      }
+
       console.log(`list currentChat id = ${id}`);
     };
 
@@ -57,9 +61,9 @@ export class List extends Block {
     this.children.menu = new Menu({
       className: 'list__chat-menu',
       items: (this.props.chatMenu as MenuProps).items,
-      visible: false,
-      top: '10px',
-      left: '10px',
+      visible: true,
+      // top: '',
+      // left: '',
       settings: {
         withInternalID: false
       }
