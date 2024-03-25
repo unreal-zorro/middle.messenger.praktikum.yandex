@@ -1,22 +1,16 @@
 <li
-  class="chat{{#if className}} {{ className }}{{/if}}"
+  class="chat{{#if className}} {{ className }}{{/if}}{{#if active}} chat_active{{/if}}"
   id="chat{{ this.id }}"
 >
-  {{> Avatar
-    className="chat__avatar avatar_no-edit"
-    imgSrc=this.avatar
-  }}
+  {{{ avatarChild }}}
 
   <div class="chat__content">
     <div class="chat__info">
       <h2 class="chat__name">
         {{ this.title }}
       </h2>
-      
-      {{> Text
-        className="chat__date"
-        text=this.date
-      }}
+
+      {{{ dateChild }}}
     </div>
 
     <div class="chat__message">
@@ -27,20 +21,10 @@
       </p>
 
       {{#if this.count}}
-        {{> Text
-          className="chat__count"
-          text=this.count
-        }}
+        {{{ countChild }}}
       {{/if}}
     </div>
   </div>
 
-  <button
-    class="chat__settings-button button"
-    type="button"
-  >
-    <svg class="chat__settings-icon">
-      <use xlink:href="#icon-settings"></use>
-    </svg>
-  </button>
+  {{{ buttonChild }}}
 </li>

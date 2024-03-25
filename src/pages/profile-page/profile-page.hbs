@@ -1,62 +1,9 @@
 <main id={{ id }} class="profile">
-  {{> Avatar avatar
-    className="avatar_big profile__avatar"
-    class="avatar_big profile__avatar{{#unless avatar}} {{ className }}{{/if}}{{#if error}} input_error{{/if}}"
-    imgSrc=avatar
-  }}
-
-  {{> Header header
-    className="profile__header"
-    text=header
-  }}
-
-  {{#> Form className="profile__form" }}
-    <div class="profile__form-controls">
-      {{#each controls}}
-        <div class="profile__form-control">
-          {{> InputField
-            className="profile__input-field"
-            classNameLabel="profile__label"
-            classNameInput="profile__input"
-            classNameError="profile__error"
-            name=this.name
-            label=this.label
-            type=this.type
-            disabled=this.disabled
-            placeholder=this.placeholder
-            value=this.value
-            error=this.error
-          }}
-        </div>
-      {{/each}}
-    </div>
-
-    <div class="profile__buttons"></div>
-      {{#each buttons}}
-        {{#> Button
-          className="profile__button"
-          type=this.type
-        }}
-          <a
-            class="profile__link"
-            href={{ this.href }}
-          >
-            {{ this.text }}
-          </a>
-        {{/ Button }}
-      {{/each}}
-    </div>
-  {{/ Form }}
-
-  {{> Link link
-    className="profile__footer"
-    href=link.href
-    text=link.text
-  }}
-
-  {{> Link navLink
-    className="profile__nav"
-    href=navLink.href
-    text=navLink.text
-  }}
+  {{{ avatarChild }}}
+  {{{ headerChild }}}
+  {{{ formChild }}}
+  {{{ changeDataButtonChild }}}
+  {{{ changePasswordButtonChild }}}
+  {{{ linkChild }}}
+  {{{ navLinkChild }}}
 </main>

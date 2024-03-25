@@ -1,0 +1,48 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.new-message-form {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template:
+  'message-attach message-input message-send' $input-height
+  'message-empty1 message-error message-empty2' auto / $icon-size auto $icon-size;
+  gap: 10px;
+
+  &__button {
+    min-width: $icon-size;
+    max-width: $icon-size;
+    height: $icon-size;
+    border-radius: 50%;
+    overflow: hidden;
+    place-self: center center;
+    padding: 7px;
+
+    @include flex(row, center, center);
+
+    &:first-child {
+      grid-area: message-attach;
+    }
+
+    &:last-child {
+      grid-area: message-send;
+    }
+  }
+
+  &__icon {
+    width: 100%;
+    height: 100%;
+    fill: $light;
+  }
+
+  &__input {
+    grid-area: message-input;
+    width: 100%;
+    place-self: center center;
+  }
+
+  &__error {
+    grid-area: message-error;
+  }
+}

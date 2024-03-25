@@ -1,5 +1,5 @@
-@import '../../../../../../styles/variables';
-@import '../../../../../../styles/mixins';
+@import '@/styles/variables';
+@import '@/styles/mixins';
 
 .chat {
   width: 100%;
@@ -12,26 +12,14 @@
   cursor: auto;
   transition: all 0.3s;
 
-  &:hover {
-    scale: 1.02;
-    box-shadow: 4px 4px 4px 0 $gray;
-    background-color: $accent;
-    border: 3px solid $border;
-  }
-
-  &:hover > &__settings-button {
-    visibility: visible;
-    opacity: 1;
-  }
-
   &_active {
     background-color: $accent;
     border: 3px solid $border;
 
     &:hover {
-      scale: 1;
-      box-shadow: none;
-      cursor: auto;
+      scale: 1 !important;
+      box-shadow: none !important;
+      cursor: auto !important;
     }
   }
 
@@ -41,7 +29,6 @@
     margin-right: 15px;
 
     & > img {
-      width: 100%;
       width: 100%;
     }
   }
@@ -69,7 +56,7 @@
   }
 
   &__date {
-    width: 100px;
+    min-width: 100px;
     color: $main;
     font-size: $font-text;
     text-align: right;
@@ -138,5 +125,17 @@
     width: 100%;
     height: 100%;
     fill: $light;
+  }
+
+  &:hover {
+    scale: 1.02;
+    box-shadow: 4px 4px 4px 0 $gray;
+    background-color: $accent;
+    border: 3px solid $border;
+  }
+
+  &:hover > &__settings-button {
+    visibility: visible;
+    opacity: 1;
   }
 }
