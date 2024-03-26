@@ -9,6 +9,7 @@ export interface ButtonProps extends Props {
   type?: string;
   text?: string;
   disabled?: boolean;
+  dataButton?: string;
 }
 
 export class Button extends Block {
