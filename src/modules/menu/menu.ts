@@ -11,6 +11,7 @@ interface MenuItem extends Record<string, string | undefined> {
 }
 
 export interface MenuProps extends Props {
+  dataMenu?: string;
   className?: string;
   visible?: boolean;
   items?: MenuItem[];
@@ -38,6 +39,10 @@ export class Menu extends Block {
           })
         })
     );
+  }
+
+  componentDidUpdate(oldProps: MenuProps, newProps: MenuProps): boolean {
+    return oldProps.visible !== newProps.visible;
   }
 
   render(): string {

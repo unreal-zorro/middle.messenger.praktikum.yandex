@@ -10,9 +10,9 @@
   overflow: hidden;
   visibility: hidden;
   opacity: 0;
-  top: -1000px;
-  left: -1000px;
   z-index: 100;
+  left: -1000px;
+  top: -1000px;
 
   &_visible {
     visibility: visible;
