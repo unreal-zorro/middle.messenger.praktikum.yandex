@@ -57,12 +57,14 @@ export class Chat extends Block {
     }
 
     this.children.buttonChild = new Button({
+      dataButton: 'chatButton',
       className: 'chat__settings-button button',
       type: 'button',
       settings: {
         withInternalID: false
       },
       buttonChild: new Svg({
+        dataSvg: 'chatSvg',
         className: 'chat__settings-icon',
         href: '#icon-settings'
       }),

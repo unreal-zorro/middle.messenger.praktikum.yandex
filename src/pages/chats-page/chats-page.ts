@@ -33,12 +33,33 @@ export class ChatsPage extends Block {
       }
     };
 
-    const clickHandler: Listener = () => {
-      if (this.children.list as List) {
+    const clickHandler: Listener<Event> = (event: Event) => {
+      if (event.target && (this.children.list as List)) {
+        const isChatButton =
+          (event.target as HTMLButtonElement).getAttribute('data-button') === 'chatButton';
+        const isChatButtonSvg =
+          (event.target as SVGAElement).getAttribute('data-svg') === 'chatSvg';
+
+        if (!isChatButton && !isChatButtonSvg) {
+          (this.children.list as List).setProps({
+            visibleChatMenu: false
+          });
+        }
+      }
+    };
+
+    const wheelHandler: Listener = () => {
+      if ((this.children.list as List)) {
         (this.children.list as List).setProps({
-          hideChatMenu: true
+          visibleChatMenu: false
         });
       }
+    };
+
+    this.props.events = {
+      click: ((event: Event) => clickHandler(event)) as Listener,
+      wheel: wheelHandler,
+      scroll: wheelHandler
     };
 
     this.children.search = new Search({
@@ -55,8 +76,7 @@ export class ChatsPage extends Block {
       chats: (this.props.list as ListProps).chats,
       classNameChatMenu: '',
       chatMenu: (this.props.list as ListProps).chatMenu,
-      hideChatMenu: false,
-      clickHandler,
+      visibleChatMenu: true,
       settings: {
         withInternalID: false
       }
