@@ -132,7 +132,15 @@ export abstract class Block {
 
   // Может переопределять пользователь, необязательно трогать
   componentDidUpdate(oldProps: Props, newProps: Props): boolean {
-    return oldProps !== newProps;
+    if (oldProps) {
+      return false;
+    }
+
+    if (newProps) {
+      return false;
+    }
+
+    return false;
   }
 
   setProps = (nextProps: Props) => {
