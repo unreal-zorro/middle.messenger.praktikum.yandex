@@ -13,15 +13,26 @@ export interface ListProps extends Props {
   chats?: ChatProps[];
   classNameChatMenu?: string;
   chatMenu?: MenuProps;
+  hideChatMenu?: boolean;
 }
 
 export class List extends Block {
   constructor(props: ListProps) {
     super(props);
 
-    const chatClickHandler: Listener<number> = (id: number) => {
-      if ((this.children.chatMenu as Menu)) {
-        (this.children.chatMenu as Menu).hide();
+    const chatClickHandler: Listener<number> = (id, buttonLeft, buttonTop, buttonHeight) => {
+      if (this.children.menu as Menu) {
+        const { height } = (this.children.menu as Menu).getContent()!.getBoundingClientRect();
+        const indent = 5;
+
+        const menuLeft = buttonLeft + buttonHeight + indent;
+        const menuTop = buttonTop - height - indent;
+
+        (this.children.menu as Menu).show.bind(this.children.menu)();
+        console.log(this.props.hideChatMenu);
+
+        (this.children.menu as Menu).getContent()!.style.left = `${menuLeft}px`;
+        (this.children.menu as Menu).getContent()!.style.top = `${menuTop}px`;
       }
 
       console.log(`list currentChat id = ${id}`);
@@ -62,8 +73,6 @@ export class List extends Block {
       className: 'list__chat-menu',
       items: (this.props.chatMenu as MenuProps).items,
       visible: true,
-      // top: '',
-      // left: '',
       settings: {
         withInternalID: false
       }
@@ -79,8 +88,18 @@ export class List extends Block {
       (this.children.menu as Menu).setProps({ chatMenu: newProps.chatMenu });
     }
 
+    if (oldProps.hideChatMenu !== newProps.hideChatMenu) {
+      (this.children.menu as Menu).hide.bind(this.children.menu)();
+    }
+
     return true;
   }
+
+  // componentDidMount() {
+    // (this.children.menu as Menu).setProps({
+    //   visible: false
+    // });
+  // }
 
   render(): string {
     return template;

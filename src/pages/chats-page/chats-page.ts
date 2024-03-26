@@ -1,6 +1,6 @@
 import './chats-page.scss';
 import { Block } from '@/base';
-import type { Props } from '@/base';
+import type { Listener, Props } from '@/base';
 import { VALIDATION_RULES } from '@/consts';
 import { Content, List, NewMessageForm, Search } from './modules';
 import type { NewMessageFormProps, SearchProps, ListProps, ContentProps } from './modules';
@@ -33,6 +33,14 @@ export class ChatsPage extends Block {
       }
     };
 
+    const clickHandler: Listener = () => {
+      if (this.children.list as List) {
+        (this.children.list as List).setProps({
+          hideChatMenu: true
+        });
+      }
+    };
+
     this.children.search = new Search({
       className: 'chats__search',
       controls: (this.props.search as SearchProps).controls,
@@ -47,6 +55,8 @@ export class ChatsPage extends Block {
       chats: (this.props.list as ListProps).chats,
       classNameChatMenu: '',
       chatMenu: (this.props.list as ListProps).chatMenu,
+      hideChatMenu: false,
+      clickHandler,
       settings: {
         withInternalID: false
       }

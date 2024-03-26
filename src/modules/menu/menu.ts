@@ -13,8 +13,6 @@ interface MenuItem extends Record<string, string | undefined> {
 export interface MenuProps extends Props {
   className?: string;
   visible?: boolean;
-  // top?: string;
-  // left?: string;
   items?: MenuItem[];
 }
 
@@ -40,32 +38,7 @@ export class Menu extends Block {
           })
         })
     );
-
-    // this.setTop(this.props.top as string);
-    // this.setLeft(this.props.left as string);
   }
-
-  // componentDidUpdate(oldProps: MenuProps, newProps: MenuProps): boolean {
-  //   if (oldProps.top !== newProps.top) {
-  //     this.setProps({ top: newProps.top });
-  //     this.setTop(newProps.top as string);
-  //   }
-
-  //   if (oldProps.left !== newProps.left) {
-  //     this.setProps({ left: newProps.left });
-  //     this.setLeft(newProps.left as string);
-  //   }
-
-  //   return true;
-  // }
-
-  // setTop(value: string): void {
-  //   this.getContent()!.style.top = value;
-  // }
-
-  // setLeft(value: string): void {
-  //   this.getContent()!.style.left = value;
-  // }
 
   render(): string {
     return template;
