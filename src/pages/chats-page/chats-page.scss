@@ -28,8 +28,5 @@
   &__new-message {
     grid-area: new-message;
     border-top: 1px solid $gray;
-    padding: 20px 20px 8px;
-
-    @include flex(row, center, center);
   }
 }

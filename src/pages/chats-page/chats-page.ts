@@ -1,9 +1,9 @@
 import './chats-page.scss';
 import { Block } from '@/base';
 import type { Listener, Props } from '@/base';
-import { VALIDATION_RULES } from '@/consts';
-import { Content, List, NewMessageForm, Search } from './modules';
-import type { NewMessageFormProps, SearchProps, ListProps, ContentProps } from './modules';
+import { Content, List, NewMessage, Search } from './modules';
+import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
+import { NewMessageFormProps } from './modules/new-message/modules';
 import template from './chats-page.hbs?raw';
 
 interface ChatsPageProps extends Props {
@@ -11,27 +11,12 @@ interface ChatsPageProps extends Props {
   search?: SearchProps;
   list?: ListProps;
   content?: ContentProps;
-  newMessage?: NewMessageFormProps;
+  newMessage?: NewMessageProps;
 }
 
 export class ChatsPage extends Block {
   constructor(props: ChatsPageProps) {
     super(props);
-
-    const submitNewMessageHandler: (...args: Record<string, string>[]) => void = (formData) => {
-      let isValid = true;
-
-      Object.entries(formData).forEach(([key, value]) => {
-        const { regExp } = VALIDATION_RULES[key];
-        isValid = isValid && regExp.test(value);
-      });
-
-      if (isValid) {
-        console.log(formData);
-      } else {
-        console.log('Invalid form data');
-      }
-    };
 
     const clickHandler: Listener<Event> = (event: Event) => {
       if (event.target && (this.children.list as List)) {
@@ -118,12 +103,9 @@ export class ChatsPage extends Block {
       }
     });
 
-    this.children.newMessageForm = new NewMessageForm({
-      input: (this.props.newMessage as NewMessageFormProps)?.input,
-      error: (this.props.newMessage as NewMessageFormProps)?.error,
-      attachButton: (this.props.newMessage as NewMessageFormProps)?.attachButton,
-      sendButton: (this.props.newMessage as NewMessageFormProps)?.sendButton,
-      submitNewMessageHandler,
+    this.children.newMessage = new NewMessage({
+      className: 'chats__new-message',
+      newMessageForm: (this.props.newMessage as NewMessageProps).form as NewMessageFormProps,
       settings: {
         withInternalID: false
       }
