@@ -1,7 +1,7 @@
 <button
   class="button{{#if className}} {{ className }}{{/if}}{{#if cancel}} button_cancel{{/if}}"
   type={{ type }}
-  data-button={{ dataButton }}
+  data-button="{{#if dataButton}}{{ dataButton }}{{/if}}"
   {{#if disabled}}disabled{{/if}}
 >
   {{#if text}}
