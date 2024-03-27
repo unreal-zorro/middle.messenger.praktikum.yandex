@@ -22,11 +22,11 @@ export class List extends Block {
 
     const chatClickHandler: Listener<number> = (id, buttonLeft, buttonTop, buttonHeight) => {
       if (this.children.menu as Menu) {
-        const { height } = (this.children.menu as Menu).getContent()!.getBoundingClientRect();
         const indent = 10;
+        const chatMenuHeight = (this.props.chatMenu as MenuProps).items!.length * 32 + 2 * 10;
 
         const menuLeft = buttonLeft + buttonHeight + indent;
-        const menuTop = buttonTop - height - indent;
+        const menuTop = buttonTop - chatMenuHeight - indent;
 
         (this.children.menu as Menu).getContent()!.style.left = `${menuLeft}px`;
         (this.children.menu as Menu).getContent()!.style.top = `${menuTop}px`;
@@ -82,8 +82,10 @@ export class List extends Block {
   componentDidUpdate(oldProps: ListProps, newProps: ListProps): boolean {
     if (oldProps.visibleChatMenu !== newProps.visibleChatMenu) {
       if (newProps.visibleChatMenu === false) {
-        (this.children.menu as Menu).getContent()!.style.left = '-1000px';
-        (this.children.menu as Menu).getContent()!.style.top = '-1000px';
+        (this.children.menu as Menu).hide();
+      }
+      if (newProps.visibleChatMenu === true) {
+        (this.children.menu as Menu).show();
       }
     }
 

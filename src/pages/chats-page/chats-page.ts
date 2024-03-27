@@ -95,7 +95,7 @@ export class ChatsPage extends Block {
       chats: (this.props.list as ListProps).chats,
       classNameChatMenu: '',
       chatMenu: (this.props.list as ListProps).chatMenu,
-      visibleChatMenu: true,
+      visibleChatMenu: false,
       settings: {
         withInternalID: false
       }
@@ -109,10 +109,10 @@ export class ChatsPage extends Block {
       currentChat: (this.props.content as ContentProps).currentChat,
       classNameContentMenu: '',
       contentMenuItems: (this.props.content as ContentProps).contentMenu,
-      visibleContentMenu: true,
+      visibleContentMenu: false,
       classNameAttachMenu: '',
       attachMenuItems: (this.props.content as ContentProps).attachMenu,
-      visibleAttachMenu: true,
+      visibleAttachMenu: false,
       settings: {
         withInternalID: false
       }
