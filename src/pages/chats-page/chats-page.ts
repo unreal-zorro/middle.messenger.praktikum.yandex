@@ -3,7 +3,6 @@ import { Block } from '@/base';
 import type { Listener, Props } from '@/base';
 import { Content, List, NewMessage, Search } from './modules';
 import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
-import { NewMessageFormProps } from './modules/new-message/modules';
 import template from './chats-page.hbs?raw';
 
 interface ChatsPageProps extends Props {
@@ -44,6 +43,19 @@ export class ChatsPage extends Block {
           });
         }
       }
+
+      if (event.target && (this.children.newMessage as NewMessage)) {
+        const isAttachButton =
+          (event.target as HTMLButtonElement).getAttribute('data-button') === 'attachButton';
+        const isAttachButtonSvg =
+          (event.target as SVGAElement).getAttribute('data-svg') === 'attachSvg';
+
+        if (!isAttachButton && !isAttachButtonSvg) {
+          (this.children.newMessage as NewMessage).setProps({
+            visibleAttachMenu: false
+          });
+        }
+      }
     };
 
     const wheelHandler: Listener = () => {
@@ -56,6 +68,12 @@ export class ChatsPage extends Block {
       if (this.children.content as Content) {
         (this.children.content as Content).setProps({
           visibleContentMenu: false
+        });
+      }
+
+      if (this.children.newMessage as NewMessage) {
+        (this.children.newMessage as NewMessage).setProps({
+          visibleAttachMenu: false
         });
       }
     };
@@ -93,11 +111,8 @@ export class ChatsPage extends Block {
       messageContent: (this.props.content as ContentProps).messageContent,
       currentChat: (this.props.content as ContentProps).currentChat,
       classNameContentMenu: '',
-      contentMenuItems: (this.props.content as ContentProps).contentMenu,
+      contentMenu: (this.props.content as ContentProps).contentMenu,
       visibleContentMenu: false,
-      classNameAttachMenu: '',
-      attachMenuItems: (this.props.content as ContentProps).attachMenu,
-      visibleAttachMenu: false,
       settings: {
         withInternalID: false
       }
@@ -105,7 +120,10 @@ export class ChatsPage extends Block {
 
     this.children.newMessage = new NewMessage({
       className: 'chats__new-message',
-      newMessageForm: (this.props.newMessage as NewMessageProps).form as NewMessageFormProps,
+      newMessageForm: (this.props.newMessage as NewMessageProps).newMessageForm,
+      classNameAttachMenu: '',
+      attachMenu: (this.props.newMessage as NewMessageProps).attachMenu,
+      visibleAttachMenu: false,
       settings: {
         withInternalID: false
       }

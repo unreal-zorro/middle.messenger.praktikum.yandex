@@ -12,12 +12,23 @@ export interface NewMessageFormProps extends Props {
   error?: ErrorProps;
   attachButton?: ButtonProps;
   sendButton?: ButtonProps;
+  clickHandler?: Listener;
   submitNewMessageHandler?: (...args: Record<string, string>[]) => void;
 }
 
 export class NewMessageForm extends Block {
   constructor(props: NewMessageFormProps) {
     super(props);
+
+    const clickHandler: Listener<Event> = (event: Event) => {
+      if (this.props.clickHandler) {
+        const coords = (event.currentTarget as HTMLButtonElement).getBoundingClientRect();
+
+        (this.props.clickHandler as Listener)(coords.left, coords.top, coords.height);
+
+        console.log('attached');
+      }
+    };
 
     const focusHandler = () => {
       (this.children.errorChild as Block).setProps({
@@ -69,15 +80,20 @@ export class NewMessageForm extends Block {
     };
 
     this.children.attachButtonChild = new Button({
+      dataButton: 'attachButton',
       className: 'new-message-form__button',
       type: (this.props.attachButton as ButtonProps)?.type,
       settings: {
         withInternalID: false
       },
       buttonChild: new Svg({
+        dataSvg: 'attachSvg',
         className: 'new-message-form__icon',
         href: '#icon-attach'
-      })
+      }),
+      events: {
+        click: ((event: Event) => clickHandler.call(this, event)) as Listener
+      }
     });
 
     this.children.inputChild = new Input({

@@ -15,9 +15,6 @@ export interface ContentProps extends Props {
   messages?: MessageProps[];
   messageContent?: MessageContent[];
   currentChat?: CurrentChat;
-  classNameAttachMenu?: string;
-  attachMenu?: MenuProps;
-  visibleAttachMenu?: boolean;
   classNameContentMenu?: string;
   contentMenu?: MenuProps;
   visibleContentMenu?: boolean;
@@ -128,20 +125,10 @@ export class Content extends Block {
       });
     }
 
-    this.children.attachMenu = new Menu({
-      dataMenu: 'attachMenu',
-      className: 'content__attach-menu',
-      items: (this.props.attachMenuItems as MenuProps).items,
-      visible: this.props.visibleAttachMenu as boolean,
-      settings: {
-        withInternalID: false
-      }
-    });
-
     this.children.contentMenu = new Menu({
       dataMenu: 'contentMenu',
       className: 'content__content-menu',
-      items: (this.props.contentMenuItems as MenuProps).items,
+      items: (this.props.contentMenu as MenuProps).items,
       visible: this.props.visibleContentMenu as boolean,
       settings: {
         withInternalID: false
@@ -150,15 +137,6 @@ export class Content extends Block {
   }
 
   componentDidUpdate(oldProps: ContentProps, newProps: ContentProps): boolean {
-    if (oldProps.visibleAttachMenu !== newProps.visibleAttachMenu) {
-      if (newProps.visibleAttachMenu === false) {
-        (this.children.attachMenu as Menu).hide();
-      }
-      if (newProps.visibleAttachMenu === true) {
-        (this.children.attachMenu as Menu).show();
-      }
-    }
-
     if (oldProps.visibleContentMenu !== newProps.visibleContentMenu) {
       if (newProps.visibleContentMenu === false) {
         (this.children.contentMenu as Menu).hide();

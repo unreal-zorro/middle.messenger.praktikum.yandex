@@ -266,12 +266,11 @@ export const getChatsPageData = (
     },
     content: {
       ...getChatsContentPageData(user, messages, currentChat),
-      attachMenu,
       contentMenu,
       userDeleteModal
     },
     newMessage: {
-      form: {
+      newMessageForm: {
         input: {
           type: 'text',
           name: 'message',
@@ -288,7 +287,8 @@ export const getChatsPageData = (
         sendButton: {
           type: 'submit'
         }
-      }
+      },
+      attachMenu
     }
   };
 };

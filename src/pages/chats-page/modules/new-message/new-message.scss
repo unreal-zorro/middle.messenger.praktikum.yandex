@@ -5,4 +5,8 @@
   padding: 20px 20px 8px;
 
   @include flex(row, center, center);
+
+  &__attach-menu {
+    position: absolute;
+  }
 }

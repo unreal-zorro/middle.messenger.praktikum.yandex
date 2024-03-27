@@ -58,7 +58,7 @@ export class Chat extends Block {
 
     this.children.buttonChild = new Button({
       dataButton: 'chatButton',
-      className: 'chat__settings-button button',
+      className: 'chat__settings-button',
       type: 'button',
       settings: {
         withInternalID: false
