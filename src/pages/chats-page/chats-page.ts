@@ -46,12 +46,31 @@ export class ChatsPage extends Block {
           });
         }
       }
+
+      if (event.target && (this.children.content as Content)) {
+        const isContentButton =
+          (event.target as HTMLButtonElement).getAttribute('data-button') === 'contentButton';
+        const isContentButtonSvg =
+          (event.target as SVGAElement).getAttribute('data-svg') === 'contentSvg';
+
+        if (!isContentButton && !isContentButtonSvg) {
+          (this.children.content as Content).setProps({
+            visibleContentMenu: false
+          });
+        }
+      }
     };
 
     const wheelHandler: Listener = () => {
-      if ((this.children.list as List)) {
+      if (this.children.list as List) {
         (this.children.list as List).setProps({
           visibleChatMenu: false
+        });
+      }
+
+      if (this.children.content as Content) {
+        (this.children.content as Content).setProps({
+          visibleContentMenu: false
         });
       }
     };
@@ -88,9 +107,12 @@ export class ChatsPage extends Block {
       messages: (this.props.content as ContentProps).messages,
       messageContent: (this.props.content as ContentProps).messageContent,
       currentChat: (this.props.content as ContentProps).currentChat,
+      classNameContentMenu: '',
+      contentMenuItems: (this.props.content as ContentProps).contentMenu,
+      visibleContentMenu: true,
+      classNameAttachMenu: '',
       attachMenuItems: (this.props.content as ContentProps).attachMenu,
-      userMenuItems: (this.props.content as ContentProps).userMenu,
-
+      visibleAttachMenu: true,
       settings: {
         withInternalID: false
       }

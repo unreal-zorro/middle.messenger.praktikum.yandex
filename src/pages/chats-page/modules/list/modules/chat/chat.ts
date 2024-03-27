@@ -21,7 +21,7 @@ export class Chat extends Block {
   constructor(props: ChatProps) {
     super(props);
 
-    const clickHandler = (event: Event) => {
+    const clickHandler: Listener<Event> = (event: Event) => {
       if (this.props.clickHandler) {
         const chatId = this.props.id;
         const coords = (event.currentTarget as HTMLButtonElement).getBoundingClientRect();

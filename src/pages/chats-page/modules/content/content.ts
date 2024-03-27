@@ -17,18 +17,40 @@ export interface ContentProps extends Props {
   currentChat?: CurrentChat;
   classNameAttachMenu?: string;
   attachMenu?: MenuProps;
-  classNameUserMenu?: string;
-  userMenu?: MenuProps;
+  visibleAttachMenu?: boolean;
+  classNameContentMenu?: string;
+  contentMenu?: MenuProps;
+  visibleContentMenu?: boolean;
 }
 
 export class Content extends Block {
   constructor(props: ContentProps) {
     super(props);
 
-    const clickHandler: Listener = () => {
-      const currentChat = this.props.currentChat as CurrentChat;
+    const clickHandler: Listener<Event> = (event: Event) => {
+      const currentChatId = (this.props.currentChat as CurrentChat).id;
+      const {
+        left: currentChatButtonLeft,
+        top: currentChatButtonTop,
+        width: currentChatButtonWidth
+      } = (event.currentTarget as HTMLButtonElement).getBoundingClientRect();
+      const indent = 10;
 
-      console.log(`content currentChat id = ${currentChat.id}`);
+      if (this.children.contentMenu as Menu) {
+        const { width: contentMenuWidth } = (this.children.contentMenu as Menu)
+          .getContent()!
+          .getBoundingClientRect();
+
+        const contentMenuLeft = currentChatButtonLeft - contentMenuWidth - indent;
+        const contentMenuTop = currentChatButtonTop + currentChatButtonWidth + indent;
+
+        (this.children.contentMenu as Menu).getContent()!.style.left = `${contentMenuLeft}px`;
+        (this.children.contentMenu as Menu).getContent()!.style.top = `${contentMenuTop}px`;
+
+        this.props.visibleContentMenu = true;
+      }
+
+      console.log(`content currentChat id = ${currentChatId}`);
     };
 
     this.children.avatar = new Avatar({
@@ -48,17 +70,17 @@ export class Content extends Block {
     });
 
     this.children.button = new Button({
+      dataButton: 'contentButton',
       className: 'content__button',
       type: 'button',
       settings: {
         withInternalID: false
       },
       events: {
-        click: ((event: Event) => {
-          clickHandler.call(this, event?.target as HTMLButtonElement);
-        }) as Listener
+        click: ((event: Event) => clickHandler.call(this, event)) as Listener
       },
       buttonChild: new Svg({
+        dataSvg: 'contentSvg',
         className: 'content__icon',
         href: '#icon-triple'
       })
@@ -110,20 +132,42 @@ export class Content extends Block {
     }
 
     this.children.attachMenu = new Menu({
+      dataMenu: 'attachMenu',
       className: 'content__attach-menu',
       items: (this.props.attachMenuItems as MenuProps).items,
+      visible: this.props.visibleAttachMenu as boolean,
       settings: {
         withInternalID: false
       }
     });
 
-    this.children.userMenu = new Menu({
-      className: 'content__user-menu',
-      items: (this.props.userMenuItems as MenuProps).items,
+    this.children.contentMenu = new Menu({
+      dataMenu: 'contentMenu',
+      className: 'content__content-menu',
+      items: (this.props.contentMenuItems as MenuProps).items,
+      visible: this.props.visibleContentMenu as boolean,
       settings: {
         withInternalID: false
       }
     });
+  }
+
+  componentDidUpdate(oldProps: ContentProps, newProps: ContentProps): boolean {
+    if (oldProps.visibleAttachMenu !== newProps.visibleAttachMenu) {
+      if (newProps.visibleAttachMenu === false) {
+        (this.children.attachMenu as Menu).getContent()!.style.left = '-1000px';
+        (this.children.attachMenu as Menu).getContent()!.style.top = '-1000px';
+      }
+    }
+
+    if (oldProps.visibleContentMenu !== newProps.visibleContentMenu) {
+      if (newProps.visibleContentMenu === false) {
+        (this.children.contentMenu as Menu).getContent()!.style.left = '-1000px';
+        (this.children.contentMenu as Menu).getContent()!.style.top = '-1000px';
+      }
+    }
+
+    return false;
   }
 
   render(): string {

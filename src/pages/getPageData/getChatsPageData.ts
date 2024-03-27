@@ -123,7 +123,7 @@ const getAttachMenuData = () => {
   };
 };
 
-const getUserMenuData = () => {
+const getContentMenuData = () => {
   const items = [
     {
       type: 'button',
@@ -235,7 +235,7 @@ export const getChatsPageData = (
   const chatMenu = getChatMenuData();
 
   const attachMenu = getAttachMenuData();
-  const userMenu = getUserMenuData();
+  const contentMenu = getContentMenuData();
   const userDeleteModal = {
     ...getUserDeleteModalData()
   };
@@ -267,7 +267,7 @@ export const getChatsPageData = (
     content: {
       ...getChatsContentPageData(user, messages, currentChat),
       attachMenu,
-      userMenu,
+      contentMenu,
       userDeleteModal
     },
     newMessage: {
