@@ -35,16 +35,13 @@ export class Content extends Block {
         width: currentChatButtonWidth
       } = (event.currentTarget as HTMLButtonElement).getBoundingClientRect();
       const indent = 10;
+      const { clientWidth } = document.documentElement;
 
       if (this.children.contentMenu as Menu) {
-        const { width: contentMenuWidth } = (this.children.contentMenu as Menu)
-          .getContent()!
-          .getBoundingClientRect();
-
-        const contentMenuLeft = currentChatButtonLeft - contentMenuWidth - indent;
+        const contentMenuRight = clientWidth - currentChatButtonLeft + indent;
         const contentMenuTop = currentChatButtonTop + currentChatButtonWidth + indent;
 
-        (this.children.contentMenu as Menu).getContent()!.style.left = `${contentMenuLeft}px`;
+        (this.children.contentMenu as Menu).getContent()!.style.right = `${contentMenuRight}px`;
         (this.children.contentMenu as Menu).getContent()!.style.top = `${contentMenuTop}px`;
 
         this.props.visibleContentMenu = true;
@@ -155,15 +152,19 @@ export class Content extends Block {
   componentDidUpdate(oldProps: ContentProps, newProps: ContentProps): boolean {
     if (oldProps.visibleAttachMenu !== newProps.visibleAttachMenu) {
       if (newProps.visibleAttachMenu === false) {
-        (this.children.attachMenu as Menu).getContent()!.style.left = '-1000px';
-        (this.children.attachMenu as Menu).getContent()!.style.top = '-1000px';
+        (this.children.attachMenu as Menu).hide();
+      }
+      if (newProps.visibleAttachMenu === true) {
+        (this.children.attachMenu as Menu).show();
       }
     }
 
     if (oldProps.visibleContentMenu !== newProps.visibleContentMenu) {
       if (newProps.visibleContentMenu === false) {
-        (this.children.contentMenu as Menu).getContent()!.style.left = '-1000px';
-        (this.children.contentMenu as Menu).getContent()!.style.top = '-1000px';
+        (this.children.contentMenu as Menu).hide();
+      }
+      if (newProps.visibleContentMenu === true) {
+        (this.children.contentMenu as Menu).show();
       }
     }
 

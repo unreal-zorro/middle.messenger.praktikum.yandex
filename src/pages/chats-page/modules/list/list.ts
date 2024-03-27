@@ -25,11 +25,11 @@ export class List extends Block {
         const indent = 10;
         const { clientHeight } = document.documentElement;
 
-        const menuLeft = buttonLeft + buttonHeight + indent;
-        const menuBottom = clientHeight - buttonTop + indent;
+        const chatMenuLeft = buttonLeft + buttonHeight + indent;
+        const chatMenuBottom = clientHeight - buttonTop + indent;
 
-        (this.children.chatMenu as Menu).getContent()!.style.left = `${menuLeft}px`;
-        (this.children.chatMenu as Menu).getContent()!.style.bottom = `${menuBottom}px`;
+        (this.children.chatMenu as Menu).getContent()!.style.left = `${chatMenuLeft}px`;
+        (this.children.chatMenu as Menu).getContent()!.style.bottom = `${chatMenuBottom}px`;
 
         this.props.visibleChatMenu = true;
       }
