@@ -21,15 +21,15 @@ export class List extends Block {
     super(props);
 
     const chatClickHandler: Listener<number> = (id, buttonLeft, buttonTop, buttonHeight) => {
-      if (this.children.menu as Menu) {
+      if (this.children.chatMenu as Menu) {
         const indent = 10;
-        const chatMenuHeight = (this.props.chatMenu as MenuProps).items!.length * 32 + 2 * 10;
+        const { clientHeight } = document.documentElement;
 
         const menuLeft = buttonLeft + buttonHeight + indent;
-        const menuTop = buttonTop - chatMenuHeight - indent;
+        const menuBottom = clientHeight - buttonTop + indent;
 
-        (this.children.menu as Menu).getContent()!.style.left = `${menuLeft}px`;
-        (this.children.menu as Menu).getContent()!.style.top = `${menuTop}px`;
+        (this.children.chatMenu as Menu).getContent()!.style.left = `${menuLeft}px`;
+        (this.children.chatMenu as Menu).getContent()!.style.bottom = `${menuBottom}px`;
 
         this.props.visibleChatMenu = true;
       }
@@ -68,7 +68,7 @@ export class List extends Block {
       });
     }
 
-    this.children.menu = new Menu({
+    this.children.chatMenu = new Menu({
       dataMenu: 'chatMenu',
       className: 'list__chat-menu',
       items: (this.props.chatMenu as MenuProps).items,
@@ -82,10 +82,10 @@ export class List extends Block {
   componentDidUpdate(oldProps: ListProps, newProps: ListProps): boolean {
     if (oldProps.visibleChatMenu !== newProps.visibleChatMenu) {
       if (newProps.visibleChatMenu === false) {
-        (this.children.menu as Menu).hide();
+        (this.children.chatMenu as Menu).hide();
       }
       if (newProps.visibleChatMenu === true) {
-        (this.children.menu as Menu).show();
+        (this.children.chatMenu as Menu).show();
       }
     }
 
