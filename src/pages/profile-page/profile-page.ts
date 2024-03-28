@@ -4,6 +4,8 @@ import type { Props } from '@/base';
 import { Avatar, Button, Header, Link } from '@/components';
 import type { AvatarProps, ButtonProps, HeaderProps, LinkProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
+import { Modal } from '@/modules';
+import type { ModalProps } from '@/modules';
 import { ProfileForm } from './modules';
 import type { ProfileFormProps } from './modules';
 import template from './profile-page.hbs?raw';
@@ -16,6 +18,7 @@ interface ProfilePageProps extends Props {
   buttons?: ButtonProps[];
   link?: LinkProps;
   navLink?: LinkProps;
+  changeAvatarModal?: ModalProps;
 }
 
 export class ProfilePage extends Block {
@@ -108,6 +111,17 @@ export class ProfilePage extends Block {
       className: 'profile__nav',
       href: (this.props.navLink as LinkProps)?.href as string,
       text: (this.props.navLink as LinkProps)?.text as string,
+      settings: {
+        withInternalID: false
+      }
+    });
+
+    this.children.changeAvatarModal = new Modal({
+      className: '',
+      header: (this.props.changeAvatarModal as ModalProps)?.header,
+      controls: (this.props.changeAvatarModal as ModalProps)?.controls,
+      buttons: (this.props.changeAvatarModal as ModalProps)?.buttons,
+      submitHandler: (this.props.changeAvatarModal as ModalProps)?.submitHandler,
       settings: {
         withInternalID: false
       }

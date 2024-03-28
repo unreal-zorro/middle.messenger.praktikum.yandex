@@ -2,8 +2,40 @@ import { User } from '@/entities';
 
 type Mode = 'edit' | 'password' | 'view';
 
+const getChangeAvatarModalData = () => {
+  const header = 'Изменить аватар';
+
+  const controls = [
+    {
+      label: '',
+      name: 'avatar',
+      type: 'file',
+      disabled: false,
+      value: '',
+      error: false,
+      text: ''
+    }
+  ];
+
+  const buttons = [
+    {
+      type: 'submit',
+      text: 'Изменить'
+    }
+  ]
+
+  return {
+    header,
+    controls,
+    buttons
+  };
+};
+
 export const getProfilePageData = (user: User, mode: Mode) => {
   let data = {};
+  const changeAvatarModal = {
+    ...getChangeAvatarModalData()
+  };
 
   if (mode === 'edit') {
     data = {
@@ -80,7 +112,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
       navLink: {
         text: 'Назад в профиль',
         href: '/profile'
-      }
+      },
+      changeAvatarModal
     };
   } else if (mode === 'password') {
     data = {
@@ -130,7 +163,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
       navLink: {
         text: 'Назад в профиль',
         href: '/profile'
-      }
+      },
+      changeAvatarModal
     };
   } else {
     data = {
@@ -205,7 +239,8 @@ export const getProfilePageData = (user: User, mode: Mode) => {
       navLink: {
         text: 'Назад к чатам',
         href: '/chats'
-      }
+      },
+      changeAvatarModal
     };
   }
 
