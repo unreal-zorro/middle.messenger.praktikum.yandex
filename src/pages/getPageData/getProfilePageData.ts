@@ -3,26 +3,26 @@ import { User } from '@/entities';
 type Mode = 'edit' | 'password' | 'view';
 
 const getChangeAvatarModalData = () => {
-  const header = 'Изменить аватар';
+  const header = 'Загрузите файл';
 
   const controls = [
     {
-      label: '',
+      label: 'Выбрать файл на компьютере',
       name: 'avatar',
       type: 'file',
       disabled: false,
       value: '',
-      error: false,
-      text: ''
+      error: true,
+      text: 'Нужно выбрать файл'
     }
   ];
 
   const buttons = [
     {
       type: 'submit',
-      text: 'Изменить'
+      text: 'Поменять'
     }
-  ]
+  ];
 
   return {
     header,
