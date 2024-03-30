@@ -2,7 +2,7 @@
   class="message{{#if className}} {{ className }}{{/if}}{{#if check}} message_our{{else}} message_their{{/if}}"
 >
   <h3 class="message__name">
-    {{ name }}
+    {{#if check}}Вы{{else}}{{ name }}{{/if}}
   </h3>
 
   {{#each content}}
