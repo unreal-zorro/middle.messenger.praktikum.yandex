@@ -14,20 +14,47 @@ export interface ChatProps extends Props {
   sender?: boolean;
   count?: string;
   active?: boolean;
-  clickHandler?: Listener;
+  chatButtonClickHandler?: Listener;
+  chatClickHandler?: Listener;
 }
 
 export class Chat extends Block {
   constructor(props: ChatProps) {
     super(props);
 
-    const clickHandler: Listener<Event> = (event: Event) => {
-      if (this.props.clickHandler) {
+    const chatButtonClickHandler: Listener<Event> = (event: Event) => {
+      if (this.props.chatButtonClickHandler) {
         const chatId = this.props.id;
         const coords = (event.currentTarget as HTMLButtonElement).getBoundingClientRect();
 
-        (this.props.clickHandler as Listener)(chatId, coords.left, coords.top, coords.height);
+        (this.props.chatButtonClickHandler as Listener)(
+          chatId,
+          coords.left,
+          coords.top,
+          coords.height
+        );
       }
+    };
+
+    const chatClickHandler: Listener<Event> = (event: Event) => {
+      if (event.target && (this.children.buttonChild as Button)) {
+        const isChatButton =
+          (event.target as HTMLButtonElement).getAttribute('data-button') === 'chatButton';
+        const isChatButtonSvg =
+          (event.target as SVGAElement).getAttribute('data-svg') === 'chatSvg';
+
+        if (!isChatButton && !isChatButtonSvg) {
+          if (this.props.chatClickHandler) {
+            const chatId = this.props.id;
+
+            (this.props.chatClickHandler as Listener)(chatId);
+          }
+        }
+      }
+    };
+
+    this.props.events = {
+      click: ((event: Event) => chatClickHandler(event)) as Listener
     };
 
     this.children.avatarChild = new Avatar({
@@ -69,7 +96,7 @@ export class Chat extends Block {
         href: '#icon-settings'
       }),
       events: {
-        click: ((event: Event) => clickHandler.call(this, event)) as Listener
+        click: ((event: Event) => chatButtonClickHandler.call(this, event)) as Listener
       }
     });
   }

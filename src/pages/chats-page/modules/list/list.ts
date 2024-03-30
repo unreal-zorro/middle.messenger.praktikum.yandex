@@ -14,13 +14,14 @@ export interface ListProps extends Props {
   classNameChatMenu?: string;
   chatMenu?: MenuProps;
   visibleChatMenu?: boolean;
+  visibleChatAvatarModal?: boolean;
 }
 
 export class List extends Block {
   constructor(props: ListProps) {
     super(props);
 
-    const chatClickHandler: Listener<number> = (id, buttonLeft, buttonTop, buttonHeight) => {
+    const chatButtonClickHandler: Listener<number> = (id, buttonLeft, buttonTop, buttonHeight) => {
       if (this.children.chatMenu as Menu) {
         const indent = 10;
         const { clientHeight } = document.documentElement;
@@ -34,7 +35,23 @@ export class List extends Block {
         this.props.visibleChatMenu = true;
       }
 
-      console.log(`list currentChat id = ${id}`);
+      this._currentChat = id;
+    };
+
+    const chatClickHandler: Listener<number> = (id) => {
+      (this.children.chats as Chat[])?.forEach((chat) => {
+        chat.setProps({
+          active: chat.getId() === String(id)
+        });
+      });
+
+      console.log(`list activeChat id = ${id}`);
+    };
+
+    const chatMenuItemClickHandler: Listener<string> = (text) => {
+      const id = this._currentChat;
+
+      console.log(`list currentChat id = ${id}, text = ${text.trim()}`);
     };
 
     if (this.props.chats && (this.props.chats as ChatProps[])?.length) {
@@ -50,7 +67,8 @@ export class List extends Block {
             sender: chat.sender,
             count: chat.count,
             active: chat.active,
-            clickHandler: chatClickHandler as Listener,
+            chatButtonClickHandler: chatButtonClickHandler as Listener,
+            chatClickHandler: chatClickHandler as Listener,
             settings: {
               withInternalID: true
             }
@@ -73,6 +91,7 @@ export class List extends Block {
       className: 'list__chat-menu',
       items: (this.props.chatMenu as MenuProps).items,
       visible: this.props.visibleChatMenu as boolean,
+      menuItemClickHandler: chatMenuItemClickHandler as Listener,
       settings: {
         withInternalID: false
       }
@@ -91,6 +110,8 @@ export class List extends Block {
 
     return false;
   }
+
+  _currentChat = 0;
 
   render(): string {
     return template;
