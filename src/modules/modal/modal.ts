@@ -70,6 +70,7 @@ export class Modal extends Block {
 
     const closeHandler: (event: SubmitEvent) => void = (event) => {
       event.preventDefault();
+      this.hide();
     };
 
     this.children.controls = (this.props.controls as InputFieldProps[])?.map(

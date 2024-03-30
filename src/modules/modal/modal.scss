@@ -6,6 +6,8 @@
   inset: 0;
   overflow: auto;
   background-color: $dark-gray;
+  z-index: 8000;
+  display: none;
 
   @include flex(column, center, center);
 
