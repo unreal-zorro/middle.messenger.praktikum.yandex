@@ -8,7 +8,7 @@
   border-radius: 15px;
   background-color: $secondary;
   overflow: hidden;
-  z-index: 100;
+  z-index: 5000;
   display: none;
 
   &__item {
@@ -41,6 +41,7 @@
     overflow: hidden;
     position: relative;
     color: inherit;
+    font-size: $font-text;
 
     @include flex(row, flex-start, center);
 
@@ -57,9 +58,5 @@
     top: 7px;
     left: 7px;
     fill: inherit;
-  }
-
-  &__text {
-    font-size: $font-text;
   }
 }

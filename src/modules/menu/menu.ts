@@ -1,7 +1,7 @@
 import './menu.scss';
-import { Block } from '@/base/';
-import type { Props } from '@/base/';
-import { Button, Span, Svg } from '@/components';
+import { Block } from '@/base';
+import type { Listener, Props } from '@/base';
+import { Button, Svg } from '@/components';
 import template from './menu.hbs?raw';
 
 interface MenuItem extends Record<string, string | undefined> {
@@ -15,17 +15,32 @@ export interface MenuProps extends Props {
   className?: string;
   visible?: boolean;
   items?: MenuItem[];
+  menuItemClickHandler?: Listener;
 }
 
 export class Menu extends Block {
   constructor(props: MenuProps) {
     super(props);
 
+    const menuItemClickHandler: (event: SubmitEvent) => void = (event) => {
+      event.preventDefault();
+
+      if (this.props.menuItemClickHandler) {
+        const itemTarget = event.target as HTMLButtonElement;
+        const itemText = itemTarget.textContent;
+
+        (this.props.menuItemClickHandler as Listener)(itemText);
+      }
+
+      this.hide();
+    };
+
     this.children.items = (this.props.items as MenuItem[])?.map(
       (item) =>
         new Button({
           className: 'menu__button',
           type: item.type,
+          text: item.text,
           settings: {
             withInternalID: true
           },
@@ -33,10 +48,9 @@ export class Menu extends Block {
             className: 'menu__icon',
             href: item.href
           }),
-          buttonChild2: new Span({
-            className: 'menu__text',
-            text: item.text
-          })
+          events: {
+            click: ((event: SubmitEvent) => menuItemClickHandler.call(this, event)) as Listener
+          }
         })
     );
   }
