@@ -20,7 +20,7 @@ export class NewMessage extends Block {
   constructor(props: NewMessageProps) {
     super(props);
 
-    const chatClickHandler: Listener<number> = (buttonLeft, buttonTop, buttonHeight) => {
+    const attachButtonClickHandler: Listener<number> = (buttonLeft, buttonTop, buttonHeight) => {
       if (this.children.attachMenu as Menu) {
         const indent = 10;
         const { clientHeight } = document.documentElement;
@@ -33,6 +33,10 @@ export class NewMessage extends Block {
 
         this.props.visibleAttachMenu = true;
       }
+    };
+
+    const attachMenuItemClickHandler: Listener<string> = (text) => {
+      console.log(`new message attach = ${text.trim()}`);
     };
 
     const submitNewMessageHandler: Listener<Record<string, string>> = (formData) => {
@@ -55,7 +59,7 @@ export class NewMessage extends Block {
       error: (this.props.newMessageForm as NewMessageFormProps).error,
       attachButton: (this.props.newMessageForm as NewMessageFormProps).attachButton,
       sendButton: (this.props.newMessageForm as NewMessageFormProps).sendButton,
-      clickHandler: chatClickHandler as Listener,
+      attachButtonClickHandler: attachButtonClickHandler as Listener,
       submitNewMessageHandler: submitNewMessageHandler as Listener,
       settings: {
         withInternalID: false
@@ -67,6 +71,7 @@ export class NewMessage extends Block {
       className: 'new-message__attach-menu',
       items: (this.props.attachMenu as MenuProps).items,
       visible: this.props.visibleAttachMenu as boolean,
+      menuItemClickHandler: attachMenuItemClickHandler as Listener,
       settings: {
         withInternalID: false
       }

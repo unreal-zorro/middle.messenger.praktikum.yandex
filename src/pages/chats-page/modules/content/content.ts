@@ -25,7 +25,6 @@ export class Content extends Block {
     super(props);
 
     const clickHandler: Listener<Event> = (event: Event) => {
-      const currentChatId = (this.props.currentChat as CurrentChat).id;
       const {
         left: currentChatButtonLeft,
         top: currentChatButtonTop,
@@ -43,8 +42,12 @@ export class Content extends Block {
 
         this.props.visibleContentMenu = true;
       }
+    };
 
-      console.log(`content currentChat id = ${currentChatId}`);
+    const contentMenuItemClickHandler: Listener<string> = (text) => {
+      const currentChatId = (this.props.currentChat as CurrentChat).id;
+
+      console.log(`content currentChat id = ${currentChatId}, action = ${text.trim()}`);
     };
 
     this.children.avatar = new Avatar({
@@ -130,6 +133,7 @@ export class Content extends Block {
       className: 'content__content-menu',
       items: (this.props.contentMenu as MenuProps).items,
       visible: this.props.visibleContentMenu as boolean,
+      menuItemClickHandler: contentMenuItemClickHandler as Listener,
       settings: {
         withInternalID: false
       }

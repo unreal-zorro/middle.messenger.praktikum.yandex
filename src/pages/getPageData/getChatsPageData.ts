@@ -1,22 +1,28 @@
 import type { MessageContent, Chat, CurrentChat, Message, User } from '@/entities';
 import { MessageProps } from '../chats-page/modules/content';
 
+const CHAT_MENU_ITEMS: Record<string, string> = {
+  rename: 'Переименовать чат',
+  changeAvatar: 'Изменить аватар чата',
+  delete: 'Удалить чат'
+};
+
 const getChatMenuData = () => {
   const items = [
     {
       type: 'button',
       href: '#icon-rename',
-      text: 'Переименовать чат'
+      text: CHAT_MENU_ITEMS.rename
     },
     {
       type: 'button',
       href: '#icon-avatar',
-      text: 'Изменить аватар чата'
+      text: CHAT_MENU_ITEMS.changeAvatar
     },
     {
       type: 'button',
       href: '#icon-delete',
-      text: 'Удалить чат'
+      text: CHAT_MENU_ITEMS.delete
     }
   ];
 
@@ -99,22 +105,28 @@ const getChatsListPageData = (user: User, chats: Chat[]) => {
   });
 };
 
+const ATTACH_MENU_ITEMS: Record<string, string> = {
+  photo: 'Фото или видео',
+  file: 'Файл',
+  location: 'Локация'
+};
+
 const getAttachMenuData = () => {
   const items = [
     {
       type: 'button',
       href: '#icon-photo',
-      text: 'Фото или видео'
+      text: ATTACH_MENU_ITEMS.photo
     },
     {
       type: 'button',
       href: '#icon-file',
-      text: 'Файл'
+      text: ATTACH_MENU_ITEMS.file
     },
     {
       type: 'button',
       href: '#icon-location',
-      text: 'Локация'
+      text: ATTACH_MENU_ITEMS.location
     }
   ];
 
@@ -123,17 +135,22 @@ const getAttachMenuData = () => {
   };
 };
 
+const CONTENT_MENU_ITEMS: Record<string, string> = {
+  add: 'Добавить пользователя',
+  delete: 'Удалить пользователя'
+};
+
 const getContentMenuData = () => {
   const items = [
     {
       type: 'button',
       href: '#icon-add',
-      text: 'Добавить пользователя'
+      text: CONTENT_MENU_ITEMS.add
     },
     {
       type: 'button',
       href: '#icon-delete',
-      text: 'Удалить пользователя'
+      text: CONTENT_MENU_ITEMS.delete
     }
   ];
 
