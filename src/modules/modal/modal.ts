@@ -77,9 +77,9 @@ export class Modal extends Block {
       (control) =>
         new InputField({
           className: 'modal__input-field',
-          classNameLabel: '',
+          classNameLabel: 'modal__label',
           classNameInput: 'modal__input',
-          classNameError: '',
+          classNameError: 'modal__error',
           name: control.name,
           label: control.label,
           type: control.type,
