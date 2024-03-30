@@ -261,5 +261,7 @@ export abstract class Block {
     this.getContent()!.style.display = 'none';
   }
 
-  getId = (): string => String(this.props.id);
+  getId(): string {
+    return String(this.props.id);
+  }
 }
