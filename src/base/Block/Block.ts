@@ -260,4 +260,6 @@ export abstract class Block {
   hide(): void {
     this.getContent()!.style.display = 'none';
   }
+
+  getId = (): string => String(this.props.id);
 }
