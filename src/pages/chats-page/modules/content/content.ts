@@ -3,8 +3,9 @@ import { Block } from '@/base';
 import type { Listener, Props } from '@/base';
 import type { CurrentChat } from '@/entities';
 import { Avatar, Button, Svg, Text } from '@/components';
-import { Menu } from '@/modules';
-import type { MenuProps } from '@/modules';
+import { Menu, Modal } from '@/modules';
+import type { MenuProps, ModalProps } from '@/modules';
+import { CONTENT_MENU_ITEMS, VALIDATION_RULES } from '@/consts';
 import { EqualDatesMessages } from './modules';
 import type { MessageContent, MessageProps } from './modules';
 import template from './content.hbs?raw';
@@ -18,6 +19,10 @@ export interface ContentProps extends Props {
   classNameContentMenu?: string;
   contentMenu?: MenuProps;
   visibleContentMenu?: boolean;
+  userAddModal: ModalProps;
+  visibleUserAddModal?: boolean;
+  userDeleteModal: ModalProps;
+  visibleUserDeleteModal?: boolean;
 }
 
 export class Content extends Block {
@@ -48,6 +53,20 @@ export class Content extends Block {
       const currentChatId = (this.props.currentChat as CurrentChat).id;
 
       console.log(`content currentChat id = ${currentChatId}, action = ${text.trim()}`);
+
+      const itemText = text.trim();
+
+      if (itemText === CONTENT_MENU_ITEMS.add) {
+        this.setProps({
+          visibleUserAddModal: true
+        });
+      }
+
+      if (itemText === CONTENT_MENU_ITEMS.delete) {
+        this.setProps({
+          visibleUserDeleteModal: true
+        });
+      }
     };
 
     this.children.avatar = new Avatar({
@@ -82,6 +101,58 @@ export class Content extends Block {
         href: '#icon-triple'
       })
     });
+
+    const submitUserAddModalHandler: (...args: Record<string, string>[]) => void = (formData) => {
+      let isValid = true;
+
+      Object.entries(formData).forEach(([key, value]) => {
+        const { regExp } = VALIDATION_RULES[key];
+        isValid = isValid && regExp.test(value);
+      });
+
+      if (isValid) {
+        this.setProps({
+          visibleUserAddModal: false
+        });
+
+        console.log(formData);
+      } else {
+        console.log('Invalid form data');
+      }
+    };
+
+    const submitUserDeleteModalHandler: (...args: Record<string, string>[]) => void = (
+      formData
+    ) => {
+      let isValid = true;
+
+      Object.entries(formData).forEach(([key, value]) => {
+        const { regExp } = VALIDATION_RULES[key];
+        isValid = isValid && regExp.test(value);
+      });
+
+      if (isValid) {
+        this.setProps({
+          visibleUserDeleteModal: false
+        });
+
+        console.log(formData);
+      } else {
+        console.log('Invalid form data');
+      }
+    };
+
+    const closeUserAddModalHandler: Listener = () => {
+      this.setProps({
+        visibleUserAddModal: false
+      });
+    };
+
+    const closeUserDeleteModalHandler: Listener = () => {
+      this.setProps({
+        visibleUserDeleteModal: false
+      });
+    };
 
     if (this.props.dates && (this.props.dates as string[])?.length) {
       this.children.dates = (this.props.dates as string[])?.map((dateItem) => {
@@ -138,6 +209,34 @@ export class Content extends Block {
         withInternalID: false
       }
     });
+
+    this.children.userAddModal = new Modal({
+      className: '',
+      type: 'image',
+      header: (this.props.userAddModal as ModalProps)?.header,
+      controls: (this.props.userAddModal as ModalProps)?.controls,
+      buttons: (this.props.userAddModal as ModalProps)?.buttons,
+      visible: this.props.visibleUserAddModal as boolean,
+      submitHandler: submitUserAddModalHandler as Listener,
+      closeHandler: closeUserAddModalHandler,
+      settings: {
+        withInternalID: false
+      }
+    });
+
+    this.children.userDeleteModal = new Modal({
+      className: '',
+      type: 'image',
+      header: (this.props.userDeleteModal as ModalProps)?.header,
+      controls: (this.props.userDeleteModal as ModalProps)?.controls,
+      buttons: (this.props.userDeleteModal as ModalProps)?.buttons,
+      visible: this.props.visibleUserDeleteModal as boolean,
+      submitHandler: submitUserDeleteModalHandler as Listener,
+      closeHandler: closeUserDeleteModalHandler,
+      settings: {
+        withInternalID: false
+      }
+    });
   }
 
   componentDidUpdate(oldProps: ContentProps, newProps: ContentProps): boolean {
@@ -147,6 +246,28 @@ export class Content extends Block {
       }
       if (newProps.visibleContentMenu === true) {
         (this.children.contentMenu as Menu).show();
+      }
+    }
+
+    if (oldProps.visibleUserAddModal !== newProps.visibleUserAddModal) {
+      if (newProps.visibleUserAddModal === false) {
+        (this.children.userAddModal as Modal).hide();
+        document.body.classList.remove('modal-open');
+      }
+      if (newProps.visibleUserAddModal === true) {
+        (this.children.userAddModal as Modal).show();
+        document.body.classList.add('modal-open');
+      }
+    }
+
+    if (oldProps.visibleUserDeleteModal !== newProps.visibleUserDeleteModal) {
+      if (newProps.visibleUserDeleteModal === false) {
+        (this.children.userDeleteModal as Modal).hide();
+        document.body.classList.remove('modal-open');
+      }
+      if (newProps.visibleUserDeleteModal === true) {
+        (this.children.userDeleteModal as Modal).show();
+        document.body.classList.add('modal-open');
       }
     }
 

@@ -113,6 +113,10 @@ export class ChatsPage extends Block {
       classNameContentMenu: '',
       contentMenu: (this.props.content as ContentProps).contentMenu,
       visibleContentMenu: false,
+      userAddModal: (this.props.content as ContentProps).userAddModal,
+      visibleUserAddModal: false,
+      userDeleteModal: (this.props.content as ContentProps).userDeleteModal,
+      visibleUserDeleteModal: false,
       settings: {
         withInternalID: false
       }

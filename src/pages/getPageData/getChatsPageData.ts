@@ -295,25 +295,63 @@ export const getChatsContentPageData = (
   };
 };
 
-const getUserDeleteModalData = () => {
-  const title = 'Вы уверены?';
+const getUserAddModalData = () => {
+  const header = 'Добавить пользователя';
+
+  const controls = [
+    {
+      label: 'Логин',
+      name: 'addUser',
+      type: 'text',
+      disabled: false,
+      value: '',
+      error: false,
+      text: ''
+    }
+  ];
 
   const buttons = [
     {
       type: 'submit',
-      cancel: false,
-      text: 'Да'
-    },
-    {
-      type: 'button',
-      cancel: true,
-      text: 'Нет'
+      text: 'Добавить'
     }
   ];
 
   return {
-    title,
-    buttons
+    header,
+    controls,
+    buttons,
+    visible: false
+  };
+};
+
+const getUserDeleteModalData = () => {
+  const header = 'Удалить пользователя';
+
+  const controls = [
+    {
+      label: 'Логин',
+      name: 'deleteUser',
+      type: 'text',
+      disabled: false,
+      value: '',
+      error: false,
+      text: ''
+    }
+  ];
+
+  const buttons = [
+    {
+      type: 'submit',
+      text: 'Удалить'
+    }
+  ];
+
+  return {
+    header,
+    controls,
+    buttons,
+    visible: false
   };
 };
 
@@ -327,6 +365,9 @@ export const getChatsPageData = (
 
   const attachMenu = getAttachMenuData();
   const contentMenu = getContentMenuData();
+  const userAddModal = {
+    ...getUserAddModalData()
+  };
   const userDeleteModal = {
     ...getUserDeleteModalData()
   };
@@ -367,6 +408,7 @@ export const getChatsPageData = (
     content: {
       ...getChatsContentPageData(user, messages, currentChat),
       contentMenu,
+      userAddModal,
       userDeleteModal
     },
     newMessage: {

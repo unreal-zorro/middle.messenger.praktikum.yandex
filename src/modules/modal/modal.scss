@@ -64,10 +64,20 @@
   }
 
   &__input-field {
-    width: 200px;
+    width: 100%;
+    max-width: $button-width;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: $font-text $input-height auto;
+    gap: 10px;
+    place-items: center start;
     margin-bottom: 10px;
 
-    @include flex(column, column, center);
+    &-file {
+      width: 200px;
+
+      @include flex(column, column, center);
+    }
 
     &:last-child {
       margin-bottom: 0;
@@ -75,14 +85,15 @@
   }
 
   &__label {
-    margin-bottom: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s;
+    &-file {
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
 
-    &:hover {
-      scale: 1.05;
-      text-decoration: underline;
+      &:hover {
+        scale: 1.05;
+        text-decoration: underline;
+      }
     }
 
     &-selected {
@@ -97,13 +108,20 @@
   }
 
   &__input {
-    height: 0;
-    visibility: hidden;
-    opacity: 0;
+    width: 100%;
+
+    &-file {
+      height: 0;
+      visibility: hidden;
+      opacity: 0;
+    }
+
   }
 
   &__error {
-    text-align: center;
+    &-file {
+      text-align: center;
+    }
   }
 
   &__button {

@@ -149,7 +149,7 @@ export class NewMessage extends Block {
       header: (this.props.attachPhotoModal as ModalProps)?.header,
       controls: (this.props.attachPhotoModal as ModalProps)?.controls,
       buttons: (this.props.attachPhotoModal as ModalProps)?.buttons,
-      visible: this.props.attachPhotoModal as boolean,
+      visible: this.props.visibleAttachPhotoModal as boolean,
       submitHandler: submitAttachModalHandler as Listener,
       closeHandler: closeAttachPhotoModalHandler,
       settings: {
@@ -163,7 +163,7 @@ export class NewMessage extends Block {
       header: (this.props.attachFileModal as ModalProps)?.header,
       controls: (this.props.attachFileModal as ModalProps)?.controls,
       buttons: (this.props.attachFileModal as ModalProps)?.buttons,
-      visible: this.props.attachFileModal as boolean,
+      visible: this.props.visibleAttachFileModal as boolean,
       submitHandler: submitAttachModalHandler as Listener,
       closeHandler: closeAttachFileModalHandler,
       settings: {
@@ -177,7 +177,7 @@ export class NewMessage extends Block {
       header: (this.props.attachLocationModal as ModalProps)?.header,
       controls: (this.props.attachLocationModal as ModalProps)?.controls,
       buttons: (this.props.attachLocationModal as ModalProps)?.buttons,
-      visible: this.props.attachLocationModal as boolean,
+      visible: this.props.visibleAttachLocationModal as boolean,
       submitHandler: submitAttachModalHandler as Listener,
       closeHandler: closeAttachLocationModalHandler,
       settings: {

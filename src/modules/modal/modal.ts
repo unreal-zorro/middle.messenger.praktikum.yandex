@@ -67,7 +67,7 @@ export class Modal extends Block {
 
         (this.children.controls as Block[])?.forEach((control) =>
           control.setProps({
-            classNameLabel: 'modal__label'
+            classNameLabel: 'modal__label modal__label-file'
           })
         );
 
@@ -83,7 +83,7 @@ export class Modal extends Block {
 
       (this.children.controls as Block[])?.forEach((control) =>
         control.setProps({
-          classNameLabel: 'modal__label modal__label-selected'
+          classNameLabel: 'modal__label modal__label-file modal__label-selected'
         })
       );
 
@@ -143,10 +143,12 @@ export class Modal extends Block {
     this.children.controls = (this.props.controls as InputFieldProps[])?.map(
       (control) =>
         new InputField({
-          className: 'modal__input-field',
-          classNameLabel: 'modal__label',
-          classNameInput: 'modal__input',
-          classNameError: 'modal__error',
+          className: `modal__input-field ${
+            control.type === 'file' ? 'modal__input-field-file' : ''
+          }`,
+          classNameLabel: `modal__label ${control.type === 'file' ? 'modal__label-file' : ''}`,
+          classNameInput: `modal__input ${control.type === 'file' ? 'modal__input-file' : ''}`,
+          classNameError: `modal__error ${control.type === 'file' ? 'modal__error-file' : ''}`,
           name: control.name,
           label: control.label,
           type: control.type,
