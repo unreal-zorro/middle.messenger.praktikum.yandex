@@ -1,38 +1,40 @@
 <article class="modal{{#if className}} {{ className }}{{/if}}">
-  <div class="modal__content">
-    <h2 class="modal__header">
-      {{ header }}
-    </h2>
+  <div class="modal__wrapper">
+    <div class="modal__content">
+      <h2 class="modal__header">
+        {{ header }}
+      </h2>
 
-    <form
-      class="modal__form"
-    >
-      {{#if controls}}
-        <div class="modal__controls">
-          {{#each controls}}
-            <div class="modal__control">
-              {{{ this }}}
-            </div>
+      <form
+        class="modal__form"
+      >
+        {{#if controls}}
+          <div class="modal__controls">
+            {{#each controls}}
+              <div class="modal__control">
+                {{{ this }}}
+              </div>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{#if buttons}}
+          {{#each buttons}}
+            {{{ this }}}
           {{/each}}
-        </div>
-      {{/if}}
+        {{/if}}
+      </form>
 
-      {{#if buttons}}
-        {{#each buttons}}
-          {{{ this }}}
-        {{/each}}
-      {{/if}}
-    </form>
+      {{{ closeButton }}}
+    </div>
 
-    {{{ closeButton }}}
+    <svg class="spritesheet">
+      <symbol id="icon-delete" viewBox="0 0 512 512">
+        <title>delete</title>
+        <polygon points="479.996,95.997 416.004,32.003 256,192.007 95.997,32.003 32.004,95.997 192.008,256 32.004,416.004
+          95.997,479.996 256,319.992 416.004,479.996 479.996,416.004 319.992,256 "
+        />
+      </symbol>
+    </svg>
   </div>
-
-  <svg class="spritesheet">
-    <symbol id="icon-delete" viewBox="0 0 512 512">
-      <title>delete</title>
-      <polygon points="479.996,95.997 416.004,32.003 256,192.007 95.997,32.003 32.004,95.997 192.008,256 32.004,416.004
-        95.997,479.996 256,319.992 416.004,479.996 479.996,416.004 319.992,256 "
-      />
-    </symbol>
-  </svg>
 </article>

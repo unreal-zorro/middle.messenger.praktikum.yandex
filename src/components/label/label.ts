@@ -14,6 +14,14 @@ export class Label extends Block {
     super(props);
   }
 
+  componentDidUpdate(oldProps: LabelProps, newProps: LabelProps): boolean {
+    if (oldProps.text !== newProps.text) {
+      this.setProps({ text: newProps.text });
+    }
+
+    return true;
+  }
+
   render(): string {
     return template;
   }

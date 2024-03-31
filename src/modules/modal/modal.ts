@@ -13,7 +13,9 @@ export interface ModalProps extends Props {
   header?: string;
   controls?: InputFieldProps[];
   buttons?: ButtonProps[];
+  visible?: boolean;
   submitHandler?: Listener;
+  closeHandler?: Listener;
 }
 
 export class Modal extends Block {
@@ -49,6 +51,43 @@ export class Modal extends Block {
         })
       );
 
+      this._formData[name] = value;
+
+      return '';
+    };
+
+    const changeHandler: (...args: string[]) => string = (name, value, type) => {
+      if (!type.includes('image')) {
+        (this.children.buttons as Block[])?.forEach((button) =>
+          button.setProps({
+            disabled: true
+          })
+        );
+
+        (this.children.controls as Block[])?.forEach((control) =>
+          control.setProps({
+            classNameLabel: 'modal__label'
+          })
+        );
+
+        const message = 'Нужно выбрать файл с изображением';
+        return message;
+      }
+
+      (this.children.buttons as Block[])?.forEach((button) =>
+        button.setProps({
+          disabled: false
+        })
+      );
+
+      (this.children.controls as Block[])?.forEach((control) =>
+        control.setProps({
+          classNameLabel: 'modal__label modal__label-selected'
+        })
+      );
+
+      this._formData[name] = value;
+
       return '';
     };
 
@@ -58,7 +97,19 @@ export class Modal extends Block {
       (this.children.controls as InputField[]).forEach((control) => {
         const element = control.getContent()?.querySelector('input') as HTMLInputElement;
         const elementName = element?.getAttribute('name') as string;
-        const elementValue = element?.value;
+        let elementValue = element?.getAttribute('value') as string;
+        const elementType = element?.getAttribute('type') as string;
+
+        if (elementType === 'file') {
+          if (element.files && element.files.length !== 0) {
+            elementValue = element.files[0]?.name;
+            const type = element.files[0]?.type;
+
+            if (!type.includes('image')) {
+              return;
+            }
+          }
+        }
 
         this._formData[elementName] = elementValue;
       });
@@ -70,7 +121,9 @@ export class Modal extends Block {
 
     const closeHandler: (event: SubmitEvent) => void = (event) => {
       event.preventDefault();
-      this.hide();
+      if (this.props.closeHandler) {
+        (this.props.closeHandler as Listener)();
+      }
     };
 
     this.children.controls = (this.props.controls as InputFieldProps[])?.map(
@@ -90,6 +143,7 @@ export class Modal extends Block {
           text: control.text,
           focusHandler,
           blurHandler,
+          changeHandler,
           settings: {
             withInternalID: true
           }
@@ -133,6 +187,10 @@ export class Modal extends Block {
   }
 
   _formData: Record<string, string> = {};
+
+  componentDidUpdate(oldProps: ModalProps, newProps: ModalProps): boolean {
+    return oldProps.visible !== newProps.visible;
+  }
 
   render(): string {
     return template;

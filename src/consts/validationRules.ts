@@ -86,5 +86,9 @@ export const VALIDATION_RULES: ValidationRules = {
   message: {
     regExp: REGEXPS.MESSAGE,
     message: 'Поле не должно быть пустым'
+  },
+  avatar: {
+    regExp: REGEXPS.MESSAGE,
+    message: 'Нужно выбрать файл'
   }
 };

@@ -6,10 +6,19 @@
   inset: 0;
   overflow: auto;
   background-color: $dark-gray;
+  padding: 10px;
   z-index: 8000;
   display: none;
 
-  @include flex(column, center, center);
+  &__wrapper {
+    position: relative;
+    inset: 0;
+    overflow: auto;
+    width: 100%;
+    min-height: 100%;
+
+    @include flex(column, center, center);
+  }
 
   &__content {
     flex: 0 0 auto;
@@ -19,6 +28,7 @@
     border-radius: 25px;
     background-color: $accent;
     position: relative;
+
   }
 
   &__header {
@@ -55,7 +65,6 @@
 
   &__input-field {
     width: 200px;
-
     margin-bottom: 10px;
 
     @include flex(column, column, center);
@@ -75,12 +84,26 @@
       scale: 1.05;
       text-decoration: underline;
     }
+
+    &-selected {
+      color: $dark;
+      cursor: auto;
+
+      &:hover {
+        scale: 1;
+        text-decoration: none;
+      }
+    }
   }
 
   &__input {
     height: 0;
     visibility: hidden;
     opacity: 0;
+  }
+
+  &__error {
+    text-align: center;
   }
 
   &__button {

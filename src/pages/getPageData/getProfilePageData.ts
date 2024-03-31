@@ -12,8 +12,8 @@ const getChangeAvatarModalData = () => {
       type: 'file',
       disabled: false,
       value: '',
-      error: true,
-      text: 'Нужно выбрать файл'
+      error: false,
+      text: ''
     }
   ];
 
@@ -27,7 +27,8 @@ const getChangeAvatarModalData = () => {
   return {
     header,
     controls,
-    buttons
+    buttons,
+    visibleChangeAvatarModal: false
   };
 };
 

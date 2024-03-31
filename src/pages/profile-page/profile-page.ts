@@ -19,6 +19,7 @@ interface ProfilePageProps extends Props {
   link?: LinkProps;
   navLink?: LinkProps;
   changeAvatarModal?: ModalProps;
+  visibleChangeAvatarModal?: boolean;
 }
 
 export class ProfilePage extends Block {
@@ -40,11 +41,41 @@ export class ProfilePage extends Block {
       }
     };
 
+    const submitChangeAvatarHandler: (...args: Record<string, string>[]) => void = (formData) => {
+      let isValid = true;
+
+      Object.entries(formData).forEach(([key, value]) => {
+        const { regExp } = VALIDATION_RULES[key];
+        isValid = isValid && regExp.test(value);
+      });
+
+      if (isValid) {
+        console.log(formData);
+      } else {
+        console.log('Invalid form data');
+      }
+    };
+
+    const avatarClickHandler: Listener = () => {
+      this.setProps({
+        visibleChangeAvatarModal: true
+      });
+    };
+
+    const closeChangeAvatarHandler: Listener = () => {
+      this.setProps({
+        visibleChangeAvatarModal: false
+      });
+    };
+
     this.children.avatarChild = new Avatar({
       className: 'avatar_big profile__avatar',
       imgSrc: (this.props.avatar as AvatarProps)?.imgSrc as string,
       settings: {
         withInternalID: false
+      },
+      events: {
+        click: (() => avatarClickHandler.call(this)) as Listener
       }
     });
 
@@ -121,11 +152,28 @@ export class ProfilePage extends Block {
       header: (this.props.changeAvatarModal as ModalProps)?.header,
       controls: (this.props.changeAvatarModal as ModalProps)?.controls,
       buttons: (this.props.changeAvatarModal as ModalProps)?.buttons,
-      submitHandler: (this.props.changeAvatarModal as ModalProps)?.submitHandler,
+      visible: this.props.visibleChangeAvatarModal as boolean,
+      submitHandler: submitChangeAvatarHandler as Listener,
+      closeHandler: closeChangeAvatarHandler,
       settings: {
         withInternalID: false
       }
     });
+  }
+
+  componentDidUpdate(oldProps: ProfilePageProps, newProps: ProfilePageProps): boolean {
+    if (oldProps.visibleChangeAvatarModal !== newProps.visibleChangeAvatarModal) {
+      if (newProps.visibleChangeAvatarModal === false) {
+        (this.children.changeAvatarModal as Modal).hide();
+        document.body.classList.remove('modal-open');
+      }
+      if (newProps.visibleChangeAvatarModal === true) {
+        (this.children.changeAvatarModal as Modal).show();
+        document.body.classList.add('modal-open');
+      }
+    }
+
+    return false;
   }
 
   render(): string {
