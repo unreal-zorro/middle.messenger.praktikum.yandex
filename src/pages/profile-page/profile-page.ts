@@ -50,6 +50,10 @@ export class ProfilePage extends Block {
       });
 
       if (isValid) {
+        this.setProps({
+          visibleChangeAvatarModal: false
+        });
+
         console.log(formData);
       } else {
         console.log('Invalid form data');
