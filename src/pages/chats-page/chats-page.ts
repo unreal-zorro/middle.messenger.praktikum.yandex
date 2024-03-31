@@ -124,6 +124,15 @@ export class ChatsPage extends Block {
       classNameAttachMenu: '',
       attachMenu: (this.props.newMessage as NewMessageProps).attachMenu,
       visibleAttachMenu: false,
+      attachPhotoModal: (this.props.newMessage as NewMessageProps).attachPhotoModal,
+      visibleAttachPhotoModal: false,
+      typeAttachPhotoModal: 'image',
+      attachFileModal: (this.props.newMessage as NewMessageProps).attachFileModal,
+      visibleAttachFileModal: false,
+      typeAttachFileModal: '',
+      attachLocationModal: (this.props.newMessage as NewMessageProps).attachLocationModal,
+      visibleAttachLocationModal: false,
+      typeAttachLocationModal: '',
       settings: {
         withInternalID: false
       }

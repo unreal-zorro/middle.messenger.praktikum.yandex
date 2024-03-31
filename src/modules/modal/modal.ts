@@ -10,6 +10,7 @@ import template from './modal.hbs?raw';
 
 export interface ModalProps extends Props {
   className?: string;
+  type?: string;
   header?: string;
   controls?: InputFieldProps[];
   buttons?: ButtonProps[];
@@ -57,7 +58,7 @@ export class Modal extends Block {
     };
 
     const changeHandler: (...args: string[]) => string = (name, value, type) => {
-      if (!type.includes('image')) {
+      if (!type.includes('image') && this.props.type === 'image') {
         (this.children.buttons as Block[])?.forEach((button) =>
           button.setProps({
             disabled: true
@@ -105,7 +106,7 @@ export class Modal extends Block {
             elementValue = element.files[0]?.name;
             const type = element.files[0]?.type;
 
-            if (!type.includes('image')) {
+            if (!type.includes('image') && this.props.type === 'image') {
               return;
             }
           }
@@ -114,6 +115,18 @@ export class Modal extends Block {
         this._formData[elementName] = elementValue;
       });
 
+      (this.children.buttons as Block[])?.forEach((button) =>
+        button.setProps({
+          disabled: true
+        })
+      );
+
+      (this.children.controls as Block[])?.forEach((control) =>
+        control.setProps({
+          classNameLabel: 'modal__label'
+        })
+      );
+
       if (this.props.submitHandler) {
         (this.props.submitHandler as Listener<Record<string, string>>)(this._formData);
       }
@@ -121,6 +134,7 @@ export class Modal extends Block {
 
     const closeHandler: (event: SubmitEvent) => void = (event) => {
       event.preventDefault();
+
       if (this.props.closeHandler) {
         (this.props.closeHandler as Listener)();
       }

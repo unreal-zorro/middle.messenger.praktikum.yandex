@@ -90,5 +90,17 @@ export const VALIDATION_RULES: ValidationRules = {
   avatar: {
     regExp: REGEXPS.MESSAGE,
     message: 'Нужно выбрать файл'
+  },
+  photo: {
+    regExp: REGEXPS.MESSAGE,
+    message: 'Нужно выбрать файл'
+  },
+  file: {
+    regExp: REGEXPS.MESSAGE,
+    message: 'Нужно выбрать файл'
+  },
+  location: {
+    regExp: REGEXPS.MESSAGE,
+    message: 'Нужно выбрать файл'
   }
 };

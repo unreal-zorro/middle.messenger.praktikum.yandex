@@ -41,7 +41,9 @@ export class ProfilePage extends Block {
       }
     };
 
-    const submitChangeAvatarHandler: (...args: Record<string, string>[]) => void = (formData) => {
+    const submitChangeAvatarModalHandler: (...args: Record<string, string>[]) => void = (
+      formData
+    ) => {
       let isValid = true;
 
       Object.entries(formData).forEach(([key, value]) => {
@@ -66,7 +68,7 @@ export class ProfilePage extends Block {
       });
     };
 
-    const closeChangeAvatarHandler: Listener = () => {
+    const closeChangeAvatarModalHandler: Listener = () => {
       this.setProps({
         visibleChangeAvatarModal: false
       });
@@ -153,12 +155,13 @@ export class ProfilePage extends Block {
 
     this.children.changeAvatarModal = new Modal({
       className: '',
+      type: 'image',
       header: (this.props.changeAvatarModal as ModalProps)?.header,
       controls: (this.props.changeAvatarModal as ModalProps)?.controls,
       buttons: (this.props.changeAvatarModal as ModalProps)?.buttons,
       visible: this.props.visibleChangeAvatarModal as boolean,
-      submitHandler: submitChangeAvatarHandler as Listener,
-      closeHandler: closeChangeAvatarHandler,
+      submitHandler: submitChangeAvatarModalHandler as Listener,
+      closeHandler: closeChangeAvatarModalHandler,
       settings: {
         withInternalID: false
       }

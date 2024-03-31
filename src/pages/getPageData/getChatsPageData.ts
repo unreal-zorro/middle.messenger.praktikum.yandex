@@ -1,11 +1,6 @@
 import type { MessageContent, Chat, CurrentChat, Message, User } from '@/entities';
+import { CHAT_MENU_ITEMS, ATTACH_MENU_ITEMS, CONTENT_MENU_ITEMS } from '@/consts';
 import { MessageProps } from '../chats-page/modules/content';
-
-const CHAT_MENU_ITEMS: Record<string, string> = {
-  rename: 'Переименовать чат',
-  changeAvatar: 'Изменить аватар чата',
-  delete: 'Удалить чат'
-};
 
 const getChatMenuData = () => {
   const items = [
@@ -105,12 +100,6 @@ const getChatsListPageData = (user: User, chats: Chat[]) => {
   });
 };
 
-const ATTACH_MENU_ITEMS: Record<string, string> = {
-  photo: 'Фото или видео',
-  file: 'Файл',
-  location: 'Локация'
-};
-
 const getAttachMenuData = () => {
   const items = [
     {
@@ -135,9 +124,94 @@ const getAttachMenuData = () => {
   };
 };
 
-const CONTENT_MENU_ITEMS: Record<string, string> = {
-  add: 'Добавить пользователя',
-  delete: 'Удалить пользователя'
+const getAttachPhotoModalData = () => {
+  const header = 'Загрузите фото или видео';
+
+  const controls = [
+    {
+      label: 'Выбрать файл на компьютере',
+      name: 'photo',
+      type: 'file',
+      disabled: false,
+      value: '',
+      error: false,
+      text: ''
+    }
+  ];
+
+  const buttons = [
+    {
+      type: 'submit',
+      text: 'Поменять'
+    }
+  ];
+
+  return {
+    header,
+    controls,
+    buttons,
+    visibleAttachModal: false
+  };
+};
+
+const getAttachFileModalData = () => {
+  const header = 'Загрузите файл';
+
+  const controls = [
+    {
+      label: 'Выбрать файл на компьютере',
+      name: 'file',
+      type: 'file',
+      disabled: false,
+      value: '',
+      error: false,
+      text: ''
+    }
+  ];
+
+  const buttons = [
+    {
+      type: 'submit',
+      text: 'Поменять'
+    }
+  ];
+
+  return {
+    header,
+    controls,
+    buttons,
+    visibleAttachModal: false
+  };
+};
+
+const getAttachLocationModalData = () => {
+  const header = 'Загрузите локацию';
+
+  const controls = [
+    {
+      label: 'Выбрать файл на компьютере',
+      name: 'location',
+      type: 'file',
+      disabled: false,
+      value: '',
+      error: false,
+      text: ''
+    }
+  ];
+
+  const buttons = [
+    {
+      type: 'submit',
+      text: 'Поменять'
+    }
+  ];
+
+  return {
+    header,
+    controls,
+    buttons,
+    visibleAttachModal: false
+  };
 };
 
 const getContentMenuData = () => {
@@ -256,6 +330,15 @@ export const getChatsPageData = (
   const userDeleteModal = {
     ...getUserDeleteModalData()
   };
+  const attachPhotoModal = {
+    ...getAttachPhotoModalData()
+  };
+  const attachFileModal = {
+    ...getAttachFileModalData()
+  };
+  const attachLocationModal = {
+    ...getAttachLocationModalData()
+  };
 
   return {
     id: 'chats',
@@ -305,7 +388,10 @@ export const getChatsPageData = (
           type: 'submit'
         }
       },
-      attachMenu
+      attachMenu,
+      attachPhotoModal,
+      attachFileModal,
+      attachLocationModal
     }
   };
 };
