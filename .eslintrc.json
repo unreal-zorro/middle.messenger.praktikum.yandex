@@ -24,7 +24,8 @@
     "class-methods-use-this": "off",
     "no-use-before-define": "off",
     "no-console": "off",
-    "no-useless-constructor": "off"
+    "no-useless-constructor": "off",
+    "no-constructor-return": "off"
   },
   "settings": {
     "import/parsers": {

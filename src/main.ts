@@ -1,6 +1,6 @@
 import './style.scss';
 import { user, errors, chats, messages, currentChat } from './entities';
-import { render } from './utils';
+// import { render } from './utils';
 import {
   LoginPage,
   ErrorPage,
@@ -12,133 +12,217 @@ import {
   getChatsPageData,
   ChatsPage
 } from './pages';
-import { Block } from './base';
+// import { Block, Router } from './base';
+import { Router } from './base';
 
-const navigate: (page: Nullable<Block>) => void = (page) => {
-  if (page) {
-    render('#root', page);
-  }
-};
+const router = new Router('#root');
+const loginPageData = getLoginPageData();
+const registerPageData = getRegisterPageData();
+const profilePageData = getProfilePageData(user, 'view');
+const chatsPageData = getChatsPageData(user, chats, messages, currentChat);
+const error404PageData = getErrorPageData(errors.error404);
+const error500PageData = getErrorPageData(errors.error500);
 
-const contentLoadedHandler: () => void = () => {
-  const { pathname } = window.location;
-  let page: Nullable<Block> = null;
+router
+  .use('/', LoginPage, {
+    settings: {
+      withInternalID: false
+    },
+    ...loginPageData
+  })
+  .use('/sign-up', LoginPage, {
+    settings: {
+      withInternalID: false
+    },
+    ...registerPageData
+  })
+  .use('/settings', ProfilePage, {
+    settings: {
+      withInternalID: false
+    },
+    ...profilePageData
+  })
+  .use('/messenger', ChatsPage, {
+    settings: {
+      withInternalID: false
+    },
+    id: chatsPageData.id,
+    search: chatsPageData.search,
+    list: chatsPageData.list,
+    content: chatsPageData.content,
+    newMessage: chatsPageData.newMessage
+  })
+  .use('/error404', ErrorPage, {
+    settings: {
+      withInternalID: false
+    },
+    ...error404PageData
+  })
+  .use('/error500', ErrorPage, {
+    settings: {
+      withInternalID: false
+    },
+    ...error500PageData
+  })
+  .start();
 
-  switch (pathname) {
-    case '/':
-    case '/index.html': {
-      const data = getLoginPageData();
+setTimeout(() => {
+  router.go('/');
+}, 1000);
 
-      const loginPage = new LoginPage({
-        settings: {
-          withInternalID: false
-        },
-        ...data
-      });
+setTimeout(() => {
+  router.go('/sign-up');
+}, 2000);
 
-      page = loginPage;
-      break;
-    }
-    case '/register': {
-      const data = getRegisterPageData();
+setTimeout(() => {
+  router.go('/settings');
+}, 3000);
 
-      const loginPage = new LoginPage({
-        settings: {
-          withInternalID: false
-        },
-        ...data
-      });
+setTimeout(() => {
+  router.go('/messenger');
+}, 4000);
 
-      page = loginPage;
-      break;
-    }
-    case '/error404': {
-      const data = getErrorPageData(errors.error404);
+setTimeout(() => {
+  router.back();
+}, 5000);
 
-      const errorPage = new ErrorPage({
-        settings: {
-          withInternalID: false
-        },
-        ...data
-      });
+setTimeout(() => {
+  router.back();
+}, 6000);
 
-      page = errorPage;
-      break;
-    }
-    case '/error500': {
-      const data = getErrorPageData(errors.error500);
+setTimeout(() => {
+  router.back();
+}, 7000);
 
-      const errorPage = new ErrorPage({
-        settings: {
-          withInternalID: false
-        },
-        ...data
-      });
+setTimeout(() => {
+  router.back();
+}, 8000);
 
-      page = errorPage;
-      break;
-    }
-    case '/profile': {
-      const data = getProfilePageData(user, 'view');
+// const navigate: (page: Nullable<Block>) => void = (page) => {
+//   if (page) {
+//     render('#root', page);
+//   }
+// };
 
-      const profilePage = new ProfilePage({
-        settings: {
-          withInternalID: false
-        },
-        ...data
-      });
+// const contentLoadedHandler: () => void = () => {
+//   const { pathname } = window.location;
+//   let page: Nullable<Block> = null;
 
-      page = profilePage;
-      break;
-    }
-    case '/profile/data': {
-      const data = getProfilePageData(user, 'edit');
+//   switch (pathname) {
+//     case '/':
+//     case '/index.html': {
+//       const data = getLoginPageData();
 
-      const profilePage = new ProfilePage({
-        settings: {
-          withInternalID: false
-        },
-        ...data
-      });
+//       const loginPage = new LoginPage({
+//         settings: {
+//           withInternalID: false
+//         },
+//         ...data
+//       });
 
-      page = profilePage;
-      break;
-    }
-    case '/profile/password': {
-      const data = getProfilePageData(user, 'password');
+//       page = loginPage;
+//       break;
+//     }
+//     case '/register': {
+//       const data = getRegisterPageData();
 
-      const profilePage = new ProfilePage({
-        settings: {
-          withInternalID: false
-        },
-        ...data
-      });
+//       const loginPage = new LoginPage({
+//         settings: {
+//           withInternalID: false
+//         },
+//         ...data
+//       });
 
-      page = profilePage;
-      break;
-    }
-    case '/chats': {
-      const data = getChatsPageData(user, chats, messages, currentChat);
+//       page = loginPage;
+//       break;
+//     }
+//     case '/error404': {
+//       const data = getErrorPageData(errors.error404);
 
-      const chatsPage = new ChatsPage({
-        settings: {
-          withInternalID: false
-        },
-        id: data.id,
-        search: data.search,
-        list: data.list,
-        content: data.content,
-        newMessage: data.newMessage
-      });
+//       const errorPage = new ErrorPage({
+//         settings: {
+//           withInternalID: false
+//         },
+//         ...data
+//       });
 
-      page = chatsPage;
-      break;
-    }
-    default:
-      break;
-  }
+//       page = errorPage;
+//       break;
+//     }
+//     case '/error500': {
+//       const data = getErrorPageData(errors.error500);
 
-  navigate(page);
-};
+//       const errorPage = new ErrorPage({
+//         settings: {
+//           withInternalID: false
+//         },
+//         ...data
+//       });
 
-document.addEventListener('DOMContentLoaded', contentLoadedHandler);
+//       page = errorPage;
+//       break;
+//     }
+//     case '/profile': {
+//       const data = getProfilePageData(user, 'view');
+
+//       const profilePage = new ProfilePage({
+//         settings: {
+//           withInternalID: false
+//         },
+//         ...data
+//       });
+
+//       page = profilePage;
+//       break;
+//     }
+//     case '/profile/data': {
+//       const data = getProfilePageData(user, 'edit');
+
+//       const profilePage = new ProfilePage({
+//         settings: {
+//           withInternalID: false
+//         },
+//         ...data
+//       });
+
+//       page = profilePage;
+//       break;
+//     }
+//     case '/profile/password': {
+//       const data = getProfilePageData(user, 'password');
+
+//       const profilePage = new ProfilePage({
+//         settings: {
+//           withInternalID: false
+//         },
+//         ...data
+//       });
+
+//       page = profilePage;
+//       break;
+//     }
+//     case '/chats': {
+//       const data = getChatsPageData(user, chats, messages, currentChat);
+
+//       const chatsPage = new ChatsPage({
+//         settings: {
+//           withInternalID: false
+//         },
+//         id: data.id,
+//         search: data.search,
+//         list: data.list,
+//         content: data.content,
+//         newMessage: data.newMessage
+//       });
+
+//       page = chatsPage;
+//       break;
+//     }
+//     default:
+//       break;
+//   }
+
+//   navigate(page);
+// };
+
+// document.addEventListener('DOMContentLoaded', contentLoadedHandler);
