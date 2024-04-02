@@ -1,10 +1,17 @@
 <main id={{ id }} class="profile">
-  {{{ avatarChild }}}
-  {{{ headerChild }}}
-  {{{ formChild }}}
-  {{{ changeDataButtonChild }}}
-  {{{ changePasswordButtonChild }}}
-  {{{ linkChild }}}
-  {{{ navLinkChild }}}
-  {{{ changeAvatarModal }}}
+  <div class="profile__wrapper">
+    {{{ avatarChild }}}
+    {{{ headerChild }}}
+    {{{ formChild }}}
+
+    {{#if navButtons}}
+      {{#each navButtons}}
+        {{{ this }}}
+      {{/each}}
+    {{/if}}
+
+    {{{ linkChild }}}
+    {{{ navLinkChild }}}
+    {{{ changeAvatarModal }}}
+  </div>
 </main>

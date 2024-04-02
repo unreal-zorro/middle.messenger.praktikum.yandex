@@ -41,7 +41,9 @@ export class Route {
 
   leave(): void {
     if (this._block) {
-      this._block.hide();
+      if (this._props.rootQuery && this._block) {
+        render(this._props.rootQuery, this._block);
+      }
     }
   }
 
@@ -60,6 +62,8 @@ export class Route {
       return;
     }
 
-    this._block.show();
+    if (this._props.rootQuery && this._block) {
+      render(this._props.rootQuery, this._block);
+    }
   }
 }

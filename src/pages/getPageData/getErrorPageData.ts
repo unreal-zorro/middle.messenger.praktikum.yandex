@@ -13,7 +13,7 @@ export const getErrorPageData = (error: Error) => {
     },
     link: {
       text: 'Назад к чатам',
-      href: '/chats'
+      href: '/messenger'
     }
   };
 };

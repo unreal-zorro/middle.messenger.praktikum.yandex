@@ -16,6 +16,7 @@ interface ProfilePageProps extends Props {
   header?: string;
   controls?: ProfileFormProps[];
   buttons?: ButtonProps[];
+  navButtons?: ButtonProps[];
   link?: LinkProps;
   navLink?: LinkProps;
   changeAvatarModal?: ModalProps;
@@ -115,24 +116,28 @@ export class ProfilePage extends Block {
       }
     });
 
-    if (!this.props.buttons || !(this.props.buttons as ButtonProps[])?.length) {
-      this.children.changeDataButtonChild = new Button({
-        className: 'profile__button',
-        type: 'button',
-        text: 'Изменить данные',
-        settings: {
-          withInternalID: false
-        }
-      });
-
-      this.children.changePasswordButtonChild = new Button({
-        className: 'profile__button',
-        type: 'button',
-        text: 'Изменить пароль',
-        settings: {
-          withInternalID: false
-        }
-      });
+    if (
+      (!this.props.buttons || !(this.props.buttons as ButtonProps[])?.length) &&
+      this.props.navButtons
+    ) {
+      this.children.navButtons = (this.props.navButtons as ButtonProps[])?.map(
+        (navButton) =>
+          new Button({
+            className: 'profile__button',
+            type: navButton.type,
+            settings: {
+              withInternalID: false
+            },
+            buttonChild: new Link({
+              className: 'profile__link',
+              href: navButton.href as string,
+              text: navButton.text,
+              settings: {
+                withInternalID: false
+              }
+            })
+          })
+      );
     }
 
     this.children.linkChild = new Link({

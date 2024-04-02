@@ -112,7 +112,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
       link: {},
       navLink: {
         text: 'Назад в профиль',
-        href: '/profile'
+        href: '/settings'
       },
       changeAvatarModal
     };
@@ -163,7 +163,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
       link: {},
       navLink: {
         text: 'Назад в профиль',
-        href: '/profile'
+        href: '/settings'
       },
       changeAvatarModal
     };
@@ -233,13 +233,25 @@ export const getProfilePageData = (user: User, mode: Mode) => {
         }
       ],
       buttons: [],
+      navButtons: [
+        {
+          type: 'button',
+          text: 'Изменить данные',
+          href: '/settings/data'
+        },
+        {
+          type: 'button',
+          text: 'Изменить пароль',
+          href: '/settings/password'
+        }
+      ],
       link: {
         text: 'Выйти',
         href: '/'
       },
       navLink: {
         text: 'Назад к чатам',
-        href: '/chats'
+        href: '/messenger'
       },
       changeAvatarModal
     };

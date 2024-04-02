@@ -386,7 +386,7 @@ export const getChatsPageData = (
     search: {
       navLink: {
         text: 'Профиль >',
-        href: '/profile'
+        href: '/settings'
       },
       controls: [
         {

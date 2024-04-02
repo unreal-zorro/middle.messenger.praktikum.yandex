@@ -29,6 +29,6 @@ export const getLoginPageData = () => ({
   ],
   link: {
     text: 'Зарегистрироваться',
-    href: '/register'
+    href: '/sign-up'
   }
 });
