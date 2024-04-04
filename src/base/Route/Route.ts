@@ -19,12 +19,7 @@ export class Route {
 
   private _blockProps: Props;
 
-  constructor(
-    pathname: string,
-    view: BlockConstructor,
-    routeProps: RouteProps,
-    blockProps: Props
-  ) {
+  constructor(pathname: string, view: BlockConstructor, routeProps: RouteProps, blockProps: Props) {
     this._pathname = pathname;
     this._blockClass = view;
     this._block = null;
