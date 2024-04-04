@@ -5,3 +5,4 @@ export type { Children, Props } from './Block';
 export { HTTPTransport } from './HTTPTransport';
 export { Route } from './Route';
 export { Router } from './Router';
+export { BaseAPI } from './BaseAPI';
