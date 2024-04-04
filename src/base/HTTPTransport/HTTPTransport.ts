@@ -27,19 +27,25 @@ type OptionsWithoutMethod = Omit<Options, 'method'>;
 type HTTPMethod = (url: string, options?: OptionsWithoutMethod) => Promise<XMLHttpRequest>;
 
 export class HTTPTransport {
+  private readonly _url: string;
+
+  constructor(baseURL: string = '') {
+    this._url = baseURL;
+  }
+
   get: HTTPMethod = (url, options = {}) => {
-    const urlWithQuery = url + queryStringify(options?.data);
+    const urlWithQuery = this._url + url + queryStringify(options?.data);
     return this.request(urlWithQuery, { ...options, method: METHODS.GET }, options.timeout);
   };
 
   put: HTTPMethod = (url, options = {}) =>
-    this.request(url, { ...options, method: METHODS.PUT }, options.timeout);
+    this.request(this._url + url, { ...options, method: METHODS.PUT }, options.timeout);
 
   post: HTTPMethod = (url, options = {}) =>
-    this.request(url, { ...options, method: METHODS.POST }, options.timeout);
+    this.request(this._url + url, { ...options, method: METHODS.POST }, options.timeout);
 
   delete: HTTPMethod = (url, options = {}) =>
-    this.request(url, { ...options, method: METHODS.DELETE }, options.timeout);
+    this.request(this._url + url, { ...options, method: METHODS.DELETE }, options.timeout);
 
   request: (url: string, options: Options, timeout?: number) => Promise<XMLHttpRequest> = (
     url,
