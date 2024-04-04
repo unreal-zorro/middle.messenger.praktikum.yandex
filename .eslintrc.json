@@ -25,7 +25,12 @@
     "no-use-before-define": "off",
     "no-console": "off",
     "no-useless-constructor": "off",
-    "no-constructor-return": "off"
+    "no-constructor-return": "off",
+    "no-restricted-syntax": "off",
+    "no-continue": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "warn",
+    "func-names": "off"
   },
   "settings": {
     "import/parsers": {
