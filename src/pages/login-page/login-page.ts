@@ -2,8 +2,9 @@ import './login-page.scss';
 import { Block, Listener } from '@/base/';
 import type { Props } from '@/base/';
 import { Header, Link } from '@/components';
-import { VALIDATION_RULES } from '@/consts';
 import type { ButtonProps, HeaderProps, LinkProps } from '@/components';
+import { AuthController } from '@/controllers';
+import { LoginFormModel, RegisterFormModel } from '@/models';
 import { LoginForm } from './modules';
 import type { LoginFormProps } from './modules';
 import template from './login-page.hbs?raw';
@@ -20,18 +21,13 @@ export class LoginPage extends Block {
   constructor(props: LoginPageProps) {
     super(props);
 
+    const controller = new AuthController();
+
     const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
-      let isValid = true;
-
-      Object.entries(formData).forEach(([key, value]) => {
-        const { regExp } = VALIDATION_RULES[key];
-        isValid = isValid && regExp.test(value);
-      });
-
-      if (isValid) {
-        console.log(formData);
-      } else {
-        console.log('Invalid form data');
+      if (this.props.id === 'login') {
+        controller.login(formData as LoginFormModel);
+      } else if (this.props.id === 'register') {
+        controller.register(formData as RegisterFormModel);
       }
     };
 
