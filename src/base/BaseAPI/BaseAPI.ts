@@ -11,27 +11,19 @@ export abstract class BaseAPI {
     this.transport = new HTTPTransport(`${this._baseURL}`);
   }
 
-  create(data: Record<string, unknown> = {}) {
-    console.log(data);
-
+  create() {
     throw new Error('Not implemented');
   }
 
-  request(data: Record<string, unknown> = {}) {
-    console.log(data);
-
+  request() {
     throw new Error('Not implemented');
   }
 
-  update(data: Record<string, unknown> = {}) {
-    console.log(data);
-
+  update() {
     throw new Error('Not implemented');
   }
 
-  delete(data: Record<string, unknown> = {}) {
-    console.log(data);
-
+  delete() {
     throw new Error('Not implemented');
   }
 }
