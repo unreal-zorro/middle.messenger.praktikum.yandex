@@ -19,7 +19,7 @@ export class UserAPI extends BaseAPI {
     email: string;
     phone: string;
   }) {
-    return  this.transport.put('/profile', { data });
+    return this.transport.put('/profile', { data });
   }
 
   // Change user avatar

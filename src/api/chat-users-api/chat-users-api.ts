@@ -6,7 +6,13 @@ export class ChatUsersAPI extends BaseAPI {
   }
 
   // Get chat users
-  request(data: { id: number; offset?: number; limit?: number; name?: string; email?: string }) {
+  requestUsers(data: {
+    id: number;
+    offset?: number;
+    limit?: number;
+    name?: string;
+    email?: string;
+  }) {
     const { id } = data;
     const requestData = {
       offset: data.offset,
@@ -19,12 +25,12 @@ export class ChatUsersAPI extends BaseAPI {
   }
 
   // Add users to chat
-  add(data: { users: number[]; chatId: number }) {
+  addUsers(data: { users: number[]; chatId: number }) {
     return this.transport.put('/users', { data });
   }
 
   // Delete users from chat
-  delete(data: { users: number[]; chatId: number }) {
+  deleteUsers(data: { users: number[]; chatId: number }) {
     return this.transport.delete('/users', { data });
   }
 }

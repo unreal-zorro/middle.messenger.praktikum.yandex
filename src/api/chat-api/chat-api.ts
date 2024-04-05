@@ -6,22 +6,22 @@ export class ChatAPI extends BaseAPI {
   }
 
   // Create chat
-  create(data: { title: string }) {
+  createChat(data: { title: string }): Promise<XMLHttpRequest> {
     return this.transport.post('/', { data });
   }
 
   // Get chats
-  request(data: { offset?: number; limit?: number; title: string }) {
+  requestChats(data: { offset?: number; limit?: number; title: string }): Promise<XMLHttpRequest> {
     return this.transport.get('/', { data });
   }
 
   // Upload chat avatar
-  updateAvatar(data: { chatId: number; avatar: FormData }) {
+  updateAvatar(data: { chatId: number; avatar: FormData }): Promise<XMLHttpRequest> {
     return this.transport.put('/avatar', { data });
   }
 
   // Delete chat by ID
-  delete(data: { chatId: number }) {
+  deleteChat(data: { chatId: number }): Promise<XMLHttpRequest> {
     return this.transport.delete('/', { data });
   }
 }

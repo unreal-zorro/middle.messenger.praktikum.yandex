@@ -1,4 +1,5 @@
 import { BaseAPI } from '@/base';
+import { LoginFormModel, RegisterFormModel, UserModel } from '@/models';
 
 export class AuthAPI extends BaseAPI {
   constructor() {
@@ -6,29 +7,22 @@ export class AuthAPI extends BaseAPI {
   }
 
   // Get user info
-  request() {
+  request(): Promise<UserModel> {
     return this.transport.get('/user');
   }
 
   // Sign in
-  signIn(data: { login: string; password: string }) {
+  signIn(data: Record<string, string>): Promise<LoginFormModel> {
     return this.transport.post('/signin', { data });
   }
 
   // Sign up (create user)
-  signUp(data: {
-    first_name: string;
-    second_name: string;
-    login: string;
-    email: string;
-    password: string;
-    phone: string;
-  }) {
+  signUp(data: Record<string, string>): Promise<RegisterFormModel> {
     return this.transport.post('/signup', { data });
   }
 
   // Logout
-  logout() {
+  logout(): Promise<XMLHttpRequest> {
     return this.transport.post('/logout');
   }
 }
