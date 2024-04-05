@@ -1,21 +1,17 @@
-import { BaseAPI, HTTPTransport } from '@/base';
-import { baseURL } from '@/consts';
-
-const userAPIInstance = new HTTPTransport(`${baseURL}`);
+import { BaseAPI } from '@/base';
 
 export class UserAPI extends BaseAPI {
-  // Search for user by login (max 10)
-  create(data: { login: string }) {
-    return userAPIInstance.post('/user/search', { data });
+  constructor() {
+    super('/user');
   }
 
-  // Get user info
-  request() {
-    return userAPIInstance.get('/auth/user');
+  // Search for user by login (max 10)
+  searchByLogin(data: { login: string }) {
+    return this.transport.post('/search', { data });
   }
 
   // Change user profile
-  update(data: {
+  updateProfile(data: {
     first_name: string;
     second_name: string;
     display_name: string;
@@ -23,6 +19,16 @@ export class UserAPI extends BaseAPI {
     email: string;
     phone: string;
   }) {
-    return userAPIInstance.put('/user/profile', { data });
+    return  this.transport.put('/profile', { data });
+  }
+
+  // Change user avatar
+  updateAvatar(data: { avatar: FormData }) {
+    return this.transport.put('/profile/avatar', { data });
+  }
+
+  // Change user password
+  updatePassword(data: { oldPassword: string; newPassword: string }) {
+    return this.transport.put('/password', { data });
   }
 }

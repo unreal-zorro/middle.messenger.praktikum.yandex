@@ -1,9 +1,10 @@
-import { BaseAPI, HTTPTransport } from '@/base';
-import { baseURL } from '@/consts';
-
-const chatUsersAPIInstance = new HTTPTransport(`${baseURL}/chats`);
+import { BaseAPI } from '@/base';
 
 export class ChatUsersAPI extends BaseAPI {
+  constructor() {
+    super('/chats');
+  }
+
   // Get chat users
   request(data: { id: number; offset?: number; limit?: number; name?: string; email?: string }) {
     const { id } = data;
@@ -14,16 +15,16 @@ export class ChatUsersAPI extends BaseAPI {
       email: data.email
     };
 
-    return chatUsersAPIInstance.get(`/${id}/users`, { data: requestData });
+    return this.transport.get(`/${id}/users`, { data: requestData });
   }
 
   // Add users to chat
-  update(data: { users: number[]; chatId: number }) {
-    return chatUsersAPIInstance.put('/users', { data });
+  add(data: { users: number[]; chatId: number }) {
+    return this.transport.put('/users', { data });
   }
 
   // Delete users from chat
   delete(data: { users: number[]; chatId: number }) {
-    return chatUsersAPIInstance.delete('/users', { data });
+    return this.transport.delete('/users', { data });
   }
 }
