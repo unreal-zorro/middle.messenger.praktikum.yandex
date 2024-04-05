@@ -1,1 +1,1 @@
-export const baseURL = 'ya-praktikum.tech/api/v2';
+export const baseURL = 'https://ya-praktikum.tech/api/v2';
