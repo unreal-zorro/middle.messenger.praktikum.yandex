@@ -1,33 +1,7 @@
-function isObject(item: unknown): item is Indexed {
-  return item !== null && typeof item === 'object' && !Array.isArray(item);
-}
-
-function merge(lhs: Indexed, rhs: Indexed): Indexed {
-  if (rhs === undefined) {
-    return lhs;
-  }
-
-  const result: Indexed = lhs;
-
-  if (isObject(lhs) && isObject(rhs)) {
-    Object.keys(rhs).forEach((key: string) => {
-      if (isObject(rhs[key])) {
-        if (!lhs[key]) {
-          Object.assign(result, { [key]: rhs[key] });
-        } else {
-          result[key] = merge(lhs[key] as Indexed, rhs[key] as Indexed);
-        }
-      } else {
-        Object.assign(result, { [key]: rhs[key] });
-      }
-    });
-  }
-
-  return result;
-}
+import { isObject } from '../isObject';
+import { merge } from '../merge';
 
 export function set(object: Indexed | unknown, path: string, value: unknown): Indexed | unknown {
-  // Код
   if (typeof path !== 'string') {
     throw new Error('path must be string');
   }
