@@ -1,7 +1,7 @@
 import { AuthAPI } from '@/api';
 import { router } from '@/router';
 import type { LoginFormModel, RegisterFormModel } from '@/models';
-import { VALIDATION_RULES } from '@/consts';
+import { validate } from '@/utils';
 
 export class AuthController {
   private authAPI: Nullable<AuthAPI> = null;
@@ -10,19 +10,8 @@ export class AuthController {
     this.authAPI = new AuthAPI();
   }
 
-  public validate(formData: LoginFormModel | RegisterFormModel) {
-    let isValid = true;
-
-    Object.entries(formData).forEach(([key, value]) => {
-      const { regExp } = VALIDATION_RULES[key];
-      isValid = isValid && regExp.test(value);
-    });
-
-    return isValid;
-  }
-
   public login(data: LoginFormModel): void {
-    const isValid = this.validate(data);
+    const isValid = validate(data);
 
     if (this.authAPI && isValid) {
       this.authAPI
@@ -35,7 +24,7 @@ export class AuthController {
   }
 
   public register(data: RegisterFormModel): void {
-    const isValid = this.validate(data);
+    const isValid = validate(data);
 
     if (this.authAPI && isValid) {
       this.authAPI
