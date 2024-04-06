@@ -9,12 +9,19 @@ export class UserController {
     this.authAPI = new AuthAPI();
   }
 
-  public getUser(): void {
+  public async getUser(): Promise<void> {
     if (this.authAPI) {
-      this.authAPI
-        .request()
-        .then((data) => store.set('user', data as UserModel))
-        .catch((error) => console.log(error));
+      try {
+        const data = await this.authAPI.request();
+        store.set('user', data as UserModel);
+      } catch (error) {
+        console.log(error);
+      }
+
+      // this.authAPI
+      //   .request()
+      //   .then((data) => store.set('user', data as UserModel))
+      //   .catch((error) => console.log(error));
     }
   }
 }
