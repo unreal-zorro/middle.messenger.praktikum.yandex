@@ -1,12 +1,15 @@
 import './profile-page.scss';
-import { Block, Listener } from '@/base';
-import type { Props } from '@/base';
+import { Block } from '@/base';
+import type { Props, Listener } from '@/base';
 import { Avatar, Button, Header, Link } from '@/components';
 import type { AvatarProps, ButtonProps, HeaderProps, LinkProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
 import { Modal } from '@/modules';
 import type { ModalProps } from '@/modules';
-import { ProfileForm } from './modules';
+import { UserController } from '@/controllers';
+import { connect } from '@/hoc';
+import { UserModel } from '@/models';
+import { ProfileForm, withUserData } from './modules';
 import type { ProfileFormProps } from './modules';
 import template from './profile-page.hbs?raw';
 
@@ -26,6 +29,18 @@ interface ProfilePageProps extends Props {
 export class ProfilePage extends Block {
   constructor(props: ProfilePageProps) {
     super(props);
+
+    const controller = new UserController();
+
+    controller.getUser();
+
+    // if (this.props.id === 'profile') {
+    //   console.log(this.props.state);
+    // } else if (this.props.id === 'profile-edit') {
+    //   console.log(this.props.state);
+    // } else if (this.props.id === 'profile-password') {
+    //   console.log(this.props.state);
+    // }
 
     const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
       let isValid = true;
@@ -94,7 +109,7 @@ export class ProfilePage extends Block {
       }
     });
 
-    this.children.formChild = new ProfileForm({
+    this.children.formChild = new (withUserData(ProfileForm))({
       className: 'profile__form',
       classNameFormControls: 'profile__form-controls',
       classNameFormControl: 'profile__form-control',
@@ -107,6 +122,7 @@ export class ProfilePage extends Block {
       classNameLink: 'profile__link',
       controls: this.props.controls as ProfileFormProps[],
       buttons: this.props.buttons as ButtonProps[],
+      state: this.props.state,
       submitHandler,
       settings: {
         withInternalID: false
@@ -185,10 +201,37 @@ export class ProfilePage extends Block {
       }
     }
 
+    if (oldProps.state !== newProps.state) {
+      return true;
+    }
+
     return false;
   }
 
   render(): string {
+    // if (this.props.id === 'profile') {
+    //   console.log(this.props.state);
+    // } else if (this.props.id === 'profile-edit') {
+    //   console.log(this.props.state);
+    // } else if (this.props.id === 'profile-password') {
+    //   console.log(this.props.state);
+    // }
+
     return template;
   }
 }
+
+function mapUserToProps(state: Indexed<UserModel>): UserModel {
+  return {
+    id: state?.user?.id,
+    first_name: state?.user?.first_name,
+    second_name: state?.user?.second_name,
+    display_name: state?.user?.display_name,
+    phone: state?.user?.phone,
+    login: state?.user?.login,
+    email: state?.user?.email,
+    avatar: state?.user?.avatar
+  };
+}
+
+export const withUserAvatar = connect(mapUserToProps as (state: Indexed<unknown>) => UserModel);

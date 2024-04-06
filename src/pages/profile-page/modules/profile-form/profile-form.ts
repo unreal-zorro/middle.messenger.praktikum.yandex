@@ -5,6 +5,9 @@ import type { InputFieldProps } from '@/modules';
 import { Button } from '@/components';
 import type { ButtonProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
+// import { UserController } from '@/controllers';
+import { UserModel } from '@/models';
+import { connect } from '@/hoc';
 import template from './profile-form.hbs?raw';
 
 export interface ProfileFormProps extends Props {
@@ -20,6 +23,7 @@ export interface ProfileFormProps extends Props {
   classNameLink?: string;
   controls?: InputFieldProps[];
   buttons?: ButtonProps[];
+  state: Omit<UserModel, 'avatar'>;
   focusHandler?: Listener;
   submitHandler?: (...args: Record<string, string>[]) => void;
 }
@@ -27,6 +31,10 @@ export interface ProfileFormProps extends Props {
 export class ProfileForm extends Block {
   constructor(props: ProfileFormProps) {
     super(props);
+
+    // const controller = new UserController();
+
+    // controller.getUser();
 
     const focusHandler = () => {
       (this.children.buttons as Block[])?.map((button) =>
@@ -106,7 +114,7 @@ export class ProfileForm extends Block {
           name: control.name,
           label: control.label,
           type: control.type,
-          value: control.value,
+          value: (this.props?.state as Omit<UserModel, 'avatar'>)[control.name as string] as string,
           placeholder: '',
           disabled: control.disabled,
           error: control.error,
@@ -140,7 +148,31 @@ export class ProfileForm extends Block {
 
   _formData: Record<string, string> = {};
 
+  componentDidUpdate(oldProps: ProfileFormProps, newProps: ProfileFormProps): boolean {
+    if (oldProps.state !== newProps.state) {
+      return true;
+    }
+
+    return false;
+  }
+
   render(): string {
     return template;
   }
 }
+
+function mapUserToProps(state: Indexed<UserModel>): Omit<UserModel, 'avatar'> {
+  return {
+    id: state?.user?.id,
+    first_name: state?.user?.first_name,
+    second_name: state?.user?.second_name,
+    display_name: state?.user?.display_name,
+    phone: state?.user?.phone,
+    login: state?.user?.login,
+    email: state?.user?.email
+  };
+}
+
+export const withUserData = connect(
+  mapUserToProps as (state: Indexed<unknown>) => Omit<UserModel, 'avatar'>
+);

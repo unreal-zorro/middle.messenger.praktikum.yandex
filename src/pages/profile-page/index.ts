@@ -1,1 +1,1 @@
-export { ProfilePage } from './profile-page';
+export { ProfilePage, withUserAvatar } from './profile-page';

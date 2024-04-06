@@ -9,15 +9,16 @@ import {
   getErrorPageData,
   getProfilePageData,
   ProfilePage,
+  withUserAvatar,
   getChatsPageData,
   ChatsPage
 } from './pages';
 
 const loginPageData = getLoginPageData();
 const registerPageData = getRegisterPageData();
-const profilePageData = getProfilePageData(user, 'view');
-const profilePageEditData = getProfilePageData(user, 'edit');
-const profilePagePasswordData = getProfilePageData(user, 'password');
+const profilePageData = getProfilePageData('view');
+const profilePageEditData = getProfilePageData('edit');
+const profilePagePasswordData = getProfilePageData('password');
 const chatsPageData = getChatsPageData(user, chats, messages, currentChat);
 const error404PageData = getErrorPageData(errors.error404);
 const error500PageData = getErrorPageData(errors.error500);
@@ -35,19 +36,19 @@ router
     },
     ...registerPageData
   })
-  .use('/settings', ProfilePage, {
+  .use('/settings', withUserAvatar(ProfilePage), {
     settings: {
       withInternalID: false
     },
     ...profilePageData
   })
-  .use('/settings/data', ProfilePage, {
+  .use('/settings/data', withUserAvatar(ProfilePage), {
     settings: {
       withInternalID: false
     },
     ...profilePageEditData
   })
-  .use('/settings/password', ProfilePage, {
+  .use('/settings/password', withUserAvatar(ProfilePage), {
     settings: {
       withInternalID: false
     },

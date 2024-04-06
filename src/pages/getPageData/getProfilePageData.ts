@@ -1,5 +1,3 @@
-import { User } from '@/entities';
-
 type Mode = 'edit' | 'password' | 'view';
 
 const getChangeAvatarModalData = () => {
@@ -32,7 +30,7 @@ const getChangeAvatarModalData = () => {
   };
 };
 
-export const getProfilePageData = (user: User, mode: Mode) => {
+export const getProfilePageData = (mode: Mode) => {
   let data = {};
   const changeAvatarModal = {
     ...getChangeAvatarModalData()
@@ -42,7 +40,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
     data = {
       id: 'profile-edit',
       avatar: {
-        imgSrc: user.avatar
+        imgSrc: ''
       },
       header: {
         text: ''
@@ -53,7 +51,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'email',
           type: 'email',
           disabled: false,
-          value: user.email,
+          value: '',
           error: false,
           text: ''
         },
@@ -62,7 +60,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'login',
           type: 'text',
           disabled: false,
-          value: user.login,
+          value: '',
           error: false,
           text: ''
         },
@@ -71,7 +69,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'first_name',
           type: 'text',
           disabled: false,
-          value: user.first_name,
+          value: '',
           error: false,
           text: ''
         },
@@ -80,7 +78,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'second_name',
           type: 'text',
           disabled: false,
-          value: user.second_name,
+          value: '',
           error: false,
           text: ''
         },
@@ -89,7 +87,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'display_name',
           type: 'text',
           disabled: false,
-          value: user.display_name,
+          value: '',
           error: false,
           text: ''
         },
@@ -98,7 +96,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'phone',
           type: 'tel',
           disabled: false,
-          value: user.phone,
+          value: '',
           error: false,
           text: ''
         }
@@ -120,7 +118,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
     data = {
       id: 'profile-password',
       avatar: {
-        imgSrc: user.avatar
+        imgSrc: ''
       },
       header: {
         text: ''
@@ -171,10 +169,10 @@ export const getProfilePageData = (user: User, mode: Mode) => {
     data = {
       id: 'profile',
       avatar: {
-        imgSrc: user.avatar
+        imgSrc: ''
       },
       header: {
-        text: user.display_name
+        text: ''
       },
       controls: [
         {
@@ -182,7 +180,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'email',
           type: 'email',
           disabled: true,
-          value: user.email,
+          value: '',
           error: false,
           text: ''
         },
@@ -191,7 +189,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'login',
           type: 'text',
           disabled: true,
-          value: user.login,
+          value: '',
           error: false,
           text: ''
         },
@@ -200,7 +198,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'first_name',
           type: 'text',
           disabled: true,
-          value: user.first_name,
+          value: '',
           error: false,
           text: ''
         },
@@ -209,7 +207,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'second_name',
           type: 'text',
           disabled: true,
-          value: user.second_name,
+          value: '',
           error: false,
           text: ''
         },
@@ -218,7 +216,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'display_name',
           type: 'text',
           disabled: true,
-          value: user.display_name,
+          value: '',
           error: false,
           text: ''
         },
@@ -227,7 +225,7 @@ export const getProfilePageData = (user: User, mode: Mode) => {
           name: 'phone',
           type: 'tel',
           disabled: true,
-          value: user.phone,
+          value: '',
           error: false,
           text: ''
         }
