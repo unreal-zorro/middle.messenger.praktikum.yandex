@@ -9,7 +9,7 @@ import {
   getErrorPageData,
   getProfilePageData,
   ProfilePage,
-  withUserAvatar,
+  withUser,
   getChatsPageData,
   ChatsPage
 } from './pages';
@@ -36,19 +36,19 @@ router
     },
     ...registerPageData
   })
-  .use('/settings', withUserAvatar(ProfilePage), {
+  .use('/settings', withUser(ProfilePage), {
     settings: {
       withInternalID: false
     },
     ...profilePageData
   })
-  .use('/settings/data', withUserAvatar(ProfilePage), {
+  .use('/settings/data', withUser(ProfilePage), {
     settings: {
       withInternalID: false
     },
     ...profilePageEditData
   })
-  .use('/settings/password', withUserAvatar(ProfilePage), {
+  .use('/settings/password', withUser(ProfilePage), {
     settings: {
       withInternalID: false
     },
@@ -80,12 +80,11 @@ router
 router.start();
 
 const clickHandler: (event: MouseEvent) => void = (event) => {
-  event.preventDefault();
-
   const target = event.target as HTMLElement;
   const href = target.getAttribute('href');
 
   if (href) {
+    event.preventDefault();
     router.go(href);
   }
 };

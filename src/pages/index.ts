@@ -1,6 +1,6 @@
 export { LoginPage } from './login-page';
 export { ErrorPage } from './error-page';
-export { ProfilePage, withUserAvatar } from './profile-page';
+export { ProfilePage, withUser } from './profile-page';
 export { ChatsPage } from './chats-page';
 export { getErrorPageData } from './getPageData';
 export { getChatsPageData } from './getPageData';
