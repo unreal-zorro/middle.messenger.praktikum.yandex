@@ -6,3 +6,4 @@ export { HTTPTransport } from './HTTPTransport';
 export { Route } from './Route';
 export { Router } from './Router';
 export { BaseAPI } from './BaseAPI';
+export { WSTransport, WSTransportEvents } from './WSTransport';
