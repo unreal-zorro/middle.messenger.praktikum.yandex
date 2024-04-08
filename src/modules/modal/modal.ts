@@ -98,21 +98,23 @@ export class Modal extends Block {
       (this.children.controls as InputField[]).forEach((control) => {
         const element = control.getContent()?.querySelector('input') as HTMLInputElement;
         const elementName = element?.getAttribute('name') as string;
-        let elementValue = element?.getAttribute('value') as string;
+        const elementValue = element?.getAttribute('value') as string;
         const elementType = element?.getAttribute('type') as string;
 
         if (elementType === 'file') {
           if (element.files && element.files.length !== 0) {
-            elementValue = element.files[0]?.name;
             const type = element.files[0]?.type;
+            const data = element.files[0];
 
             if (!type.includes('image') && this.props.type === 'image') {
               return;
             }
-          }
-        }
 
-        this._formData[elementName] = elementValue;
+            this._formData[elementName] = data;
+          }
+        } else {
+          this._formData[elementName] = elementValue;
+        }
       });
 
       (this.children.buttons as Block[])?.forEach((button) =>
@@ -128,7 +130,7 @@ export class Modal extends Block {
       );
 
       if (this.props.submitHandler) {
-        (this.props.submitHandler as Listener<Record<string, string>>)(this._formData);
+        (this.props.submitHandler as Listener<Record<string, string | File>>)(this._formData);
       }
     };
 
@@ -202,7 +204,7 @@ export class Modal extends Block {
     });
   }
 
-  _formData: Record<string, string> = {};
+  _formData: Record<string, string | File> = {};
 
   componentDidUpdate(oldProps: ModalProps, newProps: ModalProps): boolean {
     return oldProps.visible !== newProps.visible;
