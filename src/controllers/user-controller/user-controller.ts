@@ -32,7 +32,7 @@ export class UserController {
     return data;
   }
 
-  public updateProfile(data: UserModel): void {
+  public async updateProfile(data: UserModel): Promise<UserModel | undefined> {
     const userData = {
       first_name: data.first_name,
       second_name: data.second_name,
@@ -44,35 +44,43 @@ export class UserController {
 
     const isValid = validate(userData);
 
+    let newUserData: UserModel | undefined;
+
     if (this.userAPI && isValid) {
-      this.userAPI
-        .updateProfile(userData)
-        .then(() => router.go('/settings'))
-        .then((newData) => newData)
-        .catch((error) => console.log(error));
+      try {
+        newUserData = (await this.userAPI.updateProfile(userData)) as UserModel;
+        router.go('/settings');
+      } catch (error: unknown) {
+        console.log(error);
+      }
     } else {
       console.log('Invalid user form data');
     }
+
+    return newUserData;
   }
 
-  public updateAvatar(avatar: File) {
+  public async updateAvatar(avatar: File) {
     const avatarFileName = avatar.name;
     const isValid = validate({ avatar: avatarFileName });
 
     const data = new FormData();
     data.append('avatar', avatar);
 
-    console.log(data);
+    let newUserData: UserModel | undefined;
 
     if (this.userAPI && isValid) {
-      this.userAPI
-        .updateAvatar(data)
-        .then(() => router.go('/settings'))
-        .then((newData) => newData)
-        .catch((error) => console.log(error));
+      try {
+        newUserData = (await this.userAPI.updateAvatar(data)) as UserModel;
+        router.go('/settings');
+      } catch (error: unknown) {
+        console.log(error);
+      }
     } else {
       console.log('Invalid avatar form data');
     }
+
+    return newUserData;
   }
 
   public updatePassword(data: PasswordModel) {
