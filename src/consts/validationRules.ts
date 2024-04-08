@@ -11,7 +11,8 @@ const REGEXPS = {
   EMAIL: /^[\w-]+(?:\.[\w-]+)*@[\w-]+(?:\.[a-z]+)+$/,
   PASSWORD: /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,40}$/,
   PHONE: /(^\++\d{9,15})|(^\d{10,15})/,
-  MESSAGE: /^(?!\s*$).+/
+  MESSAGE: /^(?!\s*$).+/,
+  IMAGE: /.*\.(jpe?g|png|gif|webp)$/i
 };
 
 export const VALIDATION_RULES: ValidationRules = {
@@ -88,8 +89,8 @@ export const VALIDATION_RULES: ValidationRules = {
     message: 'Поле не должно быть пустым'
   },
   avatar: {
-    regExp: REGEXPS.MESSAGE,
-    message: 'Нужно выбрать файл'
+    regExp: REGEXPS.IMAGE,
+    message: 'Нужно выбрать файл с изображением'
   },
   photo: {
     regExp: REGEXPS.MESSAGE,
