@@ -12,7 +12,7 @@ export class ChatUsersAPI extends BaseAPI {
     limit?: number;
     name?: string;
     email?: string;
-  }) {
+  }): Promise<XMLHttpRequest> {
     const { id } = data;
     const requestData = {
       offset: data.offset,
@@ -25,12 +25,12 @@ export class ChatUsersAPI extends BaseAPI {
   }
 
   // Add users to chat
-  addUsers(data: { users: number[]; chatId: number }) {
+  addUsers(data: { users: number[]; chatId: number }): Promise<XMLHttpRequest> {
     return this.transport.put('/users', { data });
   }
 
   // Delete users from chat
-  deleteUsers(data: { users: number[]; chatId: number }) {
+  deleteUsers(data: { users: number[]; chatId: number }): Promise<XMLHttpRequest> {
     return this.transport.delete('/users', { data });
   }
 }

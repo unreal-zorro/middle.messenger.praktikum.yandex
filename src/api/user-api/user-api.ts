@@ -5,11 +5,6 @@ export class UserAPI extends BaseAPI {
     super('/user');
   }
 
-  // Search for user by login (max 10)
-  searchByLogin(data: { login: string }) {
-    return this.transport.post('/search', { data });
-  }
-
   // Change user profile
   updateProfile(data: {
     first_name: string;
@@ -23,12 +18,17 @@ export class UserAPI extends BaseAPI {
   }
 
   // Change user avatar
-  updateAvatar(data: { avatar: FormData }) {
+  updateAvatar(data: FormData) {
     return this.transport.put('/profile/avatar', { data });
   }
 
   // Change user password
   updatePassword(data: { oldPassword: string; newPassword: string }) {
     return this.transport.put('/password', { data });
+  }
+
+  // Search for user by login (max 10)
+  searchByLogin(data: { login: string }) {
+    return this.transport.post('/search', { data });
   }
 }
