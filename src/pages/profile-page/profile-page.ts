@@ -46,10 +46,15 @@ export class ProfilePage extends Block {
 
     this.userController
       ?.getUser()
+      .then(() => this.setProps({ isLoading: false }))
       .then(() => {
         const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
           if (this.props.id === 'profile-edit') {
-            this.userController.updateProfile(formData as UserModel);
+            this.userController?.updateProfile(formData as UserModel).then((newUserData) =>
+              this.setProps({
+                state: newUserData
+              })
+            );
           } else if (this.props.id === 'profile-password') {
             this.userController.updatePassword(formData as PasswordModel);
           }
@@ -70,7 +75,11 @@ export class ProfilePage extends Block {
               visibleChangeAvatarModal: false
             });
 
-            this.userController.updateAvatar(formData.avatar as File);
+            this.userController.updateAvatar(formData.avatar as File).then((newUserData) =>
+              this.setProps({
+                state: newUserData
+              })
+            );
           } else {
             console.log('Invalid avatar form data');
           }
@@ -193,8 +202,7 @@ export class ProfilePage extends Block {
             withInternalID: false
           }
         });
-      })
-      .then(() => this.setProps({ isLoading: false }));
+      });
   }
 
   async componentDidMount() {
@@ -224,7 +232,7 @@ export class ProfilePage extends Block {
       }
     }
 
-    if (oldProps.state !== newProps.state) {
+    if (!isEqual(oldProps.state as UserModel, newProps.state as UserModel)) {
       return true;
     }
 
