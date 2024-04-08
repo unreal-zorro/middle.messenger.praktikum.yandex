@@ -9,7 +9,7 @@ const METHODS = {
 
 type Options = {
   method: ReverseMap<typeof METHODS>;
-  data?: Record<string, unknown>;
+  data?: Record<string, unknown> | FormData;
   timeout?: number;
   headers?: Record<string, string>;
   params?: Record<string, string>;
@@ -32,7 +32,8 @@ export class HTTPTransport {
   }
 
   get: HTTPMethod = (url, options = {}) => {
-    const urlWithQuery = this._url + url + queryStringify(options?.data ?? {});
+    const urlWithQuery =
+      this._url + url + queryStringify((options?.data as Record<string, unknown>) ?? {});
     return this.request(urlWithQuery, { ...options, method: METHODS.GET }, options.timeout);
   };
 
@@ -70,7 +71,7 @@ export class HTTPTransport {
         if (status >= 200 && status < 300) {
           resolve(xhr.response);
         } else {
-          reject(new Error(xhr.response?.reason || ''));
+          reject(new Error(`status: ${status}, reason: ${xhr.response?.reason || ''}`));
         }
       };
 
