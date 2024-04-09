@@ -1,6 +1,7 @@
 import './style.scss';
 import { router } from './router';
-import { user, errors, chats, messages, currentChat } from './entities';
+import { errors } from './entities';
+import type { User } from './entities';
 import {
   LoginPage,
   ErrorPage,
@@ -19,7 +20,7 @@ const registerPageData = getRegisterPageData();
 const profilePageData = getProfilePageData('view');
 const profilePageEditData = getProfilePageData('edit');
 const profilePagePasswordData = getProfilePageData('password');
-const chatsPageData = getChatsPageData(user, chats, messages, currentChat);
+const chatsPageData = getChatsPageData({} as User, [], [], {});
 const error404PageData = getErrorPageData(errors.error404);
 const error500PageData = getErrorPageData(errors.error500);
 
