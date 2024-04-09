@@ -4,6 +4,10 @@ import type { Listener, Props } from '@/base';
 import { Text } from '@/components';
 import { Menu } from '@/modules';
 import type { MenuProps } from '@/modules';
+import { ChatModel } from '@/models';
+import { connect } from '@/hoc';
+import { ChatController } from '@/controllers';
+import { isEqual } from '@/utils';
 import { Chat } from './modules';
 import type { ChatProps } from './modules';
 import template from './list.hbs?raw';
@@ -15,11 +19,17 @@ export interface ListProps extends Props {
   chatMenu?: MenuProps;
   visibleChatMenu?: boolean;
   visibleChatAvatarModal?: boolean;
+  state?: ChatModel[];
+  isLoading?: boolean;
 }
 
 export class List extends Block {
+  private chatController: ChatController;
+
   constructor(props: ListProps) {
     super(props);
+
+    this.chatController = new ChatController();
 
     const chatButtonClickHandler: Listener<number> = (id, buttonLeft, buttonTop, buttonHeight) => {
       if (this.children.chatMenu as Menu) {
@@ -54,38 +64,6 @@ export class List extends Block {
       console.log(`list currentChat id = ${id}, text = ${text.trim()}`);
     };
 
-    if (this.props.chats && (this.props.chats as ChatProps[])?.length) {
-      this.children.chats = (this.props.chats as ChatProps[])?.map(
-        (chat) =>
-          new Chat({
-            className: 'list__item',
-            id: chat.id,
-            avatar: chat.avatar,
-            title: chat.title,
-            date: chat.date,
-            text: chat.text,
-            sender: chat.sender,
-            count: chat.count,
-            active: chat.active,
-            chatButtonClickHandler: chatButtonClickHandler as Listener,
-            chatClickHandler: chatClickHandler as Listener,
-            settings: {
-              withInternalID: true
-            }
-          })
-      );
-    }
-
-    if (!this.props.chats || !(this.props.chats as ChatProps[])?.length) {
-      this.children.text = new Text({
-        className: 'list__text',
-        text: 'Список чатов пуст',
-        settings: {
-          withInternalID: false
-        }
-      });
-    }
-
     this.children.chatMenu = new Menu({
       dataMenu: 'chatMenu',
       className: 'list__chat-menu',
@@ -96,6 +74,61 @@ export class List extends Block {
         withInternalID: false
       }
     });
+
+    this.setProps({
+      isLoading: true
+    });
+
+    this.chatController
+      ?.getChats()
+      .then(() => this.setProps({ isLoading: false }))
+      .then(() => {
+        if (((this.props.state as Record<string, ChatModel[]>)?.chats as ChatModel[])?.length) {
+          this.children.chats = (
+            (this.props.state as Record<string, ChatModel[]>)?.chats as ChatModel[]
+          )?.map(
+            (chat) =>
+              new Chat({
+                className: 'list__item',
+                id: String(chat.id),
+                avatar: chat.avatar,
+                title: chat.title,
+                date: String(chat.created_by),
+                text: chat.last_message.content,
+                sender: !!chat.last_message.user.login,
+                count: String(chat.unread_count),
+                // active: chat.active,
+                chatButtonClickHandler: chatButtonClickHandler as Listener,
+                chatClickHandler: chatClickHandler as Listener,
+                settings: {
+                  withInternalID: true
+                }
+              })
+          );
+        }
+
+        if (
+          !(this.props.state as Record<string, ChatModel[]>)?.chats ||
+          !((this.props.state as Record<string, ChatModel[]>)?.chats as ChatModel[])?.length
+        ) {
+          this.children.text = new Text({
+            className: 'list__text',
+            text: 'Список чатов пуст',
+            settings: {
+              withInternalID: false
+            }
+          });
+        }
+      });
+  }
+
+  async componentDidMount() {
+    try {
+      await this.chatController?.getChats();
+      this.setProps({ isLoading: false });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   componentDidUpdate(oldProps: ListProps, newProps: ListProps): boolean {
@@ -108,6 +141,16 @@ export class List extends Block {
       }
     }
 
+    if (oldProps.isLoading !== newProps.isLoading) {
+      if (newProps.isLoading === false) {
+        return true;
+      }
+    }
+
+    if (!isEqual(oldProps.state as [], newProps.state as [])) {
+      return true;
+    }
+
     return false;
   }
 
@@ -117,3 +160,11 @@ export class List extends Block {
     return template;
   }
 }
+
+function mapChatsToProps(state: Indexed<ChatModel[]>): { chats: ChatModel[] } {
+  return { chats: state?.chats };
+}
+
+export const withChats = connect(
+  mapChatsToProps as (state: Indexed<unknown>) => { chats: ChatModel[] }
+);

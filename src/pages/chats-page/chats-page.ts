@@ -1,7 +1,7 @@
 import './chats-page.scss';
 import { Block } from '@/base';
 import type { Listener, Props } from '@/base';
-import { Content, List, NewMessage, Search } from './modules';
+import { Content, List, NewMessage, Search, withChats } from './modules';
 import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
 import template from './chats-page.hbs?raw';
 
@@ -93,7 +93,7 @@ export class ChatsPage extends Block {
       }
     });
 
-    this.children.list = new List({
+    this.children.list = new (withChats(List))({
       className: 'chats__list',
       chats: (this.props.list as ListProps).chats,
       classNameChatMenu: '',
