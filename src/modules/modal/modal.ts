@@ -137,6 +137,13 @@ export class Modal extends Block {
     const closeHandler: (event: SubmitEvent) => void = (event) => {
       event.preventDefault();
 
+      (this.children.controls as Block[])?.forEach((control) =>
+        control.setProps({
+          classNameLabel: 'modal__label modal__label-file',
+          label: 'Выбрать файл на компьютере'
+        })
+      );
+
       if (this.props.closeHandler) {
         (this.props.closeHandler as Listener)();
       }
