@@ -49,6 +49,7 @@ export class UserController {
     if (this.userAPI && isValid) {
       try {
         newUserData = (await this.userAPI.updateProfile(userData)) as UserModel;
+        store.set('user', newUserData);
         router.go('/settings');
       } catch (error: unknown) {
         console.log(error);
@@ -72,6 +73,7 @@ export class UserController {
     if (this.userAPI && isValid) {
       try {
         newUserData = (await this.userAPI.updateAvatar(data)) as UserModel;
+        store.set('user', newUserData);
         router.go('/settings');
       } catch (error: unknown) {
         console.log(error);
@@ -90,7 +92,6 @@ export class UserController {
       this.userAPI
         .updatePassword(data)
         .then(() => router.go('/settings'))
-        .then((newData) => newData)
         .catch((error) => console.log(error));
     } else {
       console.log('Invalid password form data');
