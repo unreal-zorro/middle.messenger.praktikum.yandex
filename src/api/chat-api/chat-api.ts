@@ -1,4 +1,5 @@
 import { BaseAPI } from '@/base';
+import { ChatModel } from '@/models';
 
 export class ChatAPI extends BaseAPI {
   constructor() {
@@ -6,7 +7,9 @@ export class ChatAPI extends BaseAPI {
   }
 
   // Get chats
-  requestChats(data: { offset?: number; limit?: number; title?: string }): Promise<XMLHttpRequest> {
+  requestChats(
+    data: { offset?: number; limit?: number; title?: string } = {}
+  ): Promise<ChatModel[]> {
     return this.transport.get('/', { data });
   }
 
