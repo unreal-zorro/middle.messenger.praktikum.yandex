@@ -2,6 +2,7 @@ import { AuthAPI } from '@/api';
 import { router } from '@/router';
 import type { LoginFormModel, RegisterFormModel } from '@/models';
 import { validate } from '@/utils';
+import { store } from '@/store';
 
 export class AuthController {
   private authAPI: Nullable<AuthAPI> = null;
@@ -37,9 +38,21 @@ export class AuthController {
   }
 
   public logout(): void {
+    const emptyUser = {
+      id: undefined,
+      first_name: undefined,
+      second_name: undefined,
+      display_name: undefined,
+      login: undefined,
+      email: undefined,
+      phone: undefined,
+      avatar: undefined
+    };
+
     if (this.authAPI) {
       this.authAPI
         .logout()
+        .then(() => store.set('user', emptyUser))
         .then(() => router.go('/'))
         .catch((error) => console.log(error));
     }
