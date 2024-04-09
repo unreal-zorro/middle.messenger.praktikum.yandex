@@ -54,7 +54,7 @@ export class InputField extends Block {
     };
 
     const changeHandler = (target: HTMLInputElement): void => {
-      if (!target.files || target.files.length === 0) {
+      if (target.getAttribute('type') === 'file' && (!target.files || target.files.length === 0)) {
         (this.children.errorChild as Block).setProps({
           error: true,
           text: 'Нужно выбрать файл'
@@ -71,8 +71,13 @@ export class InputField extends Block {
       }
 
       const { name } = target;
-      const value = target.files[0]?.name;
-      const type = target.files[0]?.type;
+      let value = '';
+      let type = '';
+
+      if (target.files) {
+        value = target.files[0]?.name;
+        type = target.files[0]?.type;
+      }
 
       if (this.props.changeHandler) {
         const errorMessage = (this.props.changeHandler as (...args: string[]) => string)(
