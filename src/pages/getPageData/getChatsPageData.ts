@@ -399,7 +399,11 @@ export const getChatsPageData = (
           error: false,
           text: ''
         }
-      ]
+      ],
+      button: {
+        type: 'button',
+        text: 'Создать новый чат'
+      }
     },
     list: {
       chats: getChatsListPageData(user, chats),

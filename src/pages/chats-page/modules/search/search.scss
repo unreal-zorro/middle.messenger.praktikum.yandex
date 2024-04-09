@@ -69,4 +69,8 @@
     grid-column: 1;
     place-self: center self-start;
   }
+
+  &__button {
+    line-height: 2;
+  }
 }

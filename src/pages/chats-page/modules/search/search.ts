@@ -1,14 +1,17 @@
 import './search.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
-import { InputField, InputFieldProps } from '@/modules';
-import { Link, LinkProps } from '@/components';
+import { InputField } from '@/modules';
+import type { InputFieldProps } from '@/modules';
+import { Button, Link } from '@/components';
+import type { ButtonProps, LinkProps } from '@/components';
 import template from './search.hbs?raw';
 
 export interface SearchProps extends Props {
   className?: string;
   controls?: InputFieldProps[];
   navLink?: LinkProps;
+  button?: ButtonProps;
 }
 
 export class Search extends Block {
@@ -40,6 +43,15 @@ export class Search extends Block {
       className: 'search__link',
       href: (this.props.navLink as LinkProps)?.href as string,
       text: (this.props.navLink as LinkProps)?.text as string,
+      settings: {
+        withInternalID: false
+      }
+    });
+
+    this.children.buttonChild = new Button({
+      className: 'search__button',
+      type: (this.props.button as ButtonProps)?.type as string,
+      text: (this.props.button as ButtonProps)?.text as string,
       settings: {
         withInternalID: false
       }
