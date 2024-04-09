@@ -3,7 +3,7 @@ import { Block } from '@/base';
 import type { Props, Listener } from '@/base';
 import { Avatar, Button, Header, Link } from '@/components';
 import type { ButtonProps, LinkProps } from '@/components';
-import { VALIDATION_RULES } from '@/consts';
+import { VALIDATION_RULES, baseURL } from '@/consts';
 import { Modal } from '@/modules';
 import type { ModalProps } from '@/modules';
 import { UserController, AuthController } from '@/controllers';
@@ -40,6 +40,73 @@ export class ProfilePage extends Block {
     this.userController = new UserController();
     this.authController = new AuthController();
 
+    const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
+      if (this.props.id === 'profile-password') {
+        this.userController.updatePassword(formData as PasswordModel);
+
+        return;
+      }
+
+      this.userController?.updateProfile(formData as UserModel).then((newUserData) => {
+        this.setProps({
+          state: newUserData
+        });
+
+        (this.children.headerChild as Header).setProps({
+          text: (newUserData as UserModel).display_name
+        });
+
+        (this.children.formChild as ProfileForm).setProps({
+          state: (newUserData as UserModel).state
+        });
+      });
+    };
+
+    const submitChangeAvatarModalHandler: (...args: Record<string, string | File>[]) => void = (
+      formData
+    ) => {
+      let isValid = true;
+
+      Object.entries(formData).forEach(([key, value]) => {
+        const { regExp } = VALIDATION_RULES[key];
+        isValid = isValid && regExp.test((value as File).name);
+      });
+
+      if (isValid) {
+        this.setProps({
+          visibleChangeAvatarModal: false
+        });
+
+        this.userController.updateAvatar(formData.avatar as File).then((newUserData) => {
+          this.setProps({
+            state: newUserData
+          });
+
+          (this.children.avatarChild as Avatar).setProps({
+            imgSrc: `${baseURL}/resources${(newUserData as UserModel).avatar}`
+          });
+        });
+      } else {
+        console.log('Invalid avatar form data');
+      }
+    };
+
+    const avatarClickHandler: Listener = () => {
+      this.setProps({
+        visibleChangeAvatarModal: true
+      });
+    };
+
+    const linkClickHandler: Listener = () => {
+      this.authController.logout();
+    };
+
+    const closeChangeAvatarModalHandler: Listener = () => {
+      this.setProps({
+        visibleChangeAvatarModal: false
+      });
+    };
+
     this.setProps({
       isLoading: true
     });
@@ -48,69 +115,18 @@ export class ProfilePage extends Block {
       ?.getUser()
       .then(() => this.setProps({ isLoading: false }))
       .then(() => {
-        const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
-          if (this.props.id === 'profile-edit') {
-            this.userController?.updateProfile(formData as UserModel).then((newUserData) =>
-              this.setProps({
-                state: newUserData
-              })
-            );
-          } else if (this.props.id === 'profile-password') {
-            this.userController.updatePassword(formData as PasswordModel);
-          }
-        };
-
-        const submitChangeAvatarModalHandler: (...args: Record<string, string | File>[]) => void = (
-          formData
-        ) => {
-          let isValid = true;
-
-          Object.entries(formData).forEach(([key, value]) => {
-            const { regExp } = VALIDATION_RULES[key];
-            isValid = isValid && regExp.test((value as File).name);
+        if ((this.props?.state as UserModel).avatar) {
+          this.children.avatarChild = new Avatar({
+            className: 'avatar_big profile__avatar',
+            imgSrc: (this.props?.state as UserModel).avatar,
+            settings: {
+              withInternalID: false
+            },
+            events: {
+              click: (() => avatarClickHandler.call(this)) as Listener
+            }
           });
-
-          if (isValid) {
-            this.setProps({
-              visibleChangeAvatarModal: false
-            });
-
-            this.userController.updateAvatar(formData.avatar as File).then((newUserData) =>
-              this.setProps({
-                state: newUserData
-              })
-            );
-          } else {
-            console.log('Invalid avatar form data');
-          }
-        };
-
-        const avatarClickHandler: Listener = () => {
-          this.setProps({
-            visibleChangeAvatarModal: true
-          });
-        };
-
-        const linkClickHandler: Listener = () => {
-          this.authController.logout();
-        };
-
-        const closeChangeAvatarModalHandler: Listener = () => {
-          this.setProps({
-            visibleChangeAvatarModal: false
-          });
-        };
-
-        this.children.avatarChild = new Avatar({
-          className: 'avatar_big profile__avatar',
-          imgSrc: (this.props?.state as UserModel).avatar,
-          settings: {
-            withInternalID: false
-          },
-          events: {
-            click: (() => avatarClickHandler.call(this)) as Listener
-          }
-        });
+        }
 
         this.children.headerChild = new Header({
           className: 'profile__header',
@@ -134,7 +150,6 @@ export class ProfilePage extends Block {
           controls: this.props.controls as ProfileFormProps[],
           buttons: this.props.buttons as ButtonProps[],
           state: this.props.state as UserModel,
-          login: (this.props.state as UserModel)?.login,
           submitHandler,
           settings: {
             withInternalID: false
@@ -207,7 +222,11 @@ export class ProfilePage extends Block {
 
   async componentDidMount() {
     try {
-      await this.userController?.getUser();
+      await this.userController?.getUser().then((newUserData) => {
+        this.setProps({
+          state: newUserData
+        });
+      });
       this.setProps({ isLoading: false });
     } catch (error) {
       console.log(error);
@@ -234,6 +253,12 @@ export class ProfilePage extends Block {
 
     if (!isEqual(oldProps.state as UserModel, newProps.state as UserModel)) {
       return true;
+    }
+
+    if (oldProps.avatar !== newProps.avatar) {
+      (this.children.avatarChild as Avatar).setProps({
+        imgSrc: newProps.avatar as string
+      });
     }
 
     return false;
