@@ -5,31 +5,23 @@ import { Text } from '@/components';
 import { Menu } from '@/modules';
 import type { MenuProps } from '@/modules';
 import { ChatModel } from '@/models';
-import { connect } from '@/hoc';
-import { ChatController } from '@/controllers';
 import { isEqual } from '@/utils';
 import { Chat } from './modules';
-import type { ChatProps } from './modules';
 import template from './list.hbs?raw';
 
 export interface ListProps extends Props {
   className?: string;
-  chats?: ChatProps[];
+  chats?: ChatModel[];
   classNameChatMenu?: string;
   chatMenu?: MenuProps;
   visibleChatMenu?: boolean;
   visibleChatAvatarModal?: boolean;
   state?: ChatModel[];
-  isLoading?: boolean;
 }
 
 export class List extends Block {
-  private chatController: ChatController;
-
   constructor(props: ListProps) {
     super(props);
-
-    this.chatController = new ChatController();
 
     const chatButtonClickHandler: Listener<number> = (id, buttonLeft, buttonTop, buttonHeight) => {
       if (this.children.chatMenu as Menu) {
@@ -79,55 +71,36 @@ export class List extends Block {
       isLoading: true
     });
 
-    this.chatController
-      ?.getChats()
-      .then(() => this.setProps({ isLoading: false }))
-      .then(() => {
-        if (((this.props.state as Record<string, ChatModel[]>)?.chats as ChatModel[])?.length) {
-          this.children.chats = (
-            (this.props.state as Record<string, ChatModel[]>)?.chats as ChatModel[]
-          )?.map(
-            (chat) =>
-              new Chat({
-                className: 'list__item',
-                id: String(chat.id),
-                avatar: chat.avatar,
-                title: chat.title,
-                date: String(chat.created_by),
-                text: chat.last_message.content,
-                sender: !!chat.last_message.user.login,
-                count: String(chat.unread_count),
-                // active: chat.active,
-                chatButtonClickHandler: chatButtonClickHandler as Listener,
-                chatClickHandler: chatClickHandler as Listener,
-                settings: {
-                  withInternalID: true
-                }
-              })
-          );
-        }
-
-        if (
-          !(this.props.state as Record<string, ChatModel[]>)?.chats ||
-          !((this.props.state as Record<string, ChatModel[]>)?.chats as ChatModel[])?.length
-        ) {
-          this.children.text = new Text({
-            className: 'list__text',
-            text: 'Список чатов пуст',
+    if ((this.props.state as ChatModel[])?.length) {
+      this.children.chats = (this.props.state as ChatModel[])?.map(
+        (chat) =>
+          new Chat({
+            className: 'list__item',
+            id: String(chat.id),
+            avatar: chat.avatar,
+            title: chat.title,
+            lastMessageTime: chat.last_message?.time,
+            lastMessageContent: chat.last_message?.content,
+            createdBy: !!chat.created_by,
+            unreadCount: chat.unread_count,
+            active: chat.active === chat.id,
+            chatButtonClickHandler: chatButtonClickHandler as Listener,
+            chatClickHandler: chatClickHandler as Listener,
             settings: {
-              withInternalID: false
+              withInternalID: true
             }
-          });
+          })
+      );
+    }
+
+    if (!(this.props.state as ChatModel[]) || !(this.props.state as ChatModel[])?.length) {
+      this.children.text = new Text({
+        className: 'list__text',
+        text: 'Список чатов пуст',
+        settings: {
+          withInternalID: false
         }
       });
-  }
-
-  async componentDidMount() {
-    try {
-      await this.chatController?.getChats();
-      this.setProps({ isLoading: false });
-    } catch (error) {
-      console.log(error);
     }
   }
 
@@ -141,13 +114,21 @@ export class List extends Block {
       }
     }
 
-    if (oldProps.isLoading !== newProps.isLoading) {
-      if (newProps.isLoading === false) {
-        return true;
-      }
+    if (
+      !isEqual(oldProps.state as [], newProps.state as []) ||
+      (oldProps.state as ChatModel[])?.length !== (newProps.state as ChatModel[])?.length
+    ) {
+      return true;
     }
 
-    if (!isEqual(oldProps.state as [], newProps.state as [])) {
+    if (
+      !isEqual(oldProps.chats as [], newProps.chats as []) ||
+      (oldProps.chats as ChatModel[])?.length !== (newProps.chats as ChatModel[])?.length
+    ) {
+      return true;
+    }
+
+    if (oldProps.chats !== newProps.chats) {
       return true;
     }
 
@@ -160,11 +141,3 @@ export class List extends Block {
     return template;
   }
 }
-
-function mapChatsToProps(state: Indexed<ChatModel[]>): { chats: ChatModel[] } {
-  return { chats: state?.chats };
-}
-
-export const withChats = connect(
-  mapChatsToProps as (state: Indexed<unknown>) => { chats: ChatModel[] }
-);

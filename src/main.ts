@@ -11,7 +11,8 @@ import {
   ProfilePage,
   withUser,
   getChatsPageData,
-  ChatsPage
+  ChatsPage,
+  withChats
 } from './pages';
 
 const loginPageData = getLoginPageData();
@@ -54,7 +55,7 @@ router
     },
     ...profilePagePasswordData
   })
-  .use('/messenger', ChatsPage, {
+  .use('/messenger', withChats(ChatsPage), {
     settings: {
       withInternalID: false
     },

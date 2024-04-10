@@ -6,15 +6,17 @@ import template from './avatar.hbs?raw';
 
 export interface AvatarProps extends Props {
   className?: string;
-  imgSrc?: string;
+  imgSrc?: string | null;
 }
 
 export class Avatar extends Block {
   constructor(props: AvatarProps) {
     super(props);
 
-    const newImgSrc = `${baseURL}/resources${props.imgSrc}`;
-    this.setProps({ imgSrc: newImgSrc });
+    if (props.imgSrc !== null) {
+      const newImgSrc = `${baseURL}/resources${props.imgSrc}`;
+      this.setProps({ imgSrc: newImgSrc });
+    }
   }
 
   componentDidUpdate(oldProps: AvatarProps, newProps: AvatarProps): boolean {

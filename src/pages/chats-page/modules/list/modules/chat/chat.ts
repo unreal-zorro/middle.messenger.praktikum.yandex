@@ -7,12 +7,12 @@ import template from './chat.hbs?raw';
 export interface ChatProps extends Props {
   className?: string;
   id?: string;
-  avatar?: string;
+  avatar?: string | null;
   title?: string;
-  date?: string;
-  text?: string;
-  sender?: boolean;
-  count?: string;
+  lastMessageTime?: string;
+  lastMessageContent?: string;
+  createdBy?: boolean;
+  unreadCount?: number;
   active?: boolean;
   chatButtonClickHandler?: Listener;
   chatClickHandler?: Listener;
@@ -67,7 +67,7 @@ export class Chat extends Block {
 
     this.children.dateChild = new Text({
       className: 'chat__date',
-      text: this.props.date as string,
+      text: this.props.lastMessageTime as string,
       settings: {
         withInternalID: false
       }
@@ -76,7 +76,7 @@ export class Chat extends Block {
     if (this.props.count) {
       this.children.countChild = new Text({
         className: 'chat__count',
-        text: this.props.count as string,
+        text: this.props.unreadCount as string,
         settings: {
           withInternalID: false
         }
@@ -106,12 +106,12 @@ export class Chat extends Block {
       (this.children.avatarChild as Avatar).setProps({ value: newProps.avatar });
     }
 
-    if (oldProps.date !== newProps.date) {
-      (this.children.dateChild as Text).setProps({ error: newProps.date });
+    if (oldProps.lastMessageTime !== newProps.lastMessageTime) {
+      (this.children.dateChild as Text).setProps({ error: newProps.lastMessageTime });
     }
 
-    if (oldProps.count !== newProps.count) {
-      (this.children.countChild as Text).setProps({ text: newProps.count });
+    if (oldProps.unreadCount !== newProps.unreadCount) {
+      (this.children.countChild as Text).setProps({ text: newProps.unreadCount });
     }
 
     return true;

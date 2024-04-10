@@ -15,5 +15,5 @@ export interface ChatModel extends Record<string, unknown> {
     };
     time: string;
     content: string;
-  };
+  } | null;
 }

@@ -1,6 +1,6 @@
 export { Search } from './search';
 export type { SearchProps } from './search';
-export { List, withChats } from './list';
+export { List } from './list';
 export type { ListProps } from './list';
 export { Content } from './content';
 export type { ContentProps } from './content';

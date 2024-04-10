@@ -1,2 +1,2 @@
-export { List, withChats } from './list';
+export { List } from './list';
 export type { ListProps } from './list';

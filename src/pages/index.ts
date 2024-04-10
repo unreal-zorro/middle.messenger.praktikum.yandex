@@ -1,7 +1,7 @@
 export { LoginPage } from './login-page';
 export { ErrorPage } from './error-page';
 export { ProfilePage, withUser } from './profile-page';
-export { ChatsPage } from './chats-page';
+export { ChatsPage, withChats } from './chats-page';
 export { getErrorPageData } from './getPageData';
 export { getChatsPageData } from './getPageData';
 export { getLoginPageData } from './getPageData';
