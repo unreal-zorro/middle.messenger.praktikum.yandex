@@ -1,9 +1,10 @@
 import './search.scss';
 import { Block } from '@/base';
 import type { Listener, Props } from '@/base';
-import type { InputFieldProps } from '@/modules';
+import { Modal, type InputFieldProps, type ModalProps } from '@/modules';
 import { Button, Link } from '@/components';
 import type { ButtonProps, LinkProps } from '@/components';
+import { VALIDATION_RULES } from '@/consts';
 import { SearchForm } from './modules';
 import type { SearchFormProps } from './modules';
 import template from './search.hbs?raw';
@@ -14,8 +15,11 @@ export interface SearchProps extends Props {
   navLink?: LinkProps;
   button?: ButtonProps;
   searchForm?: SearchFormProps;
+  addNewChatModal: ModalProps;
+  visibleAddNewChatModal?: boolean;
+  typeAddNewChatModal?: string;
   keydownSearchHandler?: Listener;
-  buttonClickHandler?: Listener;
+  addNewChatClickHandler?: Listener;
 }
 
 export class Search extends Block {
@@ -23,13 +27,42 @@ export class Search extends Block {
     super(props);
 
     const submitSearchHandler: Listener<Record<string, string>[]> = (data) => {
-      console.log(data);
+      if (this.props.keydownSearchHandler) {
+        (this.props.keydownSearchHandler as Listener)(data);
+      }
     };
 
     const buttonClickHandler: Listener = () => {
-      if (this.props.buttonClickHandler) {
-        (this.props.buttonClickHandler as Listener)();
+      this.setProps({
+        visibleAddNewChatModal: true
+      });
+    };
+
+    const submitAddNewChatModalHandler: Listener<Record<string, string>> = (formData) => {
+      let isValid = true;
+
+      Object.entries(formData).forEach(([key, value]) => {
+        const { regExp } = VALIDATION_RULES[key];
+        isValid = isValid && regExp.test(value);
+      });
+
+      if (isValid) {
+        this.setProps({
+          visibleAddNewChatModal: false
+        });
+
+        if (this.props.addNewChatClickHandler) {
+          (this.props.addNewChatClickHandler as Listener)(formData);
+        }
+      } else {
+        console.log('Invalid form data');
       }
+    };
+
+    const closeAddNewChatModalHandler: Listener = () => {
+      this.setProps({
+        visibleAddNewChatModal: false
+      });
     };
 
     this.children.navLinkChild = new Link({
@@ -61,6 +94,35 @@ export class Search extends Block {
         click: buttonClickHandler
       }
     });
+
+    this.children.addNewChatModal = new Modal({
+      className: '',
+      type: 'image',
+      header: (this.props.addNewChatModal as ModalProps)?.header,
+      controls: (this.props.addNewChatModal as ModalProps)?.controls,
+      buttons: (this.props.addNewChatModal as ModalProps)?.buttons,
+      visible: this.props.visibleAddNewChatModalModal as boolean,
+      submitHandler: submitAddNewChatModalHandler as Listener,
+      closeHandler: closeAddNewChatModalHandler,
+      settings: {
+        withInternalID: false
+      }
+    });
+  }
+
+  componentDidUpdate(oldProps: SearchProps, newProps: SearchProps): boolean {
+    if (oldProps.visibleAddNewChatModal !== newProps.visibleAddNewChatModal) {
+      if (newProps.visibleAddNewChatModal === false) {
+        (this.children.addNewChatModal as Modal).hide();
+        document.body.classList.remove('modal-open');
+      }
+      if (newProps.visibleAddNewChatModal === true) {
+        (this.children.addNewChatModal as Modal).show();
+        document.body.classList.add('modal-open');
+      }
+    }
+
+    return false;
   }
 
   render(): string {

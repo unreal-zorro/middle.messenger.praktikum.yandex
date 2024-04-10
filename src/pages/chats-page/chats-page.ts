@@ -84,12 +84,25 @@ export class ChatsPage extends Block {
       scroll: wheelHandler
     };
 
+    const searchChatHandler: Listener<Record<string, string>[]> = (search) => {
+      console.log(search);
+    };
+
+    const addNewChatHandler: Listener<Record<string, string>> = (title) => {
+      console.log(title);
+    };
+
     this.children.search = new Search({
       className: 'chats__search',
       controls: (this.props.search as SearchProps).controls,
       navLink: (this.props.search as SearchProps).navLink,
       button: (this.props.search as SearchProps).button,
       searchForm: (this.props.search as SearchProps).searchForm,
+      addNewChatModal: (this.props.search as SearchProps).addNewChatModal,
+      visibleAddNewChatModal: false,
+      typeAddNewChatModal: '',
+      keydownSearchHandler: searchChatHandler as Listener,
+      addNewChatClickHandler: addNewChatHandler as Listener,
       settings: {
         withInternalID: false
       }

@@ -233,6 +233,36 @@ const getContentMenuData = () => {
   };
 };
 
+const getAddNewChatModalData = () => {
+  const header = 'Создать новый чат';
+
+  const controls = [
+    {
+      label: 'Введите заголовок чата',
+      name: 'newChatTitle',
+      type: 'text',
+      disabled: false,
+      value: '',
+      error: false,
+      text: ''
+    }
+  ];
+
+  const buttons = [
+    {
+      type: 'submit',
+      text: 'Создать'
+    }
+  ];
+
+  return {
+    header,
+    controls,
+    buttons,
+    visibleAttachModal: false
+  };
+};
+
 export const getChatsContentPageData = (
   user: User,
   messagesArray: Message[],
@@ -380,6 +410,9 @@ export const getChatsPageData = (
   const attachLocationModal = {
     ...getAttachLocationModalData()
   };
+  const addNewChatModal = {
+    ...getAddNewChatModalData()
+  };
 
   return {
     id: 'chats',
@@ -400,7 +433,8 @@ export const getChatsPageData = (
       button: {
         type: 'button',
         text: 'Создать новый чат'
-      }
+      },
+      addNewChatModal
     },
     list: {
       chats: getChatsListPageData(user, chats),
