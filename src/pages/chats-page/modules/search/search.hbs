@@ -2,27 +2,7 @@
   class="search{{#if className}} {{ className }}{{/if}}"
 >
   {{{ navLinkChild }}}
-
-  <form
-    class="search__form"
-  >
-    <div
-      class="search__form-controls"
-    >
-      {{#each controls}}
-        <div
-          class="search__form-control"
-        >
-          <svg class="search__icon">
-            <use xlink:href="#icon-search"></use>
-          </svg>
-
-          {{{ this }}}
-        </div>
-      {{/each}}
-    </div>
-  </form>
-
+  {{{ searchFormChild }}}
   {{{ buttonChild }}}
 
   <svg class="spritesheet">

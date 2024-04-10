@@ -89,6 +89,7 @@ export class ChatsPage extends Block {
       controls: (this.props.search as SearchProps).controls,
       navLink: (this.props.search as SearchProps).navLink,
       button: (this.props.search as SearchProps).button,
+      searchForm: (this.props.search as SearchProps).searchForm,
       settings: {
         withInternalID: false
       }

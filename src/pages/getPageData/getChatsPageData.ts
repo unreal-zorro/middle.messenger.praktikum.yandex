@@ -388,18 +388,15 @@ export const getChatsPageData = (
         text: 'Профиль >',
         href: '/settings'
       },
-      controls: [
-        {
-          label: '',
-          name: 'search',
+      searchForm: {
+        input: {
           type: 'text',
-          disabled: false,
+          name: 'search',
           placeholder: 'Поиск',
           value: '',
-          error: false,
-          text: ''
+          error: false
         }
-      ],
+      },
       button: {
         type: 'button',
         text: 'Создать новый чат'
