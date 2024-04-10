@@ -1,5 +1,6 @@
 import type { MessageContent, Chat, CurrentChat, Message, User } from '@/entities';
 import { CHAT_MENU_ITEMS, ATTACH_MENU_ITEMS, CONTENT_MENU_ITEMS } from '@/consts';
+import { isEqual } from '@/utils';
 import { MessageProps } from '../chats-page/modules/content';
 
 const getChatMenuData = () => {
@@ -26,7 +27,7 @@ const getChatMenuData = () => {
   };
 };
 
-const getChatsListPageData = (user: User, chats: Chat[]) => {
+const getChatsListPageData = (user: User = {}, chats: Chat[] = []) => {
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
   const currentYear = currentDate.getFullYear();
@@ -264,10 +265,26 @@ const getAddNewChatModalData = () => {
 };
 
 export const getChatsContentPageData = (
-  user: User,
-  messagesArray: Message[],
-  currentChat: CurrentChat
+  user: User = {},
+  messagesArray: Message[] = [],
+  currentChat: CurrentChat = {}
 ) => {
+  if (
+    !user ||
+    isEqual(user as PlainObject, {}) ||
+    !messagesArray ||
+    isEqual(messagesArray as [], []) ||
+    !currentChat ||
+    isEqual(currentChat as {}, {})
+  ) {
+    return {
+      dates: [],
+      messages: [],
+      messageContent: [],
+      currentChat: {}
+    };
+  }
+
   const dateArray: Set<string> = new Set();
   const messageArray: MessageProps[] = [];
   const messageContentArray: MessageContent[] = [];
@@ -385,12 +402,7 @@ const getUserDeleteModalData = () => {
   };
 };
 
-export const getChatsPageData = (
-  user: User,
-  chats: Chat[],
-  messages: Message[],
-  currentChat: CurrentChat
-) => {
+export const getChatsPageData = () => {
   const chatMenu = getChatMenuData();
 
   const attachMenu = getAttachMenuData();
@@ -437,11 +449,11 @@ export const getChatsPageData = (
       addNewChatModal
     },
     list: {
-      chats: getChatsListPageData(user, chats),
+      chats: getChatsListPageData(),
       chatMenu
     },
     content: {
-      ...getChatsContentPageData(user, messages, currentChat),
+      ...getChatsContentPageData(),
       contentMenu,
       userAddModal,
       userDeleteModal
