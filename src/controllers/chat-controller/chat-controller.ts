@@ -28,4 +28,18 @@ export class ChatController {
 
     return data;
   }
+
+  public async createChat(title: string): Promise<void> {
+    if (this.chatAPI) {
+      try {
+        await this.chatAPI.createChat({ title });
+      } catch (error: unknown) {
+        console.log((error as Error).message);
+
+        if ((error as Error).message.startsWith('status: 401')) {
+          router.go('/');
+        }
+      }
+    }
+  }
 }
