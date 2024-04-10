@@ -179,20 +179,18 @@ export class Content extends Block {
       });
     }
 
-    if (!this.props.dates || !(this.props.dates as string[])?.length) {
-      this.children.noMessagesText = new Text({
-        className: 'content__text',
-        text: 'В выбранном чате отсутствуют сообщения',
-        settings: {
-          withInternalID: false
-        }
-      });
-    }
-
     if (!this.props.currentChat) {
       this.children.noChatText = new Text({
         className: 'content__text',
         text: 'Выберите чат, чтобы отправить сообщение',
+        settings: {
+          withInternalID: false
+        }
+      });
+    } else if (!this.props.dates || !(this.props.dates as string[])?.length) {
+      this.children.noMessagesText = new Text({
+        className: 'content__text',
+        text: 'В выбранном чате отсутствуют сообщения',
         settings: {
           withInternalID: false
         }
