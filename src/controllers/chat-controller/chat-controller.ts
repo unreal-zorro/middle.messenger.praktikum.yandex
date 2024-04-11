@@ -35,10 +35,16 @@ export class ChatController {
         await this.chatAPI.createChat({ title });
       } catch (error: unknown) {
         console.log((error as Error).message);
+      }
+    }
+  }
 
-        if ((error as Error).message.startsWith('status: 401')) {
-          router.go('/');
-        }
+  public async deleteChat(chatId: number): Promise<void> {
+    if (this.chatAPI) {
+      try {
+        await this.chatAPI.deleteChat({ chatId });
+      } catch (error: unknown) {
+        console.log((error as Error).message);
       }
     }
   }
