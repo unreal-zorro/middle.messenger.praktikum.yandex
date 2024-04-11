@@ -15,8 +15,12 @@ export class ChatController {
 
     if (this.chatAPI) {
       try {
+        store.set('isLoading', true);
+
         data = await this.chatAPI.requestChats();
         store.set('chats', data as ChatModel[]);
+
+        store.set('isLoading', false);
       } catch (error: unknown) {
         console.log((error as Error).message);
 
@@ -33,6 +37,8 @@ export class ChatController {
     if (this.chatAPI) {
       try {
         await this.chatAPI.createChat({ title });
+
+        await this.getChats();
       } catch (error: unknown) {
         console.log((error as Error).message);
       }
