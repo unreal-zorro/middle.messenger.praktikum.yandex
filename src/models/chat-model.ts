@@ -1,7 +1,7 @@
 export interface ChatModel extends Record<string, unknown> {
   id: number;
   title: string;
-  avatar: string;
+  avatar: string | null;
   unread_count: number;
   created_by: number;
   last_message: {
