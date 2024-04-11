@@ -2,7 +2,8 @@ import './chats-page.scss';
 import { Block } from '@/base';
 import type { Listener, Props } from '@/base';
 import { connect } from '@/hoc';
-import { ChatModel } from '@/models';
+import { ChatModel, ChatUserModel } from '@/models';
+// import { ChatController, ChatUsersController } from '@/controllers';
 import { ChatController } from '@/controllers';
 import { isEqual } from '@/utils';
 import { Content, List, NewMessage, Search } from './modules';
@@ -22,10 +23,13 @@ interface ChatsPageProps extends Props {
 export class ChatsPage extends Block {
   private chatController: ChatController;
 
+  // private chatUsersController: ChatUsersController;
+
   constructor(props: ChatsPageProps) {
     super(props);
 
     this.chatController = new ChatController();
+    // this.chatUsersController = new ChatUsersController();
 
     const clickHandler: Listener<Event> = (event: Event) => {
       if (event.target && (this.children.list as List)) {
@@ -112,6 +116,53 @@ export class ChatsPage extends Block {
         state: newChats
       });
     };
+
+    // const deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (
+    //   data
+    // ) => {
+    //   await this.chatController.deleteChat(Number(data.chatId));
+    //   const newChats = await this.chatController.getChats();
+
+    //   this.setProps({
+    //     state: { chats: newChats }
+    //   });
+
+    //   (this.children.list as List).setProps({
+    //     state: newChats
+    //   });
+    // };
+
+    // const getChatUsersHandler: (...args: Record<string, string>[]) => Promise<void> = async (
+    //   data
+    // ) => {
+    //   const newChatUsers = await this.chatUsersController.getChatUsers(Number(data.chatId));
+
+    //   this.setProps({
+    //     state: { chatUsers: newChatUsers }
+    //   });
+    // };
+
+    // const addChatUsersHandler: (users: number[], chatId: number) => Promise<void> = async (
+    //   users, chatId
+    // ) => {
+    //   await this.chatUsersController.addChatUsers(users, chatId);
+    //   const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
+
+    //   this.setProps({
+    //     state: { chatUsers: newChatUsers }
+    //   });
+    // };
+
+    // const deleteChatUsersHandler: (users: number[], chatId: number) => Promise<void> = async (
+    //   users, chatId
+    // ) => {
+    //   await this.chatUsersController.deleteChatUsers(users, chatId);
+    //   const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
+
+    //   this.setProps({
+    //     state: { chatUsers: newChatUsers }
+    //   });
+    // };
 
     this.setProps({
       isLoading: true
@@ -242,6 +293,14 @@ function mapChatsToProps(state: Indexed<ChatModel[]>): { chats: ChatModel[] } {
   return { chats: state?.chats };
 }
 
+function mapChatUsersToProps(state: Indexed<ChatUserModel[]>): { chatUsers: ChatUserModel[] } {
+  return { chatUsers: state?.chatUsers };
+}
+
 export const withChats = connect(
   mapChatsToProps as (state: Indexed<unknown>) => { chats: ChatModel[] }
+);
+
+export const withChatUsers = connect(
+  mapChatUsersToProps as (state: Indexed<unknown>) => { chatUsers: ChatUserModel[] }
 );
