@@ -16,8 +16,7 @@ interface ChatsPageProps extends Props {
   list?: ListProps;
   content?: ContentProps;
   newMessage?: NewMessageProps;
-  state?: Record<string, ChatModel[]>;
-  isLoading?: boolean;
+  state?: Record<string, ChatModel[] | boolean>;
 }
 
 export class ChatsPage extends Block {
@@ -102,10 +101,23 @@ export class ChatsPage extends Block {
       console.log(search);
     };
 
-    const addNewChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (
+    const addNewChatHandler: (...args: Record<string, string>[]) => void = async (data) => {
+      this.chatController.createChat(data.newChatTitle);
+      // const newChats = await this.chatController.getChats();
+
+      // this.setProps({
+      //   state: { chats: newChats }
+      // });
+
+      // (this.children.list as List).setProps({
+      //   chats: newChats
+      // });
+    };
+
+    const deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (
       data
     ) => {
-      await this.chatController.createChat(data.newChatTitle);
+      await this.chatController.deleteChat(Number(data.chatId));
       const newChats = await this.chatController.getChats();
 
       this.setProps({
@@ -115,22 +127,12 @@ export class ChatsPage extends Block {
       (this.children.list as List).setProps({
         state: newChats
       });
+
+      (this.children.list as List).setProps({
+        // chats: (this.props.state as Indexed<unknown>).chats
+        state: (this.props.state as Indexed<unknown>).chats
+      });
     };
-
-    // const deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (
-    //   data
-    // ) => {
-    //   await this.chatController.deleteChat(Number(data.chatId));
-    //   const newChats = await this.chatController.getChats();
-
-    //   this.setProps({
-    //     state: { chats: newChats }
-    //   });
-
-    //   (this.children.list as List).setProps({
-    //     state: newChats
-    //   });
-    // };
 
     // const getChatUsersHandler: (...args: Record<string, string>[]) => Promise<void> = async (
     //   data
@@ -164,103 +166,115 @@ export class ChatsPage extends Block {
     //   });
     // };
 
-    this.setProps({
-      isLoading: true
+    // this.chatController
+    //   ?.getChats()
+    //   .then((chats) => console.log(`chats: ${chats}`))
+    //   .then(() => {
+    this.children.search = new Search({
+      className: 'chats__search',
+      controls: (this.props.search as SearchProps).controls,
+      navLink: (this.props.search as SearchProps).navLink,
+      button: (this.props.search as SearchProps).button,
+      searchForm: (this.props.search as SearchProps).searchForm,
+      addNewChatModal: (this.props.search as SearchProps).addNewChatModal,
+      visibleAddNewChatModal: false,
+      typeAddNewChatModal: '',
+      keydownSearchHandler: searchChatHandler as Listener,
+      addNewChatClickHandler: addNewChatHandler as Listener,
+      settings: {
+        withInternalID: false
+      }
     });
 
-    this.chatController?.getChats().then(() => {
-      this.children.search = new Search({
-        className: 'chats__search',
-        controls: (this.props.search as SearchProps).controls,
-        navLink: (this.props.search as SearchProps).navLink,
-        button: (this.props.search as SearchProps).button,
-        searchForm: (this.props.search as SearchProps).searchForm,
-        addNewChatModal: (this.props.search as SearchProps).addNewChatModal,
-        visibleAddNewChatModal: false,
-        typeAddNewChatModal: '',
-        keydownSearchHandler: searchChatHandler as Listener,
-        addNewChatClickHandler: addNewChatHandler as Listener,
-        settings: {
-          withInternalID: false
-        }
-      });
-
-      this.children.list = new List({
-        className: 'chats__list',
-        chats: (this.props.state as Record<string, ChatModel[]>).chats,
-        classNameChatMenu: '',
-        chatMenu: (this.props.list as ListProps).chatMenu,
-        visibleChatMenu: false,
-        state: (this.props.state as Record<string, ChatModel[]>).chats,
-        settings: {
-          withInternalID: false
-        }
-      });
-
-      this.children.content = new Content({
-        className: 'chats__content',
-        dates: (this.props.content as ContentProps).dates,
-        messages: (this.props.content as ContentProps).messages,
-        messageContent: (this.props.content as ContentProps).messageContent,
-        currentChat: (this.props.content as ContentProps).currentChat,
-        classNameContentMenu: '',
-        contentMenu: (this.props.content as ContentProps).contentMenu,
-        visibleContentMenu: false,
-        userAddModal: (this.props.content as ContentProps).userAddModal,
-        visibleUserAddModal: false,
-        userDeleteModal: (this.props.content as ContentProps).userDeleteModal,
-        visibleUserDeleteModal: false,
-        settings: {
-          withInternalID: false
-        }
-      });
-
-      this.children.newMessage = new NewMessage({
-        className: 'chats__new-message',
-        newMessageForm: (this.props.newMessage as NewMessageProps).newMessageForm,
-        classNameAttachMenu: '',
-        attachMenu: (this.props.newMessage as NewMessageProps).attachMenu,
-        visibleAttachMenu: false,
-        attachPhotoModal: (this.props.newMessage as NewMessageProps).attachPhotoModal,
-        visibleAttachPhotoModal: false,
-        typeAttachPhotoModal: 'image',
-        attachFileModal: (this.props.newMessage as NewMessageProps).attachFileModal,
-        visibleAttachFileModal: false,
-        typeAttachFileModal: '',
-        attachLocationModal: (this.props.newMessage as NewMessageProps).attachLocationModal,
-        visibleAttachLocationModal: false,
-        typeAttachLocationModal: '',
-        settings: {
-          withInternalID: false
-        }
-      });
+    this.children.list = new List({
+      className: 'chats__list',
+      chats: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
+      classNameChatMenu: '',
+      chatMenu: (this.props.list as ListProps).chatMenu,
+      visibleChatMenu: false,
+      state: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
+      deleteChatHandler,
+      settings: {
+        withInternalID: false
+      }
     });
+
+    this.children.content = new Content({
+      className: 'chats__content',
+      dates: (this.props.content as ContentProps).dates,
+      messages: (this.props.content as ContentProps).messages,
+      messageContent: (this.props.content as ContentProps).messageContent,
+      currentChat: (this.props.content as ContentProps).currentChat,
+      classNameContentMenu: '',
+      contentMenu: (this.props.content as ContentProps).contentMenu,
+      visibleContentMenu: false,
+      userAddModal: (this.props.content as ContentProps).userAddModal,
+      visibleUserAddModal: false,
+      userDeleteModal: (this.props.content as ContentProps).userDeleteModal,
+      visibleUserDeleteModal: false,
+      settings: {
+        withInternalID: false
+      }
+    });
+
+    this.children.newMessage = new NewMessage({
+      className: 'chats__new-message',
+      newMessageForm: (this.props.newMessage as NewMessageProps).newMessageForm,
+      classNameAttachMenu: '',
+      attachMenu: (this.props.newMessage as NewMessageProps).attachMenu,
+      visibleAttachMenu: false,
+      attachPhotoModal: (this.props.newMessage as NewMessageProps).attachPhotoModal,
+      visibleAttachPhotoModal: false,
+      typeAttachPhotoModal: 'image',
+      attachFileModal: (this.props.newMessage as NewMessageProps).attachFileModal,
+      visibleAttachFileModal: false,
+      typeAttachFileModal: '',
+      attachLocationModal: (this.props.newMessage as NewMessageProps).attachLocationModal,
+      visibleAttachLocationModal: false,
+      typeAttachLocationModal: '',
+      settings: {
+        withInternalID: false
+      }
+    });
+    // });
   }
 
   async componentDidMount() {
     try {
       const newChatsData = await this.chatController?.getChats();
 
-      this.setProps({
-        state: { chats: newChatsData }
-      });
+      // this.setProps({
+      //   state: { chats: newChatsData }
+      // });
 
-      this.setProps({ isLoading: false });
+      // (this.children.list as List).setProps({
+      //   // chats: (this.props.state as Indexed<unknown>).chats,
+      //   state: (this.props.state as Indexed<unknown>).chats
+      // });
     } catch (error) {
       console.log(error);
     }
   }
 
   componentDidUpdate(oldProps: ChatsPageProps, newProps: ChatsPageProps): boolean {
-    if (oldProps.isLoading !== newProps.isLoading) {
-      if (newProps.isLoading === false) {
+    if (
+      (oldProps.state as Indexed<unknown>).isLoading !==
+      (newProps.state as Indexed<unknown>).isLoading
+    ) {
+      if ((newProps.state as Indexed<unknown>).isLoading === false) {
         return true;
       }
     }
 
-    if (!isEqual(oldProps.state?.chats as [], newProps?.chats as [])) {
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<unknown>)?.chats as [],
+        (newProps.state as Indexed<unknown>)?.chats as []
+      )
+    ) {
       (this.children.list as List).setProps({
-        state: (newProps.state as Record<string, ChatModel[]>).chats
+        // chats: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
+        state: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[]
       });
 
       return true;
@@ -276,31 +290,38 @@ export class ChatsPage extends Block {
   _currentChat = 0;
 
   render(): string {
-    if (this.props.isLoading || isEqual(this.props.state as {}, {})) {
+    if ((this.props.state as Indexed<unknown>).isLoading) {
       return `
-      <main id={{ id }} class="chats">
-        <div class="chats__wrapper">
+        <main>
           Загрузка...
-        </div>
-      </main>`;
+        </main>`;
     }
 
     return template;
   }
 }
 
-function mapChatsToProps(state: Indexed<ChatModel[]>): { chats: ChatModel[] } {
-  return { chats: state?.chats };
+function mapChatsToProps(state: Indexed<ChatModel[] | boolean>): {
+  chats: ChatModel[];
+  isLoading: boolean;
+} {
+  return { chats: state?.chats as ChatModel[], isLoading: state?.isLoading as boolean };
 }
 
-function mapChatUsersToProps(state: Indexed<ChatUserModel[]>): { chatUsers: ChatUserModel[] } {
-  return { chatUsers: state?.chatUsers };
+function mapChatUsersToProps(state: Indexed<ChatUserModel[] | boolean>): {
+  chatUsers: ChatUserModel[];
+  isLoading: boolean;
+} {
+  return { chatUsers: state?.chatUsers as ChatUserModel[], isLoading: state?.isLoading as boolean };
 }
 
 export const withChats = connect(
-  mapChatsToProps as (state: Indexed<unknown>) => { chats: ChatModel[] }
+  mapChatsToProps as (state: Indexed<unknown>) => { chats: ChatModel[]; isLoading: boolean }
 );
 
 export const withChatUsers = connect(
-  mapChatUsersToProps as (state: Indexed<unknown>) => { chatUsers: ChatUserModel[] }
+  mapChatUsersToProps as (state: Indexed<unknown>) => {
+    chatUsers: ChatUserModel[];
+    isLoading: boolean;
+  }
 );

@@ -17,6 +17,7 @@ export interface ListProps extends Props {
   visibleChatMenu?: boolean;
   visibleChatAvatarModal?: boolean;
   state?: ChatModel[];
+  deleteChatHandler: (...args: Record<string, string>[]) => Promise<void>;
 }
 
 export class List extends Block {
@@ -53,6 +54,12 @@ export class List extends Block {
     const chatMenuItemClickHandler: Listener<string> = (text) => {
       const id = this._currentChat;
 
+      if (this.props.deleteChatHandler) {
+        (this.props.deleteChatHandler as (...args: Record<string, string>[]) => Promise<void>)({
+          chatId: String(id)
+        });
+      }
+
       console.log(`list currentChat id = ${id}, text = ${text.trim()}`);
     };
 
@@ -65,10 +72,6 @@ export class List extends Block {
       settings: {
         withInternalID: false
       }
-    });
-
-    this.setProps({
-      isLoading: true
     });
 
     if ((this.props.state as ChatModel[])?.length) {
@@ -118,6 +121,10 @@ export class List extends Block {
       !isEqual(oldProps.state as [], newProps.state as []) ||
       (oldProps.state as ChatModel[])?.length !== (newProps.state as ChatModel[])?.length
     ) {
+      this.setProps({
+        chats: this.props.state as ChatModel[]
+      });
+
       return true;
     }
 
