@@ -16,15 +16,14 @@ import template from './profile-page.hbs?raw';
 
 interface ProfilePageProps extends Props {
   id?: string;
-  avatar?: string;
+  avatar?: string | null;
   header?: string;
   controls?: ProfileFormProps[];
   buttons?: ButtonProps[];
   navButtons?: ButtonProps[];
   link?: LinkProps;
   navLink?: LinkProps;
-  state?: UserModel;
-  isLoading?: boolean;
+  state?: Record<string, UserModel | boolean>;
   changeAvatarModal?: ModalProps;
   visibleChangeAvatarModal?: boolean;
 }
@@ -48,10 +47,6 @@ export class ProfilePage extends Block {
       }
 
       this.userController?.updateProfile(formData as UserModel).then((newUserData) => {
-        this.setProps({
-          state: newUserData
-        });
-
         (this.children.headerChild as Header).setProps({
           text: (newUserData as UserModel).display_name
         });
@@ -107,127 +102,121 @@ export class ProfilePage extends Block {
       });
     };
 
-    this.setProps({
-      isLoading: true
+    this.props.children = {
+      avatarChild: this.children.avatarChild,
+      headerChild: this.children.headerChild,
+      formChild: this.children.formChild
+    };
+
+    this.children.avatarChild = new Avatar({
+      className: 'avatar_big profile__avatar',
+      imgSrc: ((this.props?.state as Indexed<UserModel | boolean>)?.user as UserModel)?.avatar,
+      settings: {
+        withInternalID: false
+      },
+      events: {
+        click: (() => avatarClickHandler.call(this)) as Listener
+      }
     });
 
-    this.userController
-      ?.getUser()
-      .then(() => this.setProps({ isLoading: false }))
-      .then(() => {
-        if ((this.props?.state as UserModel).avatar) {
-          this.children.avatarChild = new Avatar({
-            className: 'avatar_big profile__avatar',
-            imgSrc: (this.props?.state as UserModel).avatar,
+    this.children.headerChild = new Header({
+      className: 'profile__header',
+      text: ((this.props?.state as Indexed<UserModel | boolean>)?.user as UserModel)?.display_name,
+      settings: {
+        withInternalID: false
+      }
+    });
+
+    this.children.formChild = new ProfileForm({
+      className: 'profile__form',
+      classNameFormControls: 'profile__form-controls',
+      classNameFormControl: 'profile__form-control',
+      classNameInputField: 'profile__input-field',
+      classNameLabel: 'profile__label',
+      classNameInput: 'profile__input',
+      classNameError: 'profile__error',
+      classNameFormButtons: 'profile__buttons',
+      classNameButton: 'profile__button',
+      classNameLink: 'profile__link',
+      controls: this.props.controls as ProfileFormProps[],
+      buttons: this.props.buttons as ButtonProps[],
+      state: (this.props?.state as Indexed<UserModel | boolean>)?.user as UserModel,
+      submitHandler,
+      settings: {
+        withInternalID: false
+      },
+      events: {
+        submit: (() => submitHandler.call(this)) as Listener
+      }
+    });
+
+    if (
+      (!this.props.buttons || !(this.props.buttons as ButtonProps[])?.length) &&
+      this.props.navButtons
+    ) {
+      this.children.navButtons = (this.props.navButtons as ButtonProps[])?.map(
+        (navButton) =>
+          new Button({
+            className: 'profile__button',
+            type: navButton.type,
             settings: {
               withInternalID: false
             },
-            events: {
-              click: (() => avatarClickHandler.call(this)) as Listener
-            }
-          });
-        }
+            buttonChild: new Link({
+              className: 'profile__link',
+              href: navButton.href as string,
+              text: navButton.text,
+              settings: {
+                withInternalID: false
+              }
+            })
+          })
+      );
+    }
 
-        this.children.headerChild = new Header({
-          className: 'profile__header',
-          text: (this.props?.state as UserModel).display_name,
-          settings: {
-            withInternalID: false
-          }
-        });
+    this.children.linkChild = new Link({
+      className: 'profile__footer',
+      href: (this.props.link as LinkProps)?.href as string,
+      text: (this.props.link as LinkProps)?.text as string,
+      settings: {
+        withInternalID: false
+      },
+      events: {
+        click: (() => linkClickHandler.call(this)) as Listener
+      }
+    });
 
-        this.children.formChild = new ProfileForm({
-          className: 'profile__form',
-          classNameFormControls: 'profile__form-controls',
-          classNameFormControl: 'profile__form-control',
-          classNameInputField: 'profile__input-field',
-          classNameLabel: 'profile__label',
-          classNameInput: 'profile__input',
-          classNameError: 'profile__error',
-          classNameFormButtons: 'profile__buttons',
-          classNameButton: 'profile__button',
-          classNameLink: 'profile__link',
-          controls: this.props.controls as ProfileFormProps[],
-          buttons: this.props.buttons as ButtonProps[],
-          state: this.props.state as UserModel,
-          submitHandler,
-          settings: {
-            withInternalID: false
-          },
-          events: {
-            submit: (() => submitHandler.call(this)) as Listener
-          }
-        });
+    this.children.navLinkChild = new Link({
+      className: 'profile__nav',
+      href: (this.props.navLink as LinkProps)?.href as string,
+      text: (this.props.navLink as LinkProps)?.text as string,
+      settings: {
+        withInternalID: false
+      }
+    });
 
-        if (
-          (!this.props.buttons || !(this.props.buttons as ButtonProps[])?.length) &&
-          this.props.navButtons
-        ) {
-          this.children.navButtons = (this.props.navButtons as ButtonProps[])?.map(
-            (navButton) =>
-              new Button({
-                className: 'profile__button',
-                type: navButton.type,
-                settings: {
-                  withInternalID: false
-                },
-                buttonChild: new Link({
-                  className: 'profile__link',
-                  href: navButton.href as string,
-                  text: navButton.text,
-                  settings: {
-                    withInternalID: false
-                  }
-                })
-              })
-          );
-        }
-
-        this.children.linkChild = new Link({
-          className: 'profile__footer',
-          href: (this.props.link as LinkProps)?.href as string,
-          text: (this.props.link as LinkProps)?.text as string,
-          settings: {
-            withInternalID: false
-          },
-          events: {
-            click: (() => linkClickHandler.call(this)) as Listener
-          }
-        });
-
-        this.children.navLinkChild = new Link({
-          className: 'profile__nav',
-          href: (this.props.navLink as LinkProps)?.href as string,
-          text: (this.props.navLink as LinkProps)?.text as string,
-          settings: {
-            withInternalID: false
-          }
-        });
-
-        this.children.changeAvatarModal = new Modal({
-          className: '',
-          type: 'image',
-          header: (this.props.changeAvatarModal as ModalProps)?.header,
-          controls: (this.props.changeAvatarModal as ModalProps)?.controls,
-          buttons: (this.props.changeAvatarModal as ModalProps)?.buttons,
-          visible: this.props.visibleChangeAvatarModal as boolean,
-          submitHandler: submitChangeAvatarModalHandler as Listener,
-          closeHandler: closeChangeAvatarModalHandler,
-          settings: {
-            withInternalID: false
-          }
-        });
-      });
+    this.children.changeAvatarModal = new Modal({
+      className: '',
+      type: 'image',
+      header: (this.props.changeAvatarModal as ModalProps)?.header,
+      controls: (this.props.changeAvatarModal as ModalProps)?.controls,
+      buttons: (this.props.changeAvatarModal as ModalProps)?.buttons,
+      visible: this.props.visibleChangeAvatarModal as boolean,
+      submitHandler: submitChangeAvatarModalHandler as Listener,
+      closeHandler: closeChangeAvatarModalHandler,
+      settings: {
+        withInternalID: false
+      }
+    });
   }
 
   async componentDidMount() {
     try {
-      await this.userController?.getUser().then((newUserData) => {
-        this.setProps({
-          state: newUserData
-        });
+      await this.userController?.getUser();
+
+      (this.children.formChild as ProfileForm).setProps({
+        state: (this.props.state as Indexed<UserModel | boolean>).user as UserModel
       });
-      this.setProps({ isLoading: false });
     } catch (error) {
       console.log(error);
     }
@@ -245,13 +234,25 @@ export class ProfilePage extends Block {
       }
     }
 
-    if (oldProps.isLoading !== newProps.isLoading) {
-      if (newProps.isLoading === false) {
+    if (
+      (oldProps.state as Indexed<unknown>).isLoading !==
+      (newProps.state as Indexed<unknown>).isLoading
+    ) {
+      if ((newProps.state as Indexed<unknown>).isLoading === false) {
         return true;
       }
     }
 
-    if (!isEqual(oldProps.state as UserModel, newProps.state as UserModel)) {
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<unknown>).user as UserModel,
+        (newProps.state as Indexed<unknown>).user as UserModel
+      )
+    ) {
+      (this.children.formChild as ProfileForm).setProps({
+        state: (this.props.state as Indexed<UserModel | boolean>).user as UserModel
+      });
+
       return true;
     }
 
@@ -265,41 +266,27 @@ export class ProfilePage extends Block {
   }
 
   render(): string {
-    const emptyUser = {
-      id: undefined,
-      first_name: undefined,
-      second_name: undefined,
-      display_name: undefined,
-      login: undefined,
-      email: undefined,
-      phone: undefined,
-      avatar: undefined
-    };
-
-    if (this.props.isLoading || isEqual(this.props.state as UserModel, emptyUser)) {
+    if ((this.props.state as Indexed<unknown>).isLoading) {
       return `
-      <main id={{ id }} class="profile">
-        <div class="profile__wrapper">
+        <main>
           Загрузка...
-        </div>
-      </main>`;
+        </main>`;
     }
 
     return template;
   }
 }
 
-function mapUserToProps(state: Indexed<UserModel>): UserModel {
-  return {
-    id: state?.user?.id,
-    first_name: state?.user?.first_name,
-    second_name: state?.user?.second_name,
-    display_name: state?.user?.display_name,
-    phone: state?.user?.phone,
-    login: state?.user?.login,
-    email: state?.user?.email,
-    avatar: state?.user?.avatar
-  };
+function mapUserToProps(state: Indexed<UserModel | boolean>): {
+  user: UserModel;
+  isLoading: boolean;
+} {
+  return { user: state?.user as UserModel, isLoading: state?.isLoading as boolean };
 }
 
-export const withUser = connect(mapUserToProps as (state: Indexed<unknown>) => UserModel);
+export const withUser = connect(
+  mapUserToProps as (state: Indexed<unknown>) => {
+    user: UserModel;
+    isLoading: boolean;
+  }
+);

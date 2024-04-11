@@ -6,6 +6,7 @@ import { Button } from '@/components';
 import type { ButtonProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
 import { UserModel } from '@/models';
+import { isEqual } from '@/utils';
 import template from './profile-form.hbs?raw';
 
 export interface ProfileFormProps extends Props {
@@ -108,7 +109,7 @@ export class ProfileForm extends Block {
           name: control.name,
           label: control.label,
           type: control.type,
-          value: (this.props?.state as UserModel)[control.name as string] as string,
+          value: (this.props?.state as UserModel)?.[control.name as string] as string,
           placeholder: '',
           disabled: control.disabled,
           error: control.error,
@@ -143,7 +144,7 @@ export class ProfileForm extends Block {
   _formData: Record<string, string> = {};
 
   componentDidUpdate(oldProps: ProfileFormProps, newProps: ProfileFormProps): boolean {
-    if (oldProps.state !== newProps.state) {
+    if (!isEqual(oldProps.state as Indexed<unknown>, newProps.state as Indexed<unknown>)) {
       return true;
     }
 
