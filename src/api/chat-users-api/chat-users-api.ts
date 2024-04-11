@@ -1,4 +1,5 @@
 import { BaseAPI } from '@/base';
+import { ChatUserModel } from '@/models';
 
 export class ChatUsersAPI extends BaseAPI {
   constructor() {
@@ -12,7 +13,7 @@ export class ChatUsersAPI extends BaseAPI {
     limit?: number;
     name?: string;
     email?: string;
-  }): Promise<XMLHttpRequest> {
+  }): Promise<ChatUserModel[]> {
     const { id } = data;
     const requestData = {
       offset: data.offset,
