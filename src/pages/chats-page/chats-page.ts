@@ -124,9 +124,9 @@ export class ChatsPage extends Block {
         state: { chats: newChats }
       });
 
-      (this.children.list as List).setProps({
-        state: newChats
-      });
+      // (this.children.list as List).setProps({
+      //   state: newChats
+      // });
 
       (this.children.list as List).setProps({
         // chats: (this.props.state as Indexed<unknown>).chats
@@ -188,7 +188,7 @@ export class ChatsPage extends Block {
 
     this.children.list = new List({
       className: 'chats__list',
-      chats: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
+      chats: [],
       classNameChatMenu: '',
       chatMenu: (this.props.list as ListProps).chatMenu,
       visibleChatMenu: false,

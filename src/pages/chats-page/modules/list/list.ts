@@ -12,6 +12,7 @@ import template from './list.hbs?raw';
 export interface ListProps extends Props {
   className?: string;
   chats?: ChatModel[];
+  chatsChildren?: unknown[];
   classNameChatMenu?: string;
   chatMenu?: MenuProps;
   visibleChatMenu?: boolean;
@@ -96,6 +97,28 @@ export class List extends Block {
       );
     }
 
+    if ((this.props.state as ChatModel[])?.length) {
+      this.children.chatsChildren = (this.props.state as ChatModel[])?.map(
+        (chat) =>
+          new Chat({
+            className: 'list__item',
+            id: String(chat.id),
+            avatar: chat.avatar,
+            title: chat.title,
+            lastMessageTime: chat.last_message?.time,
+            lastMessageContent: chat.last_message?.content,
+            createdBy: !!chat.created_by,
+            unreadCount: chat.unread_count,
+            active: chat.active === chat.id,
+            chatButtonClickHandler: chatButtonClickHandler as Listener,
+            chatClickHandler: chatClickHandler as Listener,
+            settings: {
+              withInternalID: true
+            }
+          })
+      );
+    }
+
     if (!(this.props.state as ChatModel[]) || !(this.props.state as ChatModel[])?.length) {
       this.children.text = new Text({
         className: 'list__text',
@@ -121,8 +144,28 @@ export class List extends Block {
       !isEqual(oldProps.state as [], newProps.state as []) ||
       (oldProps.state as ChatModel[])?.length !== (newProps.state as ChatModel[])?.length
     ) {
+      const chats =  (this.props.state as ChatModel[])?.map(
+        (chat) =>
+          new Chat({
+            className: 'list__item',
+            id: String(chat.id),
+            avatar: chat.avatar,
+            title: chat.title,
+            lastMessageTime: chat.last_message?.time,
+            lastMessageContent: chat.last_message?.content,
+            createdBy: !!chat.created_by,
+            unreadCount: chat.unread_count,
+            active: chat.active === chat.id,
+            // chatButtonClickHandler: chatButtonClickHandler as Listener,
+            // chatClickHandler: chatClickHandler as Listener,
+            settings: {
+              withInternalID: true
+            }
+          })
+      );
+
       this.setProps({
-        chats: this.props.state as ChatModel[]
+        chatsChildren: chats
       });
 
       return true;
@@ -145,6 +188,8 @@ export class List extends Block {
   _currentChat = 0;
 
   render(): string {
+    console.log(this.props.chatsChildren);
+
     return template;
   }
 }
