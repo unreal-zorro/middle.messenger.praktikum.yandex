@@ -13,7 +13,7 @@ export class Avatar extends Block {
   constructor(props: AvatarProps) {
     super(props);
 
-    if (props.imgSrc !== null) {
+    if (props.imgSrc !== null && props.imgSrc !== undefined) {
       const newImgSrc = `${baseURL}/resources${props.imgSrc}`;
       this.setProps({ imgSrc: newImgSrc });
     }
