@@ -19,8 +19,12 @@ export class UserController {
 
     if (this.authAPI) {
       try {
+        store.set('isLoading', true);
+
         data = await this.authAPI.request();
-        store.set('user', data as UserModel);
+        store.set('user', data);
+
+        store.set('isLoading', false);
       } catch (error: unknown) {
         console.log((error as Error).message);
         if ((error as Error).message.startsWith('status: 401')) {
@@ -48,8 +52,12 @@ export class UserController {
 
     if (this.userAPI && isValid) {
       try {
+        store.set('isLoading', true);
+
         newUserData = (await this.userAPI.updateProfile(userData)) as UserModel;
         store.set('user', newUserData);
+
+        store.set('isLoading', false);
         router.go('/settings');
       } catch (error: unknown) {
         console.log(error);
@@ -72,8 +80,12 @@ export class UserController {
 
     if (this.userAPI && isValid) {
       try {
+        store.set('isLoading', true);
+
         newUserData = (await this.userAPI.updateAvatar(data)) as UserModel;
         store.set('user', newUserData);
+
+        store.set('isLoading', false);
         router.go('/settings');
       } catch (error: unknown) {
         console.log(error);
@@ -85,14 +97,20 @@ export class UserController {
     return newUserData;
   }
 
-  public updatePassword(data: PasswordModel) {
+  public async updatePassword(data: PasswordModel) {
     const isValid = validate(data);
 
     if (this.userAPI && isValid) {
-      this.userAPI
-        .updatePassword(data)
-        .then(() => router.go('/settings'))
-        .catch((error) => console.log(error));
+      try {
+        store.set('isLoading', true);
+
+        await this.userAPI.updatePassword(data);
+
+        store.set('isLoading', false);
+        router.go('/settings');
+      } catch (error: unknown) {
+        console.log(error);
+      }
     } else {
       console.log('Invalid password form data');
     }
