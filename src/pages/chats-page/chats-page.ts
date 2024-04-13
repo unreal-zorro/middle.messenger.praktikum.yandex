@@ -103,15 +103,15 @@ export class ChatsPage extends Block {
 
     const addNewChatHandler: (...args: Record<string, string>[]) => void = async (data) => {
       this.chatController.createChat(data.newChatTitle);
-      // const newChats = await this.chatController.getChats();
+      const newChats = await this.chatController.getChats();
 
-      // this.setProps({
-      //   state: { chats: newChats }
-      // });
+      this.setProps({
+        state: { chats: newChats }
+      });
 
-      // (this.children.list as List).setProps({
-      //   chats: newChats
-      // });
+      (this.children.list as List).setProps({
+        chats: newChats
+      });
     };
 
     const deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (
@@ -124,14 +124,14 @@ export class ChatsPage extends Block {
         state: { chats: newChats }
       });
 
-      // (this.children.list as List).setProps({
-      //   state: newChats
-      // });
-
       (this.children.list as List).setProps({
-        // chats: (this.props.state as Indexed<unknown>).chats
-        state: (this.props.state as Indexed<unknown>).chats
+        state: newChats
       });
+
+      // (this.children.list as List).setProps({
+      //   // chats: (this.props.state as Indexed<unknown>).chats
+      //   state: (this.props.state as Indexed<unknown>).chats
+      // });
     };
 
     // const getChatUsersHandler: (...args: Record<string, string>[]) => Promise<void> = async (
@@ -168,7 +168,7 @@ export class ChatsPage extends Block {
 
     // this.chatController
     //   ?.getChats()
-    //   .then((chats) => console.log(`chats: ${chats}`))
+    //   .then((chats) => console.log(chats))
     //   .then(() => {
     this.children.search = new Search({
       className: 'chats__search',
@@ -239,9 +239,45 @@ export class ChatsPage extends Block {
     // });
   }
 
+  // public deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (data)
+  //   => {
+  //   await this.chatController.deleteChat(Number(data.chatId));
+  //   const newChats = await this.chatController.getChats();
+
+  //   this.setProps({
+  //     state: { chats: newChats }
+  //   });
+
+  //   // (this.children.list as List).setProps({
+  //   //   state: newChats
+  //   // });
+
+  //   (this.children.list as List).setProps({
+  //     // chats: (this.props.state as Indexed<unknown>).chats
+  //     state: (this.props.state as Indexed<unknown>).chats
+  //   });
+  // };
+
+  // public initList() {
+  //   this.children.list = new List({
+  //     className: 'chats__list',
+  //     chats: [],
+  //     classNameChatMenu: '',
+  //     chatMenu: (this.props.list as ListProps).chatMenu,
+  //     visibleChatMenu: false,
+  //     state: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
+  //     deleteChatHandler: this.deleteChatHandler,
+  //     settings: {
+  //       withInternalID: false
+  //     }
+  //   });
+  // }
+
   async componentDidMount() {
     try {
-      const newChatsData = await this.chatController?.getChats();
+      await this.chatController?.getChats();
+
+      // this.initList();
 
       // this.setProps({
       //   state: { chats: newChatsData }
@@ -273,7 +309,7 @@ export class ChatsPage extends Block {
       )
     ) {
       (this.children.list as List).setProps({
-        // chats: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
+        chats: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
         state: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[]
       });
 
@@ -281,6 +317,8 @@ export class ChatsPage extends Block {
     }
 
     if (!isEqual(oldProps.state as {}, newProps.state as {})) {
+      // this.initList();
+
       return true;
     }
 
@@ -290,6 +328,8 @@ export class ChatsPage extends Block {
   _currentChat = 0;
 
   render(): string {
+    // console.log(this.props.state);
+
     if ((this.props.state as Indexed<unknown>).isLoading) {
       return `
         <main>

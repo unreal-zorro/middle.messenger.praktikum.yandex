@@ -1,10 +1,10 @@
 <section
   class="list{{#if className}} {{ className }}{{/if}}"
 >
-  {{#if this.chatsChildren}}
+  {{#if this.chats}}
     <ul class="list__list">
-      {{#each chatsChildren}}
-        {{{ this._element }}}
+      {{#each this.chats}}
+        {{{ this }}}
       {{/each}}
     </ul>
   {{else}}
