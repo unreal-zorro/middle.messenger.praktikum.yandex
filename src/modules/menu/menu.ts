@@ -15,44 +15,60 @@ export interface MenuProps extends Props {
   className?: string;
   visible?: boolean;
   items?: MenuItem[];
+  state?: MenuProps;
   menuItemClickHandler?: Listener;
 }
 
 export class Menu extends Block {
   constructor(props: MenuProps) {
     super(props);
+  }
 
-    const menuItemClickHandler: (event: SubmitEvent) => void = (event) => {
-      event.preventDefault();
+  public menuItemClickHandler: (event: SubmitEvent) => void = (event) => {
+    event.preventDefault();
 
-      if (this.props.menuItemClickHandler) {
-        const itemTarget = event.target as HTMLButtonElement;
-        const itemText = itemTarget.textContent;
+    if (this.props.menuItemClickHandler) {
+      const itemTarget = event.target as HTMLButtonElement;
+      const itemText = itemTarget.textContent;
 
-        (this.props.menuItemClickHandler as Listener)(itemText);
-      }
+      (this.props.menuItemClickHandler as Listener)(itemText);
+    }
 
-      this.hide();
-    };
+    this.hide();
+  };
 
-    this.children.items = (this.props.items as MenuItem[])?.map(
-      (item) =>
-        new Button({
-          className: 'menu__button',
-          type: item.type,
-          text: item.text,
-          settings: {
-            withInternalID: true
-          },
-          buttonChild: new Svg({
-            className: 'menu__icon',
-            href: item.href
-          }),
-          events: {
-            click: ((event: SubmitEvent) => menuItemClickHandler.call(this, event)) as Listener
-          }
-        })
-    );
+  public initItems() {
+    this.children.items = (this.props.items as MenuItem[])?.map((_item, index) => {
+      const currentItem = (this.props.state as MenuProps)?.items as MenuItem[];
+
+      const type = currentItem?.[index].type;
+      const text = currentItem?.[index].text;
+      const href = currentItem?.[index].href;
+
+      return new Button({
+        className: 'menu__button',
+        type,
+        text,
+        settings: {
+          withInternalID: true
+        },
+        buttonChild: new Svg({
+          className: 'menu__icon',
+          href
+        }),
+        events: {
+          click: ((event: SubmitEvent) => this.menuItemClickHandler.call(this, event)) as Listener
+        }
+      });
+    });
+  }
+
+  async componentDidMount() {
+    try {
+      this.initItems();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   componentDidUpdate(oldProps: MenuProps, newProps: MenuProps): boolean {
