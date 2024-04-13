@@ -11,50 +11,79 @@ export class AuthController {
     this.authAPI = new AuthAPI();
   }
 
-  public login(data: LoginFormModel): void {
-    const isValid = validate(data);
+  public async login(data: LoginFormModel): Promise<void> {
+    try {
+      const isValid = validate(data);
 
-    if (this.authAPI && isValid) {
-      this.authAPI
-        .signIn(data)
-        .then(() => router.go('/messenger'))
-        .catch((error) => console.log(error));
-    } else {
-      console.log('Invalid form data');
+      if (this.authAPI && isValid) {
+        await this.authAPI.signIn(data);
+        router.go('/messenger');
+      } else {
+        const status = '400';
+        const reason = 'Invalid form data';
+
+        throw new Error(`status: ${status}, reason: ${reason}`);
+      }
+    } catch (error: unknown) {
+      const { message } = error as Error;
+
+      const status = message.slice(8, 11);
+      const reason = message.slice(21);
+
+      if (status === '401') {
+        router.go('/');
+      }
+
+      throw new Error(reason);
     }
   }
 
-  public register(data: RegisterFormModel): void {
-    const isValid = validate(data);
+  public async register(data: RegisterFormModel): Promise<void> {
+    try {
+      const isValid = validate(data);
 
-    if (this.authAPI && isValid) {
-      this.authAPI
-        .signUp(data)
-        .then(() => router.go('/messenger'))
-        .catch((error) => console.log(error));
-    } else {
-      console.log('Invalid form data');
+      if (this.authAPI && isValid) {
+        await this.authAPI.signUp(data);
+        router.go('/messenger');
+      } else {
+        const status = '400';
+        const reason = 'Invalid form data';
+
+        throw new Error(`status: ${status}, reason: ${reason}`);
+      }
+    } catch (error: unknown) {
+      const { message } = error as Error;
+
+      const reason = message.slice(21);
+
+      throw new Error(reason);
     }
   }
 
-  public logout(): void {
-    const emptyUser = {
-      id: undefined,
-      first_name: undefined,
-      second_name: undefined,
-      display_name: undefined,
-      login: undefined,
-      email: undefined,
-      phone: undefined,
-      avatar: undefined
-    };
+  public async logout(): Promise<void> {
+    try {
+      const emptyUser = {
+        id: undefined,
+        first_name: undefined,
+        second_name: undefined,
+        display_name: undefined,
+        login: undefined,
+        email: undefined,
+        phone: undefined,
+        avatar: undefined
+      };
 
-    if (this.authAPI) {
-      this.authAPI
-        .logout()
-        .then(() => store.set('user', emptyUser))
-        .then(() => router.go('/'))
-        .catch((error) => console.log(error));
+      if (this.authAPI) {
+        await this.authAPI.logout();
+        store.set('user', emptyUser);
+        router.go('/messenger');
+      }
+    } catch (error: unknown) {
+      const { message } = error as Error;
+
+      const reason = message.slice(21);
+
+      throw new Error(reason);
     }
   }
 }
