@@ -3,8 +3,7 @@ import { Block } from '@/base';
 import type { Listener, Props } from '@/base';
 import { connect } from '@/hoc';
 import { ChatModel, ChatUserModel } from '@/models';
-// import { ChatController, ChatUsersController } from '@/controllers';
-import { ChatController } from '@/controllers';
+import { ChatController, ChatsPageController } from '@/controllers';
 import { isEqual } from '@/utils';
 import { Content, List, NewMessage, Search } from './modules';
 import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
@@ -22,155 +21,156 @@ interface ChatsPageProps extends Props {
 export class ChatsPage extends Block {
   private chatController: ChatController;
 
+  private chatsPageController: ChatsPageController;
+
   // private chatUsersController: ChatUsersController;
 
   constructor(props: ChatsPageProps) {
     super(props);
 
     this.chatController = new ChatController();
+    this.chatsPageController = new ChatsPageController();
     // this.chatUsersController = new ChatUsersController();
+  }
 
-    const clickHandler: Listener<Event> = (event: Event) => {
-      if (event.target && (this.children.list as List)) {
-        const isChatButton =
-          (event.target as HTMLButtonElement).getAttribute('data-button') === 'chatButton';
-        const isChatButtonSvg =
-          (event.target as SVGAElement).getAttribute('data-svg') === 'chatSvg';
+  public clickHandler: Listener<Event> = (event: Event) => {
+    if (event.target && (this.children.list as List)) {
+      const isChatButton =
+        (event.target as HTMLButtonElement).getAttribute('data-button') === 'chatButton';
+      const isChatButtonSvg = (event.target as SVGAElement).getAttribute('data-svg') === 'chatSvg';
 
-        if (!isChatButton && !isChatButtonSvg) {
-          (this.children.list as List).setProps({
-            visibleChatMenu: false
-          });
-        }
-      }
-
-      if (event.target && (this.children.content as Content)) {
-        const isContentButton =
-          (event.target as HTMLButtonElement).getAttribute('data-button') === 'contentButton';
-        const isContentButtonSvg =
-          (event.target as SVGAElement).getAttribute('data-svg') === 'contentSvg';
-
-        if (!isContentButton && !isContentButtonSvg) {
-          (this.children.content as Content).setProps({
-            visibleContentMenu: false
-          });
-        }
-      }
-
-      if (event.target && (this.children.newMessage as NewMessage)) {
-        const isAttachButton =
-          (event.target as HTMLButtonElement).getAttribute('data-button') === 'attachButton';
-        const isAttachButtonSvg =
-          (event.target as SVGAElement).getAttribute('data-svg') === 'attachSvg';
-
-        if (!isAttachButton && !isAttachButtonSvg) {
-          (this.children.newMessage as NewMessage).setProps({
-            visibleAttachMenu: false
-          });
-        }
-      }
-    };
-
-    const wheelHandler: Listener = () => {
-      if (this.children.list as List) {
+      if (!isChatButton && !isChatButtonSvg) {
         (this.children.list as List).setProps({
           visibleChatMenu: false
         });
       }
+    }
 
-      if (this.children.content as Content) {
+    if (event.target && (this.children.content as Content)) {
+      const isContentButton =
+        (event.target as HTMLButtonElement).getAttribute('data-button') === 'contentButton';
+      const isContentButtonSvg =
+        (event.target as SVGAElement).getAttribute('data-svg') === 'contentSvg';
+
+      if (!isContentButton && !isContentButtonSvg) {
         (this.children.content as Content).setProps({
           visibleContentMenu: false
         });
       }
+    }
 
-      if (this.children.newMessage as NewMessage) {
+    if (event.target && (this.children.newMessage as NewMessage)) {
+      const isAttachButton =
+        (event.target as HTMLButtonElement).getAttribute('data-button') === 'attachButton';
+      const isAttachButtonSvg =
+        (event.target as SVGAElement).getAttribute('data-svg') === 'attachSvg';
+
+      if (!isAttachButton && !isAttachButtonSvg) {
         (this.children.newMessage as NewMessage).setProps({
           visibleAttachMenu: false
         });
       }
-    };
+    }
+  };
 
+  public wheelHandler: Listener = () => {
+    if (this.children.list as List) {
+      (this.children.list as List).setProps({
+        visibleChatMenu: false
+      });
+    }
+
+    if (this.children.content as Content) {
+      (this.children.content as Content).setProps({
+        visibleContentMenu: false
+      });
+    }
+
+    if (this.children.newMessage as NewMessage) {
+      (this.children.newMessage as NewMessage).setProps({
+        visibleAttachMenu: false
+      });
+    }
+  };
+
+  public initEvents() {
     this.props.events = {
-      click: ((event: Event) => clickHandler(event)) as Listener,
-      wheel: wheelHandler,
-      scroll: wheelHandler
+      click: ((event: Event) => this.clickHandler(event)) as Listener,
+      wheel: this.wheelHandler,
+      scroll: this.wheelHandler
     };
+  }
 
-    const searchChatHandler: Listener<Record<string, string>[]> = (search) => {
-      console.log(search);
-    };
+  public searchChatHandler: Listener<Record<string, string>[]> = (search) => {
+    console.log(search);
+  };
 
-    const addNewChatHandler: (...args: Record<string, string>[]) => void = async (data) => {
-      this.chatController.createChat(data.newChatTitle);
-      const newChats = await this.chatController.getChats();
+  public addNewChatHandler: (...args: Record<string, string>[]) => void = async (data) => {
+    const newChats = this.chatController.createChat(data.newChatTitle);
 
-      this.setProps({
-        state: { chats: newChats }
-      });
+    this.setProps({
+      state: {
+        chatsData: newChats
+      }
+    });
 
-      (this.children.list as List).setProps({
-        chats: newChats
-      });
-    };
+    (this.children.list as List).setProps({
+      state: {
+        chatsData: newChats
+      }
+    });
+  };
 
-    const deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (
-      data
-    ) => {
-      await this.chatController.deleteChat(Number(data.chatId));
-      const newChats = await this.chatController.getChats();
+  public deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (data) => {
+    const newChats = await this.chatController.deleteChat(Number(data.chatId));
 
-      this.setProps({
-        state: { chats: newChats }
-      });
+    this.setProps({
+      state: {
+        chatsData: newChats
+      }
+    });
 
-      (this.children.list as List).setProps({
-        state: newChats
-      });
+    (this.children.list as List).setProps({
+      state: {
+        chatsData: newChats
+      }
+    });
+  };
 
-      // (this.children.list as List).setProps({
-      //   // chats: (this.props.state as Indexed<unknown>).chats
-      //   state: (this.props.state as Indexed<unknown>).chats
-      // });
-    };
+  // public getChatUsersHandler: (...args: Record<string, string>[]) => Promise<void> = async (
+  //   data
+  // ) => {
+  //   const newChatUsers = await this.chatUsersController.getChatUsers(Number(data.chatId));
 
-    // const getChatUsersHandler: (...args: Record<string, string>[]) => Promise<void> = async (
-    //   data
-    // ) => {
-    //   const newChatUsers = await this.chatUsersController.getChatUsers(Number(data.chatId));
+  //   this.setProps({
+  //     state: { chatUsers: newChatUsers }
+  //   });
+  // };
 
-    //   this.setProps({
-    //     state: { chatUsers: newChatUsers }
-    //   });
-    // };
+  // public addChatUsersHandler: (users: number[], chatId: number) => Promise<void> = async (
+  //   users, chatId
+  // ) => {
+  //   await this.chatUsersController.addChatUsers(users, chatId);
+  //   const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
 
-    // const addChatUsersHandler: (users: number[], chatId: number) => Promise<void> = async (
-    //   users, chatId
-    // ) => {
-    //   await this.chatUsersController.addChatUsers(users, chatId);
-    //   const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
+  //   this.setProps({
+  //     state: { chatUsers: newChatUsers }
+  //   });
+  // };
 
-    //   this.setProps({
-    //     state: { chatUsers: newChatUsers }
-    //   });
-    // };
+  // public deleteChatUsersHandler: (users: number[], chatId: number) => Promise<void> = async (
+  //   users, chatId
+  // ) => {
+  //   await this.chatUsersController.deleteChatUsers(users, chatId);
+  //   const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
 
-    // const deleteChatUsersHandler: (users: number[], chatId: number) => Promise<void> = async (
-    //   users, chatId
-    // ) => {
-    //   await this.chatUsersController.deleteChatUsers(users, chatId);
-    //   const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
+  //   this.setProps({
+  //     state: { chatUsers: newChatUsers }
+  //   });
+  // };
 
-    //   this.setProps({
-    //     state: { chatUsers: newChatUsers }
-    //   });
-    // };
-
-    // this.chatController
-    //   ?.getChats()
-    //   .then((chats) => console.log(chats))
-    //   .then(() => {
-    this.children.search = new Search({
+  public initSearch() {
+    this.children.search = new (withChatsPageData(Search))({
       className: 'chats__search',
       controls: (this.props.search as SearchProps).controls,
       navLink: (this.props.search as SearchProps).navLink,
@@ -179,26 +179,30 @@ export class ChatsPage extends Block {
       addNewChatModal: (this.props.search as SearchProps).addNewChatModal,
       visibleAddNewChatModal: false,
       typeAddNewChatModal: '',
-      keydownSearchHandler: searchChatHandler as Listener,
-      addNewChatClickHandler: addNewChatHandler as Listener,
+      keydownSearchHandler: this.searchChatHandler as Listener,
+      addNewChatClickHandler: this.addNewChatHandler as Listener,
       settings: {
         withInternalID: false
       }
     });
+  }
 
+  public initList() {
     this.children.list = new List({
       className: 'chats__list',
       chats: [],
       classNameChatMenu: '',
       chatMenu: (this.props.list as ListProps).chatMenu,
       visibleChatMenu: false,
-      state: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
-      deleteChatHandler,
+      state: this.props.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>,
+      deleteChatHandler: this.deleteChatHandler,
       settings: {
         withInternalID: false
       }
     });
+  }
 
+  public initContent() {
     this.children.content = new Content({
       className: 'chats__content',
       dates: (this.props.content as ContentProps).dates,
@@ -216,7 +220,9 @@ export class ChatsPage extends Block {
         withInternalID: false
       }
     });
+  }
 
+  public initNewMessage() {
     this.children.newMessage = new NewMessage({
       className: 'chats__new-message',
       newMessageForm: (this.props.newMessage as NewMessageProps).newMessageForm,
@@ -236,63 +242,41 @@ export class ChatsPage extends Block {
         withInternalID: false
       }
     });
-    // });
   }
-
-  // public deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (data)
-  //   => {
-  //   await this.chatController.deleteChat(Number(data.chatId));
-  //   const newChats = await this.chatController.getChats();
-
-  //   this.setProps({
-  //     state: { chats: newChats }
-  //   });
-
-  //   // (this.children.list as List).setProps({
-  //   //   state: newChats
-  //   // });
-
-  //   (this.children.list as List).setProps({
-  //     // chats: (this.props.state as Indexed<unknown>).chats
-  //     state: (this.props.state as Indexed<unknown>).chats
-  //   });
-  // };
-
-  // public initList() {
-  //   this.children.list = new List({
-  //     className: 'chats__list',
-  //     chats: [],
-  //     classNameChatMenu: '',
-  //     chatMenu: (this.props.list as ListProps).chatMenu,
-  //     visibleChatMenu: false,
-  //     state: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
-  //     deleteChatHandler: this.deleteChatHandler,
-  //     settings: {
-  //       withInternalID: false
-  //     }
-  //   });
-  // }
 
   async componentDidMount() {
     try {
       await this.chatController?.getChats();
+      await this.chatsPageController?.getChatsPageData();
 
-      // this.initList();
+      this.initEvents();
+      this.initSearch();
+      this.initList();
+      this.initContent();
+      this.initNewMessage();
 
-      // this.setProps({
-      //   state: { chats: newChatsData }
-      // });
-
-      // (this.children.list as List).setProps({
-      //   // chats: (this.props.state as Indexed<unknown>).chats,
-      //   state: (this.props.state as Indexed<unknown>).chats
-      // });
+      (this.children.list as List).setProps({
+        state: this.props.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
   componentDidUpdate(oldProps: ChatsPageProps, newProps: ChatsPageProps): boolean {
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<unknown>)?.chatsData as [],
+        (newProps.state as Indexed<unknown>)?.chatsData as []
+      )
+    ) {
+      return true;
+    }
+
+    if (!isEqual(oldProps.state as Indexed<unknown>, newProps.state as Indexed<unknown>)) {
+      return true;
+    }
+
     if (
       (oldProps.state as Indexed<unknown>).isLoading !==
       (newProps.state as Indexed<unknown>).isLoading
@@ -302,34 +286,12 @@ export class ChatsPage extends Block {
       }
     }
 
-    if (
-      !isEqual(
-        (oldProps.state as Indexed<unknown>)?.chats as [],
-        (newProps.state as Indexed<unknown>)?.chats as []
-      )
-    ) {
-      (this.children.list as List).setProps({
-        chats: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[],
-        state: (this.props.state as Record<string, ChatModel[] | boolean>).chats as ChatModel[]
-      });
-
-      return true;
-    }
-
-    if (!isEqual(oldProps.state as {}, newProps.state as {})) {
-      // this.initList();
-
-      return true;
-    }
-
     return false;
   }
 
   _currentChat = 0;
 
   render(): string {
-    // console.log(this.props.state);
-
     if ((this.props.state as Indexed<unknown>).isLoading) {
       return `
         <main>
@@ -341,11 +303,24 @@ export class ChatsPage extends Block {
   }
 }
 
-function mapChatsToProps(state: Indexed<ChatModel[] | boolean>): {
-  chats: ChatModel[];
+function mapChatsToProps(state: Indexed<ChatModel[] | boolean | Indexed<unknown>>): {
+  chatsData: ChatModel[];
   isLoading: boolean;
+  chatsPageData: Indexed<unknown>;
 } {
-  return { chats: state?.chats as ChatModel[], isLoading: state?.isLoading as boolean };
+  return {
+    chatsData: state?.chats as ChatModel[],
+    isLoading: state?.isLoading as boolean,
+    chatsPageData: state?.chatsPageData as Indexed<unknown>
+  };
+}
+
+function mapChatsPageDataToProps(state: Indexed<Indexed<unknown>>): {
+  chatsPageData: Indexed<unknown>;
+} {
+  return {
+    chatsPageData: state?.chatsPageData as Indexed<unknown>
+  };
 }
 
 function mapChatUsersToProps(state: Indexed<ChatUserModel[] | boolean>): {
@@ -356,7 +331,16 @@ function mapChatUsersToProps(state: Indexed<ChatUserModel[] | boolean>): {
 }
 
 export const withChats = connect(
-  mapChatsToProps as (state: Indexed<unknown>) => { chats: ChatModel[]; isLoading: boolean }
+  mapChatsToProps as (state: Indexed<unknown>) => {
+    chatsData: ChatModel[];
+    isLoading: boolean;
+    chatsPageData: Indexed<unknown>;
+  }
+);
+export const withChatsPageData = connect(
+  mapChatsPageDataToProps as (state: Indexed<unknown>) => {
+    chatsPageData: Indexed<unknown>;
+  }
 );
 
 export const withChatUsers = connect(

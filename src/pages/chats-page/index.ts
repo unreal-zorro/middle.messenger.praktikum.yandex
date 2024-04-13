@@ -1,1 +1,1 @@
-export { ChatsPage, withChats, withChatUsers } from './chats-page';
+export { ChatsPage, withChats, withChatsPageData, withChatUsers } from './chats-page';
