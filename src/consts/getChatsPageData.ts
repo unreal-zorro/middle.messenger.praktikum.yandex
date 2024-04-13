@@ -1,7 +1,15 @@
 import type { MessageContent, Chat, CurrentChat, Message, User } from '@/entities';
-import { CHAT_MENU_ITEMS, ATTACH_MENU_ITEMS, CONTENT_MENU_ITEMS } from '@/consts';
-import { isEqual } from '@/utils';
-import { MessageProps } from '../chats-page/modules/content';
+import { CHAT_MENU_ITEMS, ATTACH_MENU_ITEMS, CONTENT_MENU_ITEMS } from './menuItems';
+
+interface MessageProps {
+  className?: string;
+  id?: string;
+  name?: string;
+  date?: string;
+  time?: string;
+  check?: boolean;
+  content?: MessageContent[];
+}
 
 const getChatMenuData = () => {
   const items = [
@@ -269,14 +277,7 @@ export const getChatsContentPageData = (
   messagesArray: Message[] = [],
   currentChat: CurrentChat = {}
 ) => {
-  if (
-    !user ||
-    isEqual(user as PlainObject, {}) ||
-    !messagesArray ||
-    isEqual(messagesArray as [], []) ||
-    !currentChat ||
-    isEqual(currentChat as {}, {})
-  ) {
+  if (!user || !messagesArray || !currentChat) {
     return {
       dates: [],
       messages: [],

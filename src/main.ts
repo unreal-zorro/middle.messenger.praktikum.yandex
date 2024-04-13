@@ -1,16 +1,9 @@
 import './style.scss';
 import { router } from './router';
 import { errors } from './entities';
+import { LoginPage, ErrorPage, ProfilePage, withUser, ChatsPage, withChats } from './pages';
 import {
-  LoginPage,
-  ErrorPage,
-  ProfilePage,
-  withUser,
-  ChatsPage,
-  withChats,
-  getChatsPageData
-} from './pages';
-import {
+  getChatsPageData,
   getErrorPageData,
   getLoginPageData,
   getProfilePageData,

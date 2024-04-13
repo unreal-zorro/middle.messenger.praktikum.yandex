@@ -1,1 +1,0 @@
-export { getChatsPageData } from './getChatsPageData';

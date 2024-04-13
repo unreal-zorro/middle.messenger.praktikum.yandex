@@ -5,3 +5,4 @@ export { getProfilePageData } from './getProfilePageData';
 export { getErrorPageData } from './getErrorPageData';
 export { getLoginPageData } from './getLoginPageData';
 export { getRegisterPageData } from './getRegisterPageData';
+export { getChatsPageData } from './getChatsPageData';
