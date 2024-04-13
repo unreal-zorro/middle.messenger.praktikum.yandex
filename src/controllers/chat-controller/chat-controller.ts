@@ -49,6 +49,8 @@ export class ChatController {
     if (this.chatAPI) {
       try {
         await this.chatAPI.deleteChat({ chatId });
+
+        await this.getChats();
       } catch (error: unknown) {
         console.log((error as Error).message);
       }
