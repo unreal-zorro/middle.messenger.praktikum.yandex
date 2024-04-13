@@ -5,6 +5,7 @@ import { Header, Link } from '@/components';
 import type { ButtonProps, HeaderProps, LinkProps } from '@/components';
 import { AuthController } from '@/controllers';
 import { LoginFormModel, RegisterFormModel } from '@/models';
+import { isEqual } from '@/utils';
 import { LoginForm } from './modules';
 import type { LoginFormProps } from './modules';
 import template from './login-page.hbs?raw';
@@ -24,10 +25,14 @@ export class LoginPage extends Block {
     const controller = new AuthController();
 
     const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
-      if (this.props.id === 'login') {
-        controller.login(formData as LoginFormModel);
-      } else if (this.props.id === 'register') {
-        controller.register(formData as RegisterFormModel);
+      try {
+        if (this.props.id === 'login') {
+          controller.login(formData as LoginFormModel);
+        } else if (this.props.id === 'register') {
+          controller.register(formData as RegisterFormModel);
+        }
+      } catch (error: unknown) {
+        console.log((error as Error).message);
       }
     };
 
@@ -68,6 +73,14 @@ export class LoginPage extends Block {
         withInternalID: true
       }
     });
+  }
+
+  componentDidUpdate(oldProps: LoginPageProps, newProps: LoginPageProps): boolean {
+    if (!isEqual(oldProps as Indexed<unknown>, newProps as Indexed<unknown>)) {
+      return true;
+    }
+
+    return false;
   }
 
   render(): string {
