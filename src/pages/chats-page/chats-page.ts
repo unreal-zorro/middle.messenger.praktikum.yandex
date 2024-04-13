@@ -203,7 +203,7 @@ export class ChatsPage extends Block {
   }
 
   public initContent() {
-    this.children.content = new Content({
+    this.children.content = new (withChatsPageData(Content))({
       className: 'chats__content',
       dates: (this.props.content as ContentProps).dates,
       messages: (this.props.content as ContentProps).messages,
@@ -223,7 +223,7 @@ export class ChatsPage extends Block {
   }
 
   public initNewMessage() {
-    this.children.newMessage = new NewMessage({
+    this.children.newMessage = new (withChatsPageData(NewMessage))({
       className: 'chats__new-message',
       newMessageForm: (this.props.newMessage as NewMessageProps).newMessageForm,
       classNameAttachMenu: '',

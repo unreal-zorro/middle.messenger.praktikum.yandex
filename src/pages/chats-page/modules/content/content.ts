@@ -24,104 +24,105 @@ export interface ContentProps extends Props {
   visibleUserAddModal?: boolean;
   userDeleteModal: ModalProps;
   visibleUserDeleteModal?: boolean;
+  state?: Indexed<Indexed<unknown>>;
 }
 
 export class Content extends Block {
   constructor(props: ContentProps) {
     super(props);
+  }
 
-    const clickHandler: Listener<Event> = (event: Event) => {
-      const {
-        left: currentChatButtonLeft,
-        top: currentChatButtonTop,
-        width: currentChatButtonWidth
-      } = (event.currentTarget as HTMLButtonElement).getBoundingClientRect();
-      const indent = 10;
-      const { clientWidth } = document.documentElement;
+  public clickHandler: Listener<Event> = (event: Event) => {
+    const {
+      left: currentChatButtonLeft,
+      top: currentChatButtonTop,
+      width: currentChatButtonWidth
+    } = (event.currentTarget as HTMLButtonElement).getBoundingClientRect();
+    const indent = 10;
+    const { clientWidth } = document.documentElement;
 
-      if (this.children.contentMenu as Menu) {
-        const contentMenuRight = clientWidth - currentChatButtonLeft + indent;
-        const contentMenuTop = currentChatButtonTop + currentChatButtonWidth + indent;
+    if (this.children.contentMenu as Menu) {
+      const contentMenuRight = clientWidth - currentChatButtonLeft + indent;
+      const contentMenuTop = currentChatButtonTop + currentChatButtonWidth + indent;
 
-        (this.children.contentMenu as Menu).getContent()!.style.right = `${contentMenuRight}px`;
-        (this.children.contentMenu as Menu).getContent()!.style.top = `${contentMenuTop}px`;
+      (this.children.contentMenu as Menu).getContent()!.style.right = `${contentMenuRight}px`;
+      (this.children.contentMenu as Menu).getContent()!.style.top = `${contentMenuTop}px`;
 
-        this.props.visibleContentMenu = true;
-      }
-    };
+      this.props.visibleContentMenu = true;
+    }
+  };
 
-    const contentMenuItemClickHandler: Listener<string> = (text) => {
-      const currentChatId = (this.props.currentChat as CurrentChat).id;
+  public contentMenuItemClickHandler: Listener<string> = (text) => {
+    const currentChatId = (this.props.currentChat as CurrentChat).id;
 
-      console.log(`content currentChat id = ${currentChatId}, action = ${text.trim()}`);
+    console.log(`content currentChat id = ${currentChatId}, action = ${text.trim()}`);
 
-      const itemText = text.trim();
+    const itemText = text.trim();
 
-      if (itemText === CONTENT_MENU_ITEMS.add) {
-        this.setProps({
-          visibleUserAddModal: true
-        });
-      }
-
-      if (itemText === CONTENT_MENU_ITEMS.delete) {
-        this.setProps({
-          visibleUserDeleteModal: true
-        });
-      }
-    };
-
-    const submitUserAddModalHandler: (...args: Record<string, string>[]) => void = (formData) => {
-      let isValid = true;
-
-      Object.entries(formData).forEach(([key, value]) => {
-        const { regExp } = VALIDATION_RULES[key];
-        isValid = isValid && regExp.test(value);
+    if (itemText === CONTENT_MENU_ITEMS.add) {
+      this.setProps({
+        visibleUserAddModal: true
       });
+    }
 
-      if (isValid) {
-        this.setProps({
-          visibleUserAddModal: false
-        });
-
-        console.log(formData);
-      } else {
-        console.log('Invalid form data');
-      }
-    };
-
-    const submitUserDeleteModalHandler: (...args: Record<string, string>[]) => void = (
-      formData
-    ) => {
-      let isValid = true;
-
-      Object.entries(formData).forEach(([key, value]) => {
-        const { regExp } = VALIDATION_RULES[key];
-        isValid = isValid && regExp.test(value);
+    if (itemText === CONTENT_MENU_ITEMS.delete) {
+      this.setProps({
+        visibleUserDeleteModal: true
       });
+    }
+  };
 
-      if (isValid) {
-        this.setProps({
-          visibleUserDeleteModal: false
-        });
+  public submitUserAddModalHandler: (...args: Record<string, string>[]) => void = (formData) => {
+    let isValid = true;
 
-        console.log(formData);
-      } else {
-        console.log('Invalid form data');
-      }
-    };
+    Object.entries(formData).forEach(([key, value]) => {
+      const { regExp } = VALIDATION_RULES[key];
+      isValid = isValid && regExp.test(value);
+    });
 
-    const closeUserAddModalHandler: Listener = () => {
+    if (isValid) {
       this.setProps({
         visibleUserAddModal: false
       });
-    };
 
-    const closeUserDeleteModalHandler: Listener = () => {
+      console.log(formData);
+    } else {
+      console.log('Invalid form data');
+    }
+  };
+
+  public submitUserDeleteModalHandler: (...args: Record<string, string>[]) => void = (formData) => {
+    let isValid = true;
+
+    Object.entries(formData).forEach(([key, value]) => {
+      const { regExp } = VALIDATION_RULES[key];
+      isValid = isValid && regExp.test(value);
+    });
+
+    if (isValid) {
       this.setProps({
         visibleUserDeleteModal: false
       });
-    };
 
+      console.log(formData);
+    } else {
+      console.log('Invalid form data');
+    }
+  };
+
+  public closeUserAddModalHandler: Listener = () => {
+    this.setProps({
+      visibleUserAddModal: false
+    });
+  };
+
+  public closeUserDeleteModalHandler: Listener = () => {
+    this.setProps({
+      visibleUserDeleteModal: false
+    });
+  };
+
+  public initContentChat() {
     if (this.props.currentChat && !isEqual(this.props.currentChat as PlainObject, {})) {
       this.children.contentChat = new ContentChat({
         settings: {
@@ -149,7 +150,7 @@ export class Content extends Block {
             withInternalID: false
           },
           events: {
-            click: ((event: Event) => clickHandler.call(this, event)) as Listener
+            click: ((event: Event) => this.clickHandler.call(this, event)) as Listener
           },
           buttonChild: new Svg({
             dataSvg: 'contentSvg',
@@ -200,18 +201,26 @@ export class Content extends Block {
         }
       });
     }
+  }
 
+  public initContentMenu() {
     this.children.contentMenu = new Menu({
       dataMenu: 'contentMenu',
       className: 'content__content-menu',
       items: (this.props.contentMenu as MenuProps).items,
       visible: this.props.visibleContentMenu as boolean,
-      menuItemClickHandler: contentMenuItemClickHandler as Listener,
+      state: (
+        ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+          .content as Indexed<unknown>
+      ).contentMenu as MenuProps,
+      menuItemClickHandler: this.contentMenuItemClickHandler as Listener,
       settings: {
         withInternalID: false
       }
     });
+  }
 
+  public initUserAddModal() {
     this.children.userAddModal = new Modal({
       className: '',
       type: 'image',
@@ -219,13 +228,19 @@ export class Content extends Block {
       controls: (this.props.userAddModal as ModalProps)?.controls,
       buttons: (this.props.userAddModal as ModalProps)?.buttons,
       visible: this.props.visibleUserAddModal as boolean,
-      submitHandler: submitUserAddModalHandler as Listener,
-      closeHandler: closeUserAddModalHandler,
+      state: (
+        ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+          .newMessage as Indexed<unknown>
+      ).userAddModal as ModalProps,
+      submitHandler: this.submitUserAddModalHandler as Listener,
+      closeHandler: this.closeUserAddModalHandler,
       settings: {
         withInternalID: false
       }
     });
+  }
 
+  public initUserDeleteModal() {
     this.children.userDeleteModal = new Modal({
       className: '',
       type: 'image',
@@ -233,12 +248,41 @@ export class Content extends Block {
       controls: (this.props.userDeleteModal as ModalProps)?.controls,
       buttons: (this.props.userDeleteModal as ModalProps)?.buttons,
       visible: this.props.visibleUserDeleteModal as boolean,
-      submitHandler: submitUserDeleteModalHandler as Listener,
-      closeHandler: closeUserDeleteModalHandler,
+      state: (
+        ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+          .newMessage as Indexed<unknown>
+      ).userDeleteModal as ModalProps,
+      submitHandler: this.submitUserDeleteModalHandler as Listener,
+      closeHandler: this.closeUserDeleteModalHandler,
       settings: {
         withInternalID: false
       }
     });
+  }
+
+  async componentDidMount() {
+    try {
+      this.initContentChat();
+      this.initContentMenu();
+      this.initUserAddModal();
+      this.initUserDeleteModal();
+
+      (this.children.userAddModal as Block).setProps({
+        state: (
+          ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+            .content as Indexed<unknown>
+        ).userAddModal as ModalProps
+      });
+
+      (this.children.userDeleteModal as Block).setProps({
+        state: (
+          ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+            .content as Indexed<unknown>
+        ).userDeleteModal as ModalProps
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   componentDidUpdate(oldProps: ContentProps, newProps: ContentProps): boolean {
