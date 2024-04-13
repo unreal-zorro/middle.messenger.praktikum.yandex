@@ -4,16 +4,18 @@ import { errors } from './entities';
 import {
   LoginPage,
   ErrorPage,
-  getLoginPageData,
-  getRegisterPageData,
-  getErrorPageData,
-  getProfilePageData,
   ProfilePage,
   withUser,
-  getChatsPageData,
   ChatsPage,
-  withChats
+  withChats,
+  getChatsPageData
 } from './pages';
+import {
+  getErrorPageData,
+  getLoginPageData,
+  getProfilePageData,
+  getRegisterPageData
+} from './consts';
 
 const loginPageData = getLoginPageData();
 const registerPageData = getRegisterPageData();
