@@ -33,27 +33,35 @@ export class ChatController {
     return data;
   }
 
-  public async createChat(title: string): Promise<void> {
+  public async createChat(title: string): Promise<ChatModel[] | undefined> {
+    let data;
+
     if (this.chatAPI) {
       try {
         await this.chatAPI.createChat({ title });
 
-        await this.getChats();
+        data = await this.getChats();
       } catch (error: unknown) {
         console.log((error as Error).message);
       }
     }
+
+    return data;
   }
 
-  public async deleteChat(chatId: number): Promise<void> {
+  public async deleteChat(chatId: number): Promise<ChatModel[] | undefined> {
+    let data;
+
     if (this.chatAPI) {
       try {
         await this.chatAPI.deleteChat({ chatId });
 
-        await this.getChats();
+        data = await this.getChats();
       } catch (error: unknown) {
         console.log((error as Error).message);
       }
     }
+
+    return data;
   }
 }
