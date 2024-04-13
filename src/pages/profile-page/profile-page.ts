@@ -6,7 +6,7 @@ import type { ButtonProps, LinkProps } from '@/components';
 import { VALIDATION_RULES, baseURL } from '@/consts';
 import { Modal } from '@/modules';
 import type { ModalProps } from '@/modules';
-import { UserController, AuthController } from '@/controllers';
+import { UserController, AuthController, ProfilePageController } from '@/controllers';
 import { connect } from '@/hoc';
 import { PasswordModel, UserModel } from '@/models';
 import { isEqual } from '@/utils';
@@ -33,81 +33,80 @@ export class ProfilePage extends Block {
 
   private authController: AuthController;
 
+  private profilePageController: ProfilePageController;
+
   constructor(props: ProfilePageProps) {
     super(props);
 
     this.userController = new UserController();
     this.authController = new AuthController();
+    this.profilePageController = new ProfilePageController();
+  }
 
-    const submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
-      if (this.props.id === 'profile-password') {
-        this.userController.updatePassword(formData as PasswordModel);
+  public submitChangeAvatarModalHandler: (...args: Record<string, string | File>[]) => void = (
+    formData
+  ) => {
+    let isValid = true;
 
-        return;
-      }
+    Object.entries(formData).forEach(([key, value]) => {
+      const { regExp } = VALIDATION_RULES[key];
+      isValid = isValid && regExp.test((value as File).name);
+    });
 
-      this.userController?.updateProfile(formData as UserModel).then((newUserData) => {
-        (this.children.headerChild as Header).setProps({
-          text: (newUserData as UserModel).display_name
-        });
-
-        (this.children.formChild as ProfileForm).setProps({
-          state: (newUserData as UserModel).state
-        });
-      });
-    };
-
-    const submitChangeAvatarModalHandler: (...args: Record<string, string | File>[]) => void = (
-      formData
-    ) => {
-      let isValid = true;
-
-      Object.entries(formData).forEach(([key, value]) => {
-        const { regExp } = VALIDATION_RULES[key];
-        isValid = isValid && regExp.test((value as File).name);
-      });
-
-      if (isValid) {
-        this.setProps({
-          visibleChangeAvatarModal: false
-        });
-
-        this.userController.updateAvatar(formData.avatar as File).then((newUserData) => {
-          this.setProps({
-            state: newUserData
-          });
-
-          (this.children.avatarChild as Avatar).setProps({
-            imgSrc: `${baseURL}/resources${(newUserData as UserModel).avatar}`
-          });
-        });
-      } else {
-        console.log('Invalid avatar form data');
-      }
-    };
-
-    const avatarClickHandler: Listener = () => {
-      this.setProps({
-        visibleChangeAvatarModal: true
-      });
-    };
-
-    const linkClickHandler: Listener = () => {
-      this.authController.logout();
-    };
-
-    const closeChangeAvatarModalHandler: Listener = () => {
+    if (isValid) {
       this.setProps({
         visibleChangeAvatarModal: false
       });
-    };
 
-    this.props.children = {
-      avatarChild: this.children.avatarChild,
-      headerChild: this.children.headerChild,
-      formChild: this.children.formChild
-    };
+      this.userController.updateAvatar(formData.avatar as File).then((newUserData) => {
+        this.setProps({
+          state: newUserData
+        });
 
+        (this.children.avatarChild as Avatar).setProps({
+          imgSrc: `${baseURL}/resources${(newUserData as UserModel).avatar}`
+        });
+      });
+    } else {
+      console.log('Invalid avatar form data');
+    }
+  };
+
+  public avatarClickHandler: Listener = () => {
+    this.setProps({
+      visibleChangeAvatarModal: true
+    });
+  };
+
+  public linkClickHandler: Listener = () => {
+    this.authController.logout();
+  };
+
+  public closeChangeAvatarModalHandler: Listener = () => {
+    this.setProps({
+      visibleChangeAvatarModal: false
+    });
+  };
+
+  public submitHandler: (...args: Record<string, string>[]) => void = (formData) => {
+    if (this.props.id === 'profile-password') {
+      this.userController.updatePassword(formData as PasswordModel);
+
+      return;
+    }
+
+    this.userController?.updateProfile(formData as UserModel).then((newUserData) => {
+      (this.children.headerChild as Header).setProps({
+        text: (newUserData as UserModel).display_name
+      });
+
+      (this.children.formChild as ProfileForm).setProps({
+        state: (newUserData as UserModel).state
+      });
+    });
+  };
+
+  public initAvatar() {
     this.children.avatarChild = new Avatar({
       className: 'avatar_big profile__avatar',
       imgSrc: ((this.props?.state as Indexed<UserModel | boolean>)?.user as UserModel)?.avatar,
@@ -115,10 +114,12 @@ export class ProfilePage extends Block {
         withInternalID: false
       },
       events: {
-        click: (() => avatarClickHandler.call(this)) as Listener
+        click: (() => this.avatarClickHandler.call(this)) as Listener
       }
     });
+  }
 
+  public initHeader() {
     this.children.headerChild = new Header({
       className: 'profile__header',
       text: ((this.props?.state as Indexed<UserModel | boolean>)?.user as UserModel)?.display_name,
@@ -126,7 +127,9 @@ export class ProfilePage extends Block {
         withInternalID: false
       }
     });
+  }
 
+  public initForm() {
     this.children.formChild = new ProfileForm({
       className: 'profile__form',
       classNameFormControls: 'profile__form-controls',
@@ -140,40 +143,64 @@ export class ProfilePage extends Block {
       classNameLink: 'profile__link',
       controls: this.props.controls as ProfileFormProps[],
       buttons: this.props.buttons as ButtonProps[],
-      state: (this.props?.state as Indexed<UserModel | boolean>)?.user as UserModel,
-      submitHandler,
+      state: this.props?.state as Indexed<UserModel | boolean | Indexed<unknown>>,
+      submitHandler: this.submitHandler,
       settings: {
         withInternalID: false
       },
       events: {
-        submit: (() => submitHandler.call(this)) as Listener
+        submit: (() => this.submitHandler.call(this)) as Listener
       }
     });
+  }
 
+  public initNavButtons() {
     if (
       (!this.props.buttons || !(this.props.buttons as ButtonProps[])?.length) &&
       this.props.navButtons
     ) {
       this.children.navButtons = (this.props.navButtons as ButtonProps[])?.map(
-        (navButton) =>
-          new Button({
+        (_navButton, index) => {
+          const type = (
+            (
+              (this.props?.state as Indexed<UserModel | boolean | Indexed<unknown>>)
+                .profilePageData as Indexed<unknown>
+            )?.navButtons as ButtonProps[]
+          )?.[index]?.type;
+          const href = (
+            (
+              (this.props?.state as Indexed<UserModel | boolean | Indexed<unknown>>)
+                .profilePageData as Indexed<unknown>
+            )?.navButtons as ButtonProps[]
+          )?.[index]?.href as string;
+          const text = (
+            (
+              (this.props?.state as Indexed<UserModel | boolean | Indexed<unknown>>)
+                .profilePageData as Indexed<unknown>
+            )?.navButtons as ButtonProps[]
+          )?.[index]?.text;
+
+          return new Button({
             className: 'profile__button',
-            type: navButton.type,
+            type,
             settings: {
               withInternalID: false
             },
             buttonChild: new Link({
               className: 'profile__link',
-              href: navButton.href as string,
-              text: navButton.text,
+              href,
+              text,
               settings: {
                 withInternalID: false
               }
             })
-          })
+          });
+        }
       );
     }
+  }
 
+  public initLink() {
     this.children.linkChild = new Link({
       className: 'profile__footer',
       href: (this.props.link as LinkProps)?.href as string,
@@ -182,10 +209,12 @@ export class ProfilePage extends Block {
         withInternalID: false
       },
       events: {
-        click: (() => linkClickHandler.call(this)) as Listener
+        click: (() => this.linkClickHandler.call(this)) as Listener
       }
     });
+  }
 
+  public initNavLink() {
     this.children.navLinkChild = new Link({
       className: 'profile__nav',
       href: (this.props.navLink as LinkProps)?.href as string,
@@ -194,7 +223,9 @@ export class ProfilePage extends Block {
         withInternalID: false
       }
     });
+  }
 
+  public initAvatarModal() {
     this.children.changeAvatarModal = new Modal({
       className: '',
       type: 'image',
@@ -202,20 +233,44 @@ export class ProfilePage extends Block {
       controls: (this.props.changeAvatarModal as ModalProps)?.controls,
       buttons: (this.props.changeAvatarModal as ModalProps)?.buttons,
       visible: this.props.visibleChangeAvatarModal as boolean,
-      submitHandler: submitChangeAvatarModalHandler as Listener,
-      closeHandler: closeChangeAvatarModalHandler,
+      state: (
+        (this.props.state as Indexed<UserModel | boolean | Indexed<unknown>>)
+          .profilePageData as Indexed<unknown>
+      ).changeAvatarModal as ModalProps,
+      submitHandler: this.submitChangeAvatarModalHandler as Listener,
+      closeHandler: this.closeChangeAvatarModalHandler,
       settings: {
         withInternalID: false
       }
     });
   }
 
+  public initChildren() {
+    this.props.children = {
+      avatarChild: this.children.avatarChild,
+      headerChild: this.children.headerChild,
+      formChild: this.children.formChild
+    };
+  }
+
   async componentDidMount() {
     try {
       await this.userController?.getUser();
+      await this.profilePageController?.getProfilePageData(this.props.id);
 
-      (this.children.formChild as ProfileForm).setProps({
-        state: (this.props.state as Indexed<UserModel | boolean>).user as UserModel
+      this.initAvatar();
+      this.initHeader();
+      this.initForm();
+      this.initNavButtons();
+      this.initLink();
+      this.initNavLink();
+      this.initAvatarModal();
+
+      (this.children.changeAvatarModal as Block).setProps({
+        state: (
+          (this.props.state as Indexed<UserModel | boolean | Indexed<unknown>>)
+            .profilePageData as Indexed<unknown>
+        ).changeAvatarModal as ModalProps
       });
     } catch (error) {
       console.log(error);
@@ -243,16 +298,7 @@ export class ProfilePage extends Block {
       }
     }
 
-    if (
-      !isEqual(
-        (oldProps.state as Indexed<unknown>).user as UserModel,
-        (newProps.state as Indexed<unknown>).user as UserModel
-      )
-    ) {
-      (this.children.formChild as ProfileForm).setProps({
-        state: (this.props.state as Indexed<UserModel | boolean>).user as UserModel
-      });
-
+    if (!isEqual(oldProps.state as Indexed<unknown>, newProps.state as Indexed<unknown>)) {
       return true;
     }
 
@@ -280,13 +326,19 @@ export class ProfilePage extends Block {
 function mapUserToProps(state: Indexed<UserModel | boolean>): {
   user: UserModel;
   isLoading: boolean;
+  profilePageData: Indexed<unknown>;
 } {
-  return { user: state?.user as UserModel, isLoading: state?.isLoading as boolean };
+  return {
+    user: state?.user as UserModel,
+    isLoading: state?.isLoading as boolean,
+    profilePageData: state?.profilePageData as Indexed<unknown>
+  };
 }
 
 export const withUser = connect(
   mapUserToProps as (state: Indexed<unknown>) => {
     user: UserModel;
     isLoading: boolean;
+    profilePageData: Indexed<unknown>;
   }
 );
