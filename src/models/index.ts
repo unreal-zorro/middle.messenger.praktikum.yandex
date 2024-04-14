@@ -4,3 +4,4 @@ export type { UserModel } from './user-model';
 export type { PasswordModel } from './password-model';
 export type { ChatModel } from './chat-model';
 export type { ChatUserModel } from './chat-user-model';
+export type { MessageType, FileMessage, RequestMessage, ResponseMessage } from './message-model';
