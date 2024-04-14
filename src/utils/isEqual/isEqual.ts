@@ -31,8 +31,10 @@ export function isEqual(
     return true;
   }
 
-  if (typeof lhs !== 'object') {
-    return lhs === rhs;
+  if (typeof lhs !== 'object' && typeof rhs !== 'object') {
+    if (!isArray(lhs) && !isArray(rhs)) {
+      return lhs === rhs;
+    }
   }
 
   if (Object.keys(lhs).length !== Object.keys(rhs).length) {
@@ -41,7 +43,7 @@ export function isEqual(
 
   if (typeof lhs !== 'string' && typeof rhs !== 'string') {
     for (const [key, value] of Object.entries(lhs)) {
-      const rightValue = Array.isArray(rhs) ? rhs[Number(key)] : rhs[key];
+      const rightValue = isArray(rhs) ? rhs[Number(key)] : rhs[key];
 
       if (isArrayOrObject(value) && isArrayOrObject(rightValue)) {
         if (isEqual(value, rightValue)) {
