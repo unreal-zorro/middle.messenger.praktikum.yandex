@@ -1,7 +1,7 @@
 import { HTTPTransport, WSTransport } from '@/base';
 import { baseURL, baseWSSURL } from '@/consts';
 
-export class MessagesAPI {
+class MessagesAPI {
   private _baseURL: string;
 
   private _baseWSSURL: string;
@@ -20,7 +20,7 @@ export class MessagesAPI {
   }
 
   // Get token
-  async getToken(id: number): Promise<void> {
+  private async _getToken(id: number): Promise<void> {
     try {
       const token = await this.httpTransport.get(`/${id}`);
       this._token = token;
@@ -30,9 +30,9 @@ export class MessagesAPI {
   }
 
   // Create WSS transport
-  async getWSSTransport(userId: number, chatID: number): Promise<void> {
+  private async _getWSSTransport(userId: number, chatID: number): Promise<void> {
     try {
-      await this.getToken(chatID);
+      await this._getToken(chatID);
 
       this.wssTransport = new WSTransport(`${this._baseWSSURL}/${userId}/${chatID}/${this._token}`);
     } catch (error) {
@@ -43,7 +43,7 @@ export class MessagesAPI {
   // Connect to chat
   async connectToChat(userId: number, chatID: number): Promise<void> {
     try {
-      await this.getWSSTransport(userId, chatID);
+      await this._getWSSTransport(userId, chatID);
 
       if (this.wssTransport) {
         await this.wssTransport.connect();
@@ -86,3 +86,5 @@ export class MessagesAPI {
     }
   }
 }
+
+export default new MessagesAPI();

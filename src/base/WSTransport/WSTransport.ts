@@ -10,7 +10,7 @@ export enum WSTransportEvents {
 }
 
 export class WSTransport extends EventBus {
-  private socket?: WebSocket;
+  public socket?: WebSocket;
 
   private pingInterval?: ReturnType<typeof setInterval>;
 

@@ -1,1 +1,1 @@
-export { MessagesAPI } from './messages-api';
+export { default as messagesAPI } from './messages-api';
