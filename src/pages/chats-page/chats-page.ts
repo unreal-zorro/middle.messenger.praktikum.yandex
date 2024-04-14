@@ -1,10 +1,11 @@
 import './chats-page.scss';
-import { Block } from '@/base';
+import { Block, WSTransportEvents, Listener } from '@/base';
 import type { Listener, Props } from '@/base';
 import { connect } from '@/hoc';
-import { ChatModel, ChatUserModel, UserModel } from '@/models';
+import { ChatModel, ChatUserModel, RequestMessage, UserModel } from '@/models';
 import { ChatController, ChatUsersController, ChatsPageController } from '@/controllers';
 import { isEqual } from '@/utils';
+import { messagesAPI } from '@/api';
 import { Content, List, NewMessage, Search } from './modules';
 import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
 import template from './chats-page.hbs?raw';
@@ -26,11 +27,31 @@ export class ChatsPage extends Block {
   private chatUsersController: ChatUsersController;
 
   constructor(props: ChatsPageProps) {
-    super(props);
+    const messages: string[] = [];
+
+    super({...props, ...messages});
 
     this.chatController = new ChatController();
     this.chatsPageController = new ChatsPageController();
     this.chatUsersController = new ChatUsersController();
+
+    if (messagesAPI && messagesAPI.wssTransport) {
+      messagesAPI.wssTransport.on(WSTransportEvents.Connected, () => {
+
+      });
+
+      messagesAPI.wssTransport.on(WSTransportEvents.Close, () => {
+
+      });
+
+      messagesAPI.wssTransport.on(WSTransportEvents.Message, (message: string) => {
+        messages.push(message);
+      });
+
+      messagesAPI.wssTransport.on(WSTransportEvents.Error, (error) => {
+
+      });
+    }
   }
 
   public clickHandler: Listener<Event> = (event: Event) => {
