@@ -163,6 +163,7 @@ export class List extends Block {
       )
     ) {
       this.initChats();
+      this.initText();
 
       return true;
     }
