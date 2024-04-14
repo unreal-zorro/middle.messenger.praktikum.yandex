@@ -6,6 +6,7 @@ import { Menu } from '@/modules';
 import type { MenuProps } from '@/modules';
 import { ChatModel } from '@/models';
 import { isEqual } from '@/utils';
+import { CHAT_MENU_ITEMS } from '@/consts';
 import { Chat } from './modules';
 import template from './list.hbs?raw';
 
@@ -18,6 +19,7 @@ export interface ListProps extends Props {
   visibleChatAvatarModal?: boolean;
   state?: Indexed<ChatModel[] | boolean | Indexed<unknown>>;
   isUpdate?: boolean;
+  checkActiveChatHandler: (...args: Record<string, string>[]) => Promise<void>;
   deleteChatHandler: (...args: Record<string, string>[]) => Promise<void>;
 }
 
@@ -50,19 +52,27 @@ export class List extends Block {
       });
     });
 
-    console.log(`list activeChat id = ${id}`);
-  };
-
-  public chatMenuItemClickHandler: Listener<string> = (text) => {
-    const id = this._currentChat;
-
-    if (this.props.deleteChatHandler) {
-      (this.props.deleteChatHandler as (...args: Record<string, string>[]) => Promise<void>)({
+    if (this.props.checkActiveChatHandler) {
+      (this.props.checkActiveChatHandler as (...args: Record<string, string>[]) => Promise<void>)({
         chatId: String(id)
       });
     }
+  };
 
-    console.log(`list currentChat id = ${id}, text = ${text.trim()}`);
+  public chatMenuItemClickHandler: Listener<string> = (text: string) => {
+    const id = this._currentChat;
+
+    const itemText = text.trim();
+
+    if (itemText === CHAT_MENU_ITEMS.delete) {
+      if (this.props.deleteChatHandler) {
+        (this.props.deleteChatHandler as (...args: Record<string, string>[]) => Promise<void>)({
+          chatId: String(id)
+        });
+      }
+    } else {
+      console.log(`list currentChat id = ${id}, text = ${itemText}`);
+    }
   };
 
   public initChatMenu() {
@@ -192,8 +202,6 @@ export class List extends Block {
   _currentChat = 0;
 
   render(): string {
-    console.log(this.props.state);
-
     if ((this.props.state as Indexed<unknown>).isLoading) {
       return `
         <section class="list ${this.props.className}">

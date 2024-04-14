@@ -39,6 +39,7 @@ export class ChatController {
     if (this.chatAPI) {
       try {
         await this.chatAPI.createChat({ title });
+        store.set('activeChat', undefined);
 
         data = await this.getChats();
       } catch (error: unknown) {
@@ -55,6 +56,7 @@ export class ChatController {
     if (this.chatAPI) {
       try {
         await this.chatAPI.deleteChat({ chatId });
+        store.set('activeChat', undefined);
 
         data = await this.getChats();
       } catch (error: unknown) {
@@ -63,5 +65,16 @@ export class ChatController {
     }
 
     return data;
+  }
+
+  public async checkActiveChat(chatId: number): Promise<ChatModel> {
+    const currentChats: ChatModel[] = (await store.getState().chats) as ChatModel[];
+    const activeChat = currentChats?.find((chat) => chat.id === chatId);
+
+    store.set('activeChat', {
+      ...activeChat
+    });
+
+    return activeChat as ChatModel;
   }
 }
