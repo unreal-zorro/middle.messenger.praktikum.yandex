@@ -1,1 +1,7 @@
-export { ChatsPage, withChats, withChatsPageData, withChatUsers } from './chats-page';
+export {
+  ChatsPage,
+  withActiveChatAndUserIdToProps,
+  withChats,
+  withChatsPageData,
+  withChatUsers
+} from './chats-page';

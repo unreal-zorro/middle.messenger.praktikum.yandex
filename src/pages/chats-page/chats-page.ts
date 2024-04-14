@@ -2,8 +2,8 @@ import './chats-page.scss';
 import { Block } from '@/base';
 import type { Listener, Props } from '@/base';
 import { connect } from '@/hoc';
-import { ChatModel, ChatUserModel } from '@/models';
-import { ChatController, ChatsPageController } from '@/controllers';
+import { ChatModel, ChatUserModel, UserModel } from '@/models';
+import { ChatController, ChatUsersController, ChatsPageController } from '@/controllers';
 import { isEqual } from '@/utils';
 import { Content, List, NewMessage, Search } from './modules';
 import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
@@ -23,14 +23,14 @@ export class ChatsPage extends Block {
 
   private chatsPageController: ChatsPageController;
 
-  // private chatUsersController: ChatUsersController;
+  private chatUsersController: ChatUsersController;
 
   constructor(props: ChatsPageProps) {
     super(props);
 
     this.chatController = new ChatController();
     this.chatsPageController = new ChatsPageController();
-    // this.chatUsersController = new ChatUsersController();
+    this.chatUsersController = new ChatUsersController();
   }
 
   public clickHandler: Listener<Event> = (event: Event) => {
@@ -121,6 +121,20 @@ export class ChatsPage extends Block {
     });
   };
 
+  public checkActiveChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (
+    data
+  ) => {
+    const activeChat = await this.chatController.checkActiveChat(Number(data.chatId));
+
+    (this.children.content as Content).setProps({
+      state: {
+        activeChat
+      }
+    });
+
+    await this.getChatUsersHandler(data);
+  };
+
   public deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (data) => {
     const newChats = await this.chatController.deleteChat(Number(data.chatId));
 
@@ -137,37 +151,37 @@ export class ChatsPage extends Block {
     });
   };
 
-  // public getChatUsersHandler: (...args: Record<string, string>[]) => Promise<void> = async (
-  //   data
-  // ) => {
-  //   const newChatUsers = await this.chatUsersController.getChatUsers(Number(data.chatId));
+  public getChatUsersHandler: (...args: Record<string, string>[]) => Promise<void> = async (
+    data
+  ) => {
+    const id = Number(data.chatId);
 
-  //   this.setProps({
-  //     state: { chatUsers: newChatUsers }
-  //   });
-  // };
+    const newChatUsers = await this.chatUsersController.getChatUsers(id);
 
-  // public addChatUsersHandler: (users: number[], chatId: number) => Promise<void> = async (
-  //   users, chatId
-  // ) => {
-  //   await this.chatUsersController.addChatUsers(users, chatId);
-  //   const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
+    this.setProps({
+      state: { chatUsers: newChatUsers }
+    });
+  };
 
-  //   this.setProps({
-  //     state: { chatUsers: newChatUsers }
-  //   });
-  // };
+  public addChatUsersHandler: (data: { users: number[]; chatId: number }) => Promise<void> =
+    async ({ users, chatId }) => {
+      await this.chatUsersController.addChatUsers(users, chatId);
+      const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
 
-  // public deleteChatUsersHandler: (users: number[], chatId: number) => Promise<void> = async (
-  //   users, chatId
-  // ) => {
-  //   await this.chatUsersController.deleteChatUsers(users, chatId);
-  //   const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
+      this.setProps({
+        state: { chatUsers: newChatUsers }
+      });
+    };
 
-  //   this.setProps({
-  //     state: { chatUsers: newChatUsers }
-  //   });
-  // };
+  public deleteChatUsersHandler: (data: { users: number[]; chatId: number }) => Promise<void> =
+    async ({ users, chatId }) => {
+      await this.chatUsersController.deleteChatUsers(users, chatId);
+      const newChatUsers = await this.chatUsersController.getChatUsers(chatId);
+
+      this.setProps({
+        state: { chatUsers: newChatUsers }
+      });
+    };
 
   public initSearch() {
     this.children.search = new (withChatsPageData(Search))({
@@ -194,7 +208,7 @@ export class ChatsPage extends Block {
       classNameChatMenu: '',
       chatMenu: (this.props.list as ListProps).chatMenu,
       visibleChatMenu: false,
-      // state: this.props.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>,
+      checkActiveChatHandler: this.checkActiveChatHandler,
       deleteChatHandler: this.deleteChatHandler,
       settings: {
         withInternalID: false
@@ -203,7 +217,7 @@ export class ChatsPage extends Block {
   }
 
   public initContent() {
-    this.children.content = new (withChatsPageData(Content))({
+    this.children.content = new (withActiveChatAndUserIdAndUsersToProps(Content))({
       className: 'chats__content',
       dates: (this.props.content as ContentProps).dates,
       messages: (this.props.content as ContentProps).messages,
@@ -216,6 +230,8 @@ export class ChatsPage extends Block {
       visibleUserAddModal: false,
       userDeleteModal: (this.props.content as ContentProps).userDeleteModal,
       visibleUserDeleteModal: false,
+      chatUsersAddHandler: this.addChatUsersHandler,
+      chatUsersDeleteHandler: this.deleteChatUsersHandler,
       settings: {
         withInternalID: false
       }
@@ -330,6 +346,40 @@ function mapChatUsersToProps(state: Indexed<ChatUserModel[] | boolean>): {
   return { chatUsers: state?.chatUsers as ChatUserModel[], isLoading: state?.isLoading as boolean };
 }
 
+function mapActiveChatAndUserIdToProps(
+  state: Indexed<Indexed<unknown> | ChatModel | number | boolean>
+): {
+  userId: number;
+  activeChat: ChatModel;
+  chatsPageData: Indexed<unknown>;
+  isLoading: boolean;
+} {
+  return {
+    userId: (state?.user as UserModel)?.id,
+    activeChat: state?.activeChat as ChatModel,
+    chatsPageData: state?.chatsPageData as Indexed<unknown>,
+    isLoading: state?.isLoading as boolean
+  };
+}
+
+function mapActiveChatAndUserIdAndUsersToProps(
+  state: Indexed<Indexed<unknown> | ChatModel | ChatUserModel[] | number | boolean>
+): {
+  userId: number;
+  activeChat: ChatModel;
+  chatUsers: ChatUserModel[];
+  chatsPageData: Indexed<unknown>;
+  isLoading: boolean;
+} {
+  return {
+    userId: (state?.user as UserModel)?.id,
+    activeChat: state?.activeChat as ChatModel,
+    chatUsers: state?.chatUsers as ChatUserModel[],
+    chatsPageData: state?.chatsPageData as Indexed<unknown>,
+    isLoading: state?.isLoading as boolean
+  };
+}
+
 export const withChats = connect(
   mapChatsToProps as (state: Indexed<unknown>) => {
     chatsData: ChatModel[];
@@ -346,6 +396,25 @@ export const withChatsPageData = connect(
 export const withChatUsers = connect(
   mapChatUsersToProps as (state: Indexed<unknown>) => {
     chatUsers: ChatUserModel[];
+    isLoading: boolean;
+  }
+);
+
+export const withActiveChatAndUserIdToProps = connect(
+  mapActiveChatAndUserIdToProps as (state: Indexed<unknown>) => {
+    userId: number;
+    activeChat: ChatModel;
+    chatsPageData: Indexed<unknown>;
+    isLoading: boolean;
+  }
+);
+
+export const withActiveChatAndUserIdAndUsersToProps = connect(
+  mapActiveChatAndUserIdAndUsersToProps as (state: Indexed<unknown>) => {
+    userId: number;
+    activeChat: ChatModel;
+    chatUsers: ChatUserModel[];
+    chatsPageData: Indexed<unknown>;
     isLoading: boolean;
   }
 );

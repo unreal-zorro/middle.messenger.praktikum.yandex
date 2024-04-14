@@ -1,7 +1,7 @@
 <section
   class="content{{#if className}} {{ className }}{{/if}}"
 >
-  {{#if currentChat}}
+  {{#if this.state.activeChat.id}}
     {{{ contentChat }}}
 
     {{#if dates}}
@@ -13,9 +13,11 @@
     {{else}}
       {{{ noMessagesText }}}
     {{/if}}
-  {{else}}
-    {{{ noChatText }}}
   {{/if}}
+
+  {{#unless this.state.activeChat.id}}
+    {{{ noChatText }}}
+  {{/unless}}
 
   {{{ attachMenu }}}
   {{{ contentMenu }}}

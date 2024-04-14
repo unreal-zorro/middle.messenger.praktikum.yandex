@@ -15,12 +15,28 @@ export class ChatUsersAPI extends BaseAPI {
     email?: string;
   }): Promise<ChatUserModel[]> {
     const { id } = data;
-    const requestData = {
-      offset: data.offset,
-      limit: data.limit,
-      name: data.name,
-      email: data.email
-    };
+    const requestData: {
+      offset?: number;
+      limit?: number;
+      name?: string;
+      email?: string;
+    } = {};
+
+    if (data.offset) {
+      requestData.offset = data.offset;
+    }
+
+    if (data.limit) {
+      requestData.limit = data.limit;
+    }
+
+    if (data.name) {
+      requestData.name = data.name;
+    }
+
+    if (data.email) {
+      requestData.email = data.email;
+    }
 
     return this.transport.get(`/${id}/users`, { data: requestData });
   }

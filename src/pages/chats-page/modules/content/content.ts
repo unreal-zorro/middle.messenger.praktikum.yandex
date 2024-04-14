@@ -7,6 +7,7 @@ import { Menu, Modal } from '@/modules';
 import type { MenuProps, ModalProps } from '@/modules';
 import { CONTENT_MENU_ITEMS, VALIDATION_RULES } from '@/consts';
 import { isEqual } from '@/utils';
+import { ChatModel, ChatUserModel } from '@/models';
 import { ContentChat, EqualDatesMessages } from './modules';
 import type { MessageContent, MessageProps } from './modules';
 import template from './content.hbs?raw';
@@ -24,7 +25,9 @@ export interface ContentProps extends Props {
   visibleUserAddModal?: boolean;
   userDeleteModal: ModalProps;
   visibleUserDeleteModal?: boolean;
-  state?: Indexed<Indexed<unknown>>;
+  state?: Indexed<ChatModel[] | ChatUserModel[] | number | boolean | Indexed<unknown>>;
+  chatUsersAddHandler: Listener;
+  chatUsersDeleteHandler: Listener;
 }
 
 export class Content extends Block {
@@ -53,22 +56,28 @@ export class Content extends Block {
   };
 
   public contentMenuItemClickHandler: Listener<string> = (text) => {
-    const currentChatId = (this.props.currentChat as CurrentChat).id;
+    const currentChat = (
+      this.props?.state as Indexed<Indexed<unknown> | ChatModel | number | boolean>
+    )?.activeChat as ChatModel;
 
-    console.log(`content currentChat id = ${currentChatId}, action = ${text.trim()}`);
+    const currentChatId = currentChat?.id;
 
-    const itemText = text.trim();
+    if (currentChatId) {
+      console.log(`content currentChat id = ${currentChatId}, action = ${text.trim()}`);
 
-    if (itemText === CONTENT_MENU_ITEMS.add) {
-      this.setProps({
-        visibleUserAddModal: true
-      });
-    }
+      const itemText = text.trim();
 
-    if (itemText === CONTENT_MENU_ITEMS.delete) {
-      this.setProps({
-        visibleUserDeleteModal: true
-      });
+      if (itemText === CONTENT_MENU_ITEMS.add) {
+        this.setProps({
+          visibleUserAddModal: true
+        });
+      }
+
+      if (itemText === CONTENT_MENU_ITEMS.delete) {
+        this.setProps({
+          visibleUserDeleteModal: true
+        });
+      }
     }
   };
 
@@ -81,6 +90,24 @@ export class Content extends Block {
     });
 
     if (isValid) {
+      const currentChat = (
+        this.props?.state as Indexed<Indexed<unknown> | ChatModel | number | boolean>
+      )?.activeChat as ChatModel;
+
+      const currentChatId = currentChat?.id;
+      const users = [Number(formData.addUser)];
+
+      if (this.props.chatUsersAddHandler) {
+        (
+          this.props.chatUsersAddHandler as (
+            ...args: Record<string, number | number[]>[]
+          ) => Promise<void>
+        )({
+          chatId: currentChatId,
+          users
+        });
+      }
+
       this.setProps({
         visibleUserAddModal: false
       });
@@ -100,6 +127,24 @@ export class Content extends Block {
     });
 
     if (isValid) {
+      const currentChat = (
+        this.props?.state as Indexed<Indexed<unknown> | ChatModel | number | boolean>
+      )?.activeChat as ChatModel;
+
+      const currentChatId = currentChat?.id;
+      const users = [Number(formData.deleteUser)];
+
+      if (this.props.chatUsersDeleteHandler) {
+        (
+          this.props.chatUsersDeleteHandler as (
+            ...args: Record<string, number | number[]>[]
+          ) => Promise<void>
+        )({
+          chatId: currentChatId,
+          users
+        });
+      }
+
       this.setProps({
         visibleUserDeleteModal: false
       });
@@ -123,21 +168,26 @@ export class Content extends Block {
   };
 
   public initContentChat() {
-    if (this.props.currentChat && !isEqual(this.props.currentChat as PlainObject, {})) {
+    // if (this.props.currentChat && !isEqual(this.props.currentChat as PlainObject, {})) {
+    const activeChat = (
+      this.props?.state as Indexed<Indexed<unknown> | ChatModel | number | boolean>
+    )?.activeChat as ChatModel;
+
+    if (activeChat) {
       this.children.contentChat = new ContentChat({
         settings: {
           withInternalID: false
         },
         avatar: new Avatar({
           className: 'content__avatar avatar_no-edit',
-          imgSrc: (this.props.currentChat as CurrentChat)?.avatar as string,
+          imgSrc: activeChat?.avatar as string,
           settings: {
             withInternalID: false
           }
         }),
         title: new Text({
           className: 'content__title',
-          text: (this.props.currentChat as CurrentChat)?.title as string,
+          text: activeChat?.title as string,
           settings: {
             withInternalID: false
           }
@@ -192,7 +242,7 @@ export class Content extends Block {
           }
         });
       }
-    } else {
+    } else if (!(activeChat as ChatModel)?.id) {
       this.children.noChatText = new Text({
         className: 'content__text',
         text: 'Выберите чат, чтобы отправить сообщение',
@@ -202,6 +252,74 @@ export class Content extends Block {
       });
     }
   }
+
+  // public initDates() {
+  //   // if (this.props.currentChat && !isEqual(this.props.currentChat as PlainObject, {})) {
+  //   const activeChat = (
+  //     this.props?.state as Indexed<Indexed<unknown> | ChatModel | number | boolean>
+  //   )?.activeChat as ChatModel;
+
+  //   if (activeChat) {
+  //     if (this.props.dates && (this.props.dates as string[])?.length) {
+  //       this.children.dates = (this.props.dates as string[])?.map((dateItem) => {
+  //         const messages: MessageProps[] = (this.props.messages as MessageProps[])?.filter(
+  //           (messageItem) => dateItem === messageItem.date
+  //         );
+  //         const messageContent: MessageContent[] = [];
+  //         messages?.forEach((messageItem) => {
+  //           const content = (this.props.messageContent as MessageContent[])?.filter(
+  //             (messageContentItem) => messageItem.id === messageContentItem.messageId
+  //           );
+  //           messageContent.push(...content);
+  //         });
+
+  //         return new EqualDatesMessages({
+  //           className: 'content__list-item',
+  //           date: dateItem,
+  //           messages,
+  //           messageContent,
+  //           settings: {
+  //             withInternalID: true
+  //           }
+  //         });
+  //       });
+  //     }
+  //   }
+  // }
+
+  // public initNoMessagesText() {
+  //   const activeChat = (
+  //     this.props?.state as Indexed<Indexed<unknown> | ChatModel | number | boolean>
+  //   )?.activeChat as ChatModel;
+
+  //   if (!activeChat) {
+  //     if (!this.props.dates || !(this.props.dates as string[])?.length) {
+  //       this.children.noMessagesText = new Text({
+  //         className: 'content__text',
+  //         text: 'В выбранном чате отсутствуют сообщения',
+  //         settings: {
+  //           withInternalID: false
+  //         }
+  //       });
+  //     }
+  //   }
+  // }
+
+  // public initNoChatText() {
+  //   const activeChat = (
+  //     this.props?.state as Indexed<Indexed<unknown> | ChatModel | number | boolean>
+  //   )?.activeChat as ChatModel;
+
+  //   if (!activeChat) {
+  //     this.children.noChatText = new Text({
+  //       className: 'content__text',
+  //       text: 'Выберите чат, чтобы отправить сообщение',
+  //       settings: {
+  //         withInternalID: false
+  //       }
+  //     });
+  //   }
+  // }
 
   public initContentMenu() {
     this.children.contentMenu = new Menu({
@@ -221,6 +339,19 @@ export class Content extends Block {
   }
 
   public initUserAddModal() {
+    // const modalState = {
+    //   ...((
+    //     ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+    //       .newMessage as Indexed<unknown>
+    //   ).userAddModal as ModalProps),
+    //   list: []
+    // };
+
+    const modalState = (
+      ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+        .newMessage as Indexed<unknown>
+    ).userAddModal as ModalProps;
+
     this.children.userAddModal = new Modal({
       className: '',
       type: 'image',
@@ -228,10 +359,8 @@ export class Content extends Block {
       controls: (this.props.userAddModal as ModalProps)?.controls,
       buttons: (this.props.userAddModal as ModalProps)?.buttons,
       visible: this.props.visibleUserAddModal as boolean,
-      state: (
-        ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-          .newMessage as Indexed<unknown>
-      ).userAddModal as ModalProps,
+      // list: [],
+      state: modalState,
       submitHandler: this.submitUserAddModalHandler as Listener,
       closeHandler: this.closeUserAddModalHandler,
       settings: {
@@ -241,6 +370,19 @@ export class Content extends Block {
   }
 
   public initUserDeleteModal() {
+    // const modalState = {
+    //   ...((
+    //     ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+    //       .newMessage as Indexed<unknown>
+    //   ).userDeleteModal as ModalProps),
+    //   list: []
+    // };
+
+    const modalState = (
+      ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+        .newMessage as Indexed<unknown>
+    ).userDeleteModal as ModalProps;
+
     this.children.userDeleteModal = new Modal({
       className: '',
       type: 'image',
@@ -248,10 +390,8 @@ export class Content extends Block {
       controls: (this.props.userDeleteModal as ModalProps)?.controls,
       buttons: (this.props.userDeleteModal as ModalProps)?.buttons,
       visible: this.props.visibleUserDeleteModal as boolean,
-      state: (
-        ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-          .newMessage as Indexed<unknown>
-      ).userDeleteModal as ModalProps,
+      // list: [],
+      state: modalState,
       submitHandler: this.submitUserDeleteModalHandler as Listener,
       closeHandler: this.closeUserDeleteModalHandler,
       settings: {
@@ -263,6 +403,9 @@ export class Content extends Block {
   async componentDidMount() {
     try {
       this.initContentChat();
+      // this.initDates();
+      // this.initNoMessagesText();
+      // this.initNoChatText();
       this.initContentMenu();
       this.initUserAddModal();
       this.initUserDeleteModal();
@@ -317,10 +460,41 @@ export class Content extends Block {
       }
     }
 
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<unknown>).activeChat as Indexed<unknown>,
+        (newProps.state as Indexed<unknown>).activeChat as Indexed<unknown>
+      )
+    ) {
+      // if ((newProps.state as Indexed<unknown>).activeChat as Indexed<unknown>) {
+      this.initContentChat();
+      // } else {
+      // this.initNoChatText();
+      // }
+
+      return true;
+    }
+
+    if (
+      (oldProps.state as Indexed<unknown>).isLoading !==
+      (newProps.state as Indexed<unknown>).isLoading
+    ) {
+      if ((newProps.state as Indexed<unknown>).isLoading === false) {
+        return true;
+      }
+    }
+
     return false;
   }
 
   render(): string {
+    if ((this.props.state as Indexed<unknown>).isLoading) {
+      return `
+        <section class="content ${this.props.className}">
+          Загрузка...
+        </section>`;
+    }
+
     return template;
   }
 }
