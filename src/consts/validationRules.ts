@@ -105,18 +105,12 @@ export const VALIDATION_RULES: ValidationRules = {
     message: 'Нужно выбрать файл'
   },
   addUser: {
-    regExp: REGEXPS.LOGIN,
-    message:
-      'Логин должен содержать от 3 до 20 символов, латиница, может содержать цифры, ' +
-      'но не состоять из них, без пробелов, без спецсимволов ' +
-      '(допустимы дефис и нижнее подчёркивание)'
+    regExp: REGEXPS.MESSAGE,
+    message: 'Поле не должно быть пустым'
   },
   deleteUser: {
-    regExp: REGEXPS.LOGIN,
-    message:
-      'Логин должен содержать от 3 до 20 символов, латиница, может содержать цифры, ' +
-      'но не состоять из них, без пробелов, без спецсимволов ' +
-      '(допустимы дефис и нижнее подчёркивание)'
+    regExp: REGEXPS.MESSAGE,
+    message: 'Поле не должно быть пустым'
   },
   newChatTitle: {
     regExp: REGEXPS.MESSAGE,
