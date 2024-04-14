@@ -188,13 +188,13 @@ export class ChatsPage extends Block {
   }
 
   public initList() {
-    this.children.list = new List({
+    this.children.list = new (withChats(List))({
       className: 'chats__list',
       chats: [],
       classNameChatMenu: '',
       chatMenu: (this.props.list as ListProps).chatMenu,
       visibleChatMenu: false,
-      state: this.props.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>,
+      // state: this.props.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>,
       deleteChatHandler: this.deleteChatHandler,
       settings: {
         withInternalID: false
@@ -292,12 +292,12 @@ export class ChatsPage extends Block {
   _currentChat = 0;
 
   render(): string {
-    if ((this.props.state as Indexed<unknown>).isLoading) {
-      return `
-        <main>
-          Загрузка...
-        </main>`;
-    }
+    // if ((this.props.state as Indexed<unknown>).isLoading) {
+    //   return `
+    //     <main>
+    //       Загрузка...
+    //     </main>`;
+    // }
 
     return template;
   }

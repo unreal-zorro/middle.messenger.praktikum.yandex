@@ -6,14 +6,12 @@ import { Menu } from '@/modules';
 import type { MenuProps } from '@/modules';
 import { ChatModel } from '@/models';
 import { isEqual } from '@/utils';
-// import { ChatController } from '@/controllers';
 import { Chat } from './modules';
 import template from './list.hbs?raw';
 
 export interface ListProps extends Props {
   className?: string;
   chats?: ChatModel[];
-  // chatsChildren?: unknown[];
   classNameChatMenu?: string;
   chatMenu?: MenuProps;
   visibleChatMenu?: boolean;
@@ -24,12 +22,8 @@ export interface ListProps extends Props {
 }
 
 export class List extends Block {
-  // private chatController: ChatController;
-
   constructor(props: ListProps) {
     super(props);
-
-    // this.chatController = new ChatController();
   }
 
   public chatButtonClickHandler: Listener<number> = (id, buttonLeft, buttonTop, buttonHeight) => {
@@ -135,7 +129,12 @@ export class List extends Block {
   }
 
   public initText() {
-    if (!(this.props.state as ChatModel[]) || !(this.props.state as ChatModel[])?.length) {
+    const chatsArray = (this.props?.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>)
+      ?.chatsData as ChatModel[];
+
+    const chatsArrayLength = chatsArray?.length;
+
+    if (!chatsArray || !chatsArrayLength) {
       this.children.text = new Text({
         className: 'list__text',
         text: 'Список чатов пуст',
@@ -148,8 +147,6 @@ export class List extends Block {
 
   async componentDidMount() {
     try {
-      // await this.chatController?.getChats();
-
       this.initChats();
       this.initChatMenu();
       this.initText();
@@ -159,26 +156,14 @@ export class List extends Block {
   }
 
   componentDidUpdate(oldProps: ListProps, newProps: ListProps): boolean {
-    if (!isEqual(oldProps.state as Indexed<unknown>, newProps.state as Indexed<unknown>)) {
-      return true;
-    }
-
     if (
       !isEqual(
-        (oldProps.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>)
-          .chatsPageData as Indexed<unknown>,
-        (newProps.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>)
-          .chatsPageData as Indexed<unknown>
+        (oldProps.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>).chatsData as [],
+        (newProps.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>).chatsData as []
       )
     ) {
-      return true;
-    }
+      this.initChats();
 
-    if (
-      ((oldProps.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>)
-        .isLoading as boolean) !==
-      ((newProps.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>).isLoading as boolean)
-    ) {
       return true;
     }
 
@@ -200,48 +185,20 @@ export class List extends Block {
       }
     }
 
-    if (
-      !isEqual(
-        (oldProps.state as Indexed<unknown>)?.chats as [],
-        (newProps.state as Indexed<unknown>)?.chats as []
-      )
-    ) {
-      return true;
-    }
-
-    if (oldProps.isUpdate !== newProps.isUpdate) {
-      if (newProps.isUpdate === true) {
-        return true;
-      }
-    }
-
-    if (!isEqual(oldProps.children as {}, newProps.children as {})) {
-      return true;
-    }
-
-    if (
-      !isEqual(oldProps.chats as [], newProps.chats as []) ||
-      (oldProps.chats as ChatModel[])?.length !== (newProps.chats as ChatModel[])?.length
-    ) {
-      return true;
-    }
-
-    if (oldProps.chats !== newProps.chats) {
-      return true;
-    }
-
     return false;
   }
 
   _currentChat = 0;
 
   render(): string {
-    // if ((this.props.state as Indexed<unknown>).isLoading) {
-    //   return `
-    //     <section class="list ${this.props.className}">
-    //       Загрузка...
-    //     </section>`;
-    // }
+    console.log(this.props.state);
+
+    if ((this.props.state as Indexed<unknown>).isLoading) {
+      return `
+        <section class="list ${this.props.className}">
+          Загрузка...
+        </section>`;
+    }
 
     return template;
   }
