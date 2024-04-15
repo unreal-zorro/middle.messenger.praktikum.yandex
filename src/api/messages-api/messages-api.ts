@@ -30,7 +30,7 @@ class MessagesAPI {
   }
 
   // Create WSS transport
-  private async _getWSSTransport(userId: number, chatID: number): Promise<void> {
+  async getWSSTransport(userId: number, chatID: number): Promise<void> {
     try {
       await this._getToken(chatID);
       this.wssTransport = new WSTransport(`${this._baseWSSURL}/${userId}/${chatID}/${this._token}`);
@@ -40,10 +40,8 @@ class MessagesAPI {
   }
 
   // Connect to chat
-  async connectToChat(userId: number, chatID: number): Promise<void> {
+  async connectToChat(): Promise<void> {
     try {
-      await this._getWSSTransport(userId, chatID);
-
       if (this.wssTransport) {
         await this.wssTransport.connect();
       }
