@@ -1,11 +1,18 @@
+import { user } from './../../entities/user';
 import './chats-page.scss';
-import { Block, WSTransportEvents, Listener } from '@/base';
+import { Block, WSTransportEvents } from '@/base';
 import type { Listener, Props } from '@/base';
 import { connect } from '@/hoc';
-import { ChatModel, ChatUserModel, RequestMessage, UserModel } from '@/models';
-import { ChatController, ChatUsersController, ChatsPageController } from '@/controllers';
+import { ChatModel, ChatUserModel, ResponseMessage, UserModel } from '@/models';
+import {
+  ChatController,
+  ChatUsersController,
+  ChatsPageController,
+  UserController
+} from '@/controllers';
 import { isEqual } from '@/utils';
 import { messagesAPI } from '@/api';
+import type { MessageContent, MessageProps } from '@/entities';
 import { Content, List, NewMessage, Search } from './modules';
 import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
 import template from './chats-page.hbs?raw';
@@ -16,7 +23,7 @@ interface ChatsPageProps extends Props {
   list?: ListProps;
   content?: ContentProps;
   newMessage?: NewMessageProps;
-  state?: Record<string, ChatModel[] | boolean>;
+  state?: Record<string, ChatModel[] | UserModel | boolean>;
 }
 
 export class ChatsPage extends Block {
@@ -26,31 +33,60 @@ export class ChatsPage extends Block {
 
   private chatUsersController: ChatUsersController;
 
-  constructor(props: ChatsPageProps) {
-    const messages: string[] = [];
+  private userController: UserController;
 
-    super({...props, ...messages});
+  constructor(props: ChatsPageProps) {
+    const receivedMessages: ResponseMessage[] = [];
+
+    super({ ...props, ...receivedMessages });
 
     this.chatController = new ChatController();
     this.chatsPageController = new ChatsPageController();
     this.chatUsersController = new ChatUsersController();
+    this.userController = new UserController();
 
     if (messagesAPI && messagesAPI.wssTransport) {
-      messagesAPI.wssTransport.on(WSTransportEvents.Connected, () => {
+      const connectHandler: Listener<void> = () => {
+        console.log('connect');
+      };
 
-      });
+      messagesAPI.wssTransport.on(WSTransportEvents.Connected, connectHandler as Listener);
 
-      messagesAPI.wssTransport.on(WSTransportEvents.Close, () => {
+      const closeHandler: Listener<void> = () => {
+        console.log('close');
+      };
 
-      });
+      messagesAPI.wssTransport.on(WSTransportEvents.Close, closeHandler as Listener);
 
-      messagesAPI.wssTransport.on(WSTransportEvents.Message, (message: string) => {
-        messages.push(message);
-      });
+      const messageHandler: Listener<ResponseMessage> = (message: ResponseMessage) => {
+        receivedMessages.push(message);
+      };
 
-      messagesAPI.wssTransport.on(WSTransportEvents.Error, (error) => {
+      messagesAPI.wssTransport.on(WSTransportEvents.Message, messageHandler as Listener);
 
-      });
+      const errorHandler: Listener<Error> = (error: Error) => {
+        console.log(error);
+      };
+
+      messagesAPI.wssTransport.on(WSTransportEvents.Error, errorHandler as Listener);
+    }
+  }
+
+  public async initMessagesAPI() {
+    const currentState = this.props.state as Indexed<
+      ChatModel[] | ChatModel | UserModel | boolean | Indexed<unknown>
+    >;
+
+    const userId = (currentState?.user as UserModel)?.id;
+    const chatID = (currentState?.activeChat as ChatModel)?.id;
+
+    if (messagesAPI.wssTransport) {
+      await messagesAPI.disconnectFromChat();
+    }
+
+    if (userId && chatID) {
+      await messagesAPI.connectToChat(userId, chatID);
+      await messagesAPI.getMessages();
     }
   }
 
@@ -184,6 +220,12 @@ export class ChatsPage extends Block {
     });
   };
 
+  public submitNewMessageHandler: (data: { newMessageText: string }) => Promise<void> = async ({
+    newMessageText
+  }) => {
+    await messagesAPI.sendMessage(newMessageText);
+  };
+
   public addChatUsersHandler: (data: { users: number[]; chatId: number }) => Promise<void> =
     async ({ users, chatId }) => {
       await this.chatUsersController.addChatUsers(users, chatId);
@@ -275,6 +317,7 @@ export class ChatsPage extends Block {
       attachLocationModal: (this.props.newMessage as NewMessageProps).attachLocationModal,
       visibleAttachLocationModal: false,
       typeAttachLocationModal: '',
+      submitNewMessageHandler: this.submitNewMessageHandler,
       settings: {
         withInternalID: false
       }
@@ -285,12 +328,14 @@ export class ChatsPage extends Block {
     try {
       await this.chatController?.getChats();
       await this.chatsPageController?.getChatsPageData();
+      await this.userController?.getUser();
 
       this.initEvents();
       this.initSearch();
       this.initList();
       this.initContent();
       this.initNewMessage();
+      this.initMessagesAPI();
 
       (this.children.list as List).setProps({
         state: this.props.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>
@@ -307,6 +352,15 @@ export class ChatsPage extends Block {
         (newProps.state as Indexed<unknown>)?.chatsData as []
       )
     ) {
+      return true;
+    }
+
+    if (
+      ((oldProps.state as Indexed<unknown>)?.activeChat as ChatModel)?.id !==
+      ((newProps.state as Indexed<unknown>)?.activeChat as ChatModel)?.id
+    ) {
+      this.initMessagesAPI();
+
       return true;
     }
 
@@ -340,13 +394,19 @@ export class ChatsPage extends Block {
   }
 }
 
-function mapChatsToProps(state: Indexed<ChatModel[] | boolean | Indexed<unknown>>): {
+function mapChatsToProps(
+  state: Indexed<ChatModel[] | ChatModel | UserModel | boolean | Indexed<unknown>>
+): {
   chatsData: ChatModel[];
+  activeChat: ChatModel;
+  user: UserModel;
   isLoading: boolean;
   chatsPageData: Indexed<unknown>;
 } {
   return {
     chatsData: state?.chats as ChatModel[],
+    activeChat: state?.activeChat as ChatModel,
+    user: state?.user as UserModel,
     isLoading: state?.isLoading as boolean,
     chatsPageData: state?.chatsPageData as Indexed<unknown>
   };
@@ -384,19 +444,31 @@ function mapActiveChatAndUserIdToProps(
 }
 
 function mapActiveChatAndUserIdAndUsersToProps(
-  state: Indexed<Indexed<unknown> | ChatModel | ChatUserModel[] | number | boolean>
+  state: Indexed<
+    | Indexed<unknown>
+    | ChatModel
+    | UserModel
+    | ChatUserModel[]
+    | ResponseMessage[]
+    | number
+    | boolean
+  >
 ): {
   userId: number;
+  user: UserModel;
   activeChat: ChatModel;
   chatUsers: ChatUserModel[];
   chatsPageData: Indexed<unknown>;
+  receivedMessages: ResponseMessage[];
   isLoading: boolean;
 } {
   return {
     userId: (state?.user as UserModel)?.id,
+    user: state?.user as UserModel,
     activeChat: state?.activeChat as ChatModel,
     chatUsers: state?.chatUsers as ChatUserModel[],
     chatsPageData: state?.chatsPageData as Indexed<unknown>,
+    receivedMessages: state?.receivedMessages as ResponseMessage[],
     isLoading: state?.isLoading as boolean
   };
 }
@@ -404,10 +476,13 @@ function mapActiveChatAndUserIdAndUsersToProps(
 export const withChats = connect(
   mapChatsToProps as (state: Indexed<unknown>) => {
     chatsData: ChatModel[];
+    activeChat: ChatModel;
+    user: UserModel;
     isLoading: boolean;
     chatsPageData: Indexed<unknown>;
   }
 );
+
 export const withChatsPageData = connect(
   mapChatsPageDataToProps as (state: Indexed<unknown>) => {
     chatsPageData: Indexed<unknown>;
@@ -433,9 +508,11 @@ export const withActiveChatAndUserIdToProps = connect(
 export const withActiveChatAndUserIdAndUsersToProps = connect(
   mapActiveChatAndUserIdAndUsersToProps as (state: Indexed<unknown>) => {
     userId: number;
+    user: UserModel;
     activeChat: ChatModel;
     chatUsers: ChatUserModel[];
     chatsPageData: Indexed<unknown>;
+    receivedMessages: ResponseMessage[];
     isLoading: boolean;
   }
 );

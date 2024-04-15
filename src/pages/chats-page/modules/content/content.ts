@@ -7,7 +7,7 @@ import { Menu, Modal } from '@/modules';
 import type { MenuProps, ModalProps } from '@/modules';
 import { CONTENT_MENU_ITEMS, VALIDATION_RULES } from '@/consts';
 import { isEqual } from '@/utils';
-import { ChatModel, ChatUserModel } from '@/models';
+import { ChatModel, ChatUserModel, ResponseMessage, UserModel } from '@/models';
 import { ContentChat, EqualDatesMessages } from './modules';
 import type { MessageContent, MessageProps } from './modules';
 import template from './content.hbs?raw';
@@ -25,7 +25,15 @@ export interface ContentProps extends Props {
   visibleUserAddModal?: boolean;
   userDeleteModal: ModalProps;
   visibleUserDeleteModal?: boolean;
-  state?: Indexed<ChatModel[] | ChatUserModel[] | number | boolean | Indexed<unknown>>;
+  state?: Indexed<
+    | Indexed<unknown>
+    | ChatModel
+    | UserModel
+    | ChatUserModel[]
+    | ResponseMessage[]
+    | number
+    | boolean
+  >;
   chatUsersAddHandler: Listener;
   chatUsersDeleteHandler: Listener;
 }
@@ -34,6 +42,81 @@ export class Content extends Block {
   constructor(props: ContentProps) {
     super(props);
   }
+
+  public getChatsContent = (
+    userID: string = '',
+    messagesArray: ResponseMessage[] = [],
+    chatUsers: ChatUserModel[] = []
+  ) => {
+    if (!userID || !messagesArray) {
+      return {
+        dates: [],
+        messages: [],
+        messageContent: []
+      };
+    }
+
+    const dateArray: Set<string> = new Set();
+    const messageArray: MessageProps[] = [];
+    const messageContentArray: MessageContent[] = [];
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+
+    let dateFormatter = new Intl.DateTimeFormat('ru', {
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const timeFormatter = new Intl.DateTimeFormat('ru', {
+      hour: 'numeric',
+      minute: 'numeric'
+    });
+
+    messagesArray.forEach((message) => {
+      const messageDate = new Date(message.time);
+      const messageYear = messageDate.getFullYear();
+
+      const isISendMessage = message.user_id === userID;
+
+      if (currentYear !== messageYear) {
+        dateFormatter = new Intl.DateTimeFormat('ru', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      }
+
+      const date = dateFormatter.format(messageDate);
+      const time = timeFormatter.format(messageDate);
+
+      const chatUser = chatUsers.filter((user) => user.id === +message.user_id);
+      const name = chatUser?.[0].display_name;
+
+      const resultMessage: MessageProps = {
+        id: message.id,
+        name,
+        date,
+        time,
+        check: isISendMessage
+      };
+
+      dateArray.add(date);
+      messageArray.push(resultMessage);
+      messageContentArray.push({
+        messageId: message.id,
+        isText: true,
+        isImage: false,
+        data: message.content
+      });
+    });
+
+    return {
+      dates: Array.from(dateArray),
+      messages: messageArray,
+      messageContent: messageContentArray
+    };
+  };
 
   public clickHandler: Listener<Event> = (event: Event) => {
     const {
@@ -169,9 +252,17 @@ export class Content extends Block {
 
   public initContentChat() {
     // if (this.props.currentChat && !isEqual(this.props.currentChat as PlainObject, {})) {
-    const activeChat = (
-      this.props?.state as Indexed<Indexed<unknown> | ChatModel | number | boolean>
-    )?.activeChat as ChatModel;
+    const currentState = this.props.state as Indexed<
+      | Indexed<unknown>
+      | ChatModel
+      | UserModel
+      | ChatUserModel[]
+      | ResponseMessage[]
+      | number
+      | boolean
+    >;
+
+    const activeChat = currentState?.activeChat as ChatModel;
 
     if (activeChat) {
       this.children.contentChat = new ContentChat({
@@ -210,14 +301,41 @@ export class Content extends Block {
         })
       });
 
-      if (this.props.dates && (this.props.dates as string[])?.length) {
-        this.children.dates = (this.props.dates as string[])?.map((dateItem) => {
-          const messages: MessageProps[] = (this.props.messages as MessageProps[])?.filter(
-            (messageItem) => dateItem === messageItem.date
+      const userId = (currentState?.user as UserModel)?.id;
+      const messagesArray = currentState?.receivedMessages as ResponseMessage[];
+      const chatUsersArray = currentState?.chatUsers as ChatUserModel[];
+
+      const {
+        dates: datesArray,
+        messages: newMessagesArray,
+        messageContent: messageContentArray
+      } = this.getChatsContent(String(userId), messagesArray, chatUsersArray);
+      const datesArrayLength = datesArray?.length;
+
+      // if (this.props.dates && (this.props.dates as string[])?.length) {
+      if (datesArrayLength) {
+        const newDatesArray = new Array(datesArrayLength).fill(0);
+
+        // this.children.dates = (this.props.dates as string[])?.map((dateItem) => {
+        this.children.dates = newDatesArray?.map((_dateItem, index) => {
+          const currentDate = datesArray?.[index];
+
+          // const messages: MessageProps[] = (this.props.messages as MessageProps[])?.filter(
+          //   (messageItem) => dateItem === messageItem.date
+          // );
+          const messages: MessageProps[] = newMessagesArray?.filter(
+            (messageItem) => currentDate === messageItem.date
           );
+
           const messageContent: MessageContent[] = [];
-          messages?.forEach((messageItem) => {
-            const content = (this.props.messageContent as MessageContent[])?.filter(
+          // messages?.forEach((messageItem) => {
+          //   const content = (this.props.messageContent as MessageContent[])?.filter(
+          //     (messageContentItem) => messageItem.id === messageContentItem.messageId
+          //   );
+          //   messageContent.push(...content);
+          // });
+          newMessagesArray?.forEach((messageItem) => {
+            const content = messageContentArray?.filter(
               (messageContentItem) => messageItem.id === messageContentItem.messageId
             );
             messageContent.push(...content);
@@ -225,7 +343,7 @@ export class Content extends Block {
 
           return new EqualDatesMessages({
             className: 'content__list-item',
-            date: dateItem,
+            date: currentDate,
             messages,
             messageContent,
             settings: {
@@ -471,6 +589,17 @@ export class Content extends Block {
       // } else {
       // this.initNoChatText();
       // }
+
+      return true;
+    }
+
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<unknown>).receivedMessages as [],
+        (newProps.state as Indexed<unknown>).receivedMessages as []
+      )
+    ) {
+      this.initContentChat();
 
       return true;
     }

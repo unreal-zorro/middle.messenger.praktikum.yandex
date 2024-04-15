@@ -24,6 +24,7 @@ export interface NewMessageProps extends Props {
   visibleAttachLocationModal?: boolean;
   typeAttachLocationModal?: string;
   state?: Indexed<Indexed<unknown>>;
+  submitNewMessageHandler: Listener;
 }
 
 export class NewMessage extends Block {
@@ -77,6 +78,18 @@ export class NewMessage extends Block {
     });
 
     if (isValid) {
+      const newMessageText = [Number(formData.message)];
+
+      if (this.props.submitNewMessageHandler) {
+        (
+          this.props.submitNewMessageHandler as (
+            ...args: Record<string, number | number[]>[]
+          ) => Promise<void>
+        )({
+          newMessageText
+        });
+      }
+
       console.log(formData);
     } else {
       console.log('Invalid form data');
