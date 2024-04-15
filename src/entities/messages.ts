@@ -5,6 +5,16 @@ export interface MessageContent extends Record<string, string | boolean | undefi
   data?: string;
 }
 
+export interface MessageProps {
+  className?: string;
+  id?: string;
+  name?: string;
+  date?: string;
+  time?: string;
+  check?: boolean;
+  content?: MessageContent[];
+}
+
 export interface Message {
   id: string;
   login: string;
