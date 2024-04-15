@@ -1,15 +1,5 @@
-import type { MessageContent, Chat, CurrentChat, Message, User } from '@/entities';
+import type { MessageContent, Chat, CurrentChat, Message, User, MessageProps } from '@/entities';
 import { CHAT_MENU_ITEMS, ATTACH_MENU_ITEMS, CONTENT_MENU_ITEMS } from './menuItems';
-
-interface MessageProps {
-  className?: string;
-  id?: string;
-  name?: string;
-  date?: string;
-  time?: string;
-  check?: boolean;
-  content?: MessageContent[];
-}
 
 const getChatMenuData = () => {
   const items = [
