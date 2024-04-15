@@ -78,13 +78,11 @@ export class NewMessage extends Block {
     });
 
     if (isValid) {
-      const newMessageText = [Number(formData.message)];
+      const newMessageText = String(formData.message);
 
       if (this.props.submitNewMessageHandler) {
         (
-          this.props.submitNewMessageHandler as (
-            ...args: Record<string, number | number[]>[]
-          ) => Promise<void>
+          this.props.submitNewMessageHandler as (...args: Record<string, string>[]) => Promise<void>
         )({
           newMessageText
         });
