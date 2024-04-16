@@ -73,7 +73,7 @@ export class Chat extends Block {
       }
     });
 
-    if (this.props.count) {
+    if (this.props.unreadCount) {
       this.children.countChild = new Text({
         className: 'chat__count',
         text: this.props.unreadCount as string,

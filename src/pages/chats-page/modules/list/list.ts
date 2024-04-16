@@ -4,11 +4,72 @@ import type { Listener, Props } from '@/base';
 import { Text } from '@/components';
 import { Menu } from '@/modules';
 import type { MenuProps } from '@/modules';
-import { ChatModel } from '@/models';
+import { ChatModel, ResponseMessage, UserModel } from '@/models';
 import { isEqual } from '@/utils';
 import { CHAT_MENU_ITEMS } from '@/consts';
 import { Chat } from './modules';
 import template from './list.hbs?raw';
+
+const getTransformChatsDate: (chatsDate: string) => string = (chatsDate) => {
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const currentYear = currentDate.getFullYear();
+
+  const dateFormatter = new Intl.DateTimeFormat('ru', {
+    month: 'long',
+    day: 'numeric'
+  });
+
+  const shortDateFormatter = new Intl.DateTimeFormat('ru', {
+    weekday: 'short'
+  });
+
+  const longDateFormatter = new Intl.DateTimeFormat('ru', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+
+  const timeFormatter = new Intl.DateTimeFormat('ru', {
+    hour: 'numeric',
+    minute: 'numeric'
+  });
+
+  const weekDaysInMs = 7 * 24 * 60 * 60 * 1000;
+
+  const capitalizeFirstLetter: (string: string) => string = (string) =>
+    string.charAt(0).toUpperCase() + string.slice(1);
+
+  const chatMessageDate = new Date(chatsDate);
+
+  let formatter = dateFormatter;
+
+  const chatMessageYear = chatMessageDate.getFullYear();
+
+  if (currentYear !== chatMessageYear) {
+    formatter = longDateFormatter;
+  }
+
+  const dateDifference = new Date(currentDate.getTime() - chatMessageDate.getTime());
+
+  if (dateDifference.getTime() < weekDaysInMs) {
+    formatter = shortDateFormatter;
+
+    const chatMessageDay = chatMessageDate.getDate();
+
+    if (currentDay === chatMessageDay) {
+      formatter = timeFormatter;
+    }
+  }
+
+  let date = capitalizeFirstLetter(formatter.format(chatMessageDate));
+
+  if (formatter === longDateFormatter) {
+    date = date.slice(0, -3);
+  }
+
+  return date;
+};
 
 export interface ListProps extends Props {
   className?: string;
@@ -17,7 +78,9 @@ export interface ListProps extends Props {
   chatMenu?: MenuProps;
   visibleChatMenu?: boolean;
   visibleChatAvatarModal?: boolean;
-  state?: Indexed<ChatModel[] | boolean | Indexed<unknown>>;
+  state?: Indexed<
+    ChatModel[] | ChatModel | UserModel | ResponseMessage[] | boolean | Indexed<unknown>
+  >;
   isUpdate?: boolean;
   checkActiveChatHandler: (...args: Record<string, string>[]) => Promise<void>;
   deleteChatHandler: (...args: Record<string, string>[]) => Promise<void>;
@@ -95,28 +158,35 @@ export class List extends Block {
   }
 
   public initChats() {
-    const chatsArrayLength = (
-      (this.props?.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>)
-        ?.chatsData as ChatModel[]
-    )?.length;
+    const currentState = this.props?.state as Indexed<
+      ChatModel[] | ChatModel | UserModel | ResponseMessage[] | boolean | Indexed<unknown>
+    >;
+
+    const chatsData = currentState?.chatsData as ChatModel[];
+
+    const chatUser = currentState?.user as UserModel;
+    const chatUserId = chatUser.id;
+
+    const chatsArrayLength = chatsData?.length;
 
     if (chatsArrayLength) {
       const chatsArray = new Array(chatsArrayLength).fill(0);
 
       this.children.chats = chatsArray?.map((_chat, index) => {
-        const currentChat = (
-          (this.props?.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>)
-            ?.chatsData as ChatModel[]
-        )?.[index];
+        const currentChat = chatsData?.[index];
 
         const id = currentChat?.id;
         const avatar = currentChat?.avatar;
         const title = currentChat?.title;
-        const lastMessageTime = currentChat?.last_message?.time;
         const lastMessageContent = currentChat?.last_message?.content;
-        const createdBy = !!currentChat?.created_by;
+        const createdBy = currentChat?.created_by === chatUserId;
         const unreadCount = currentChat?.unread_count;
         const active = currentChat?.active === id;
+
+        let lastMessageTime = '';
+        if (currentChat?.last_message) {
+          lastMessageTime = getTransformChatsDate(currentChat?.last_message?.time as string);
+        }
 
         return new Chat({
           className: 'list__item',
@@ -187,14 +257,14 @@ export class List extends Block {
       }
     }
 
-    if (
-      (oldProps.state as Indexed<unknown>).isLoading !==
-      (newProps.state as Indexed<unknown>).isLoading
-    ) {
-      if ((newProps.state as Indexed<unknown>).isLoading === false) {
-        return true;
-      }
-    }
+    // if (
+    //   (oldProps.state as Indexed<unknown>).isLoading !==
+    //   (newProps.state as Indexed<unknown>).isLoading
+    // ) {
+    //   if ((newProps.state as Indexed<unknown>).isLoading === false) {
+    //     return true;
+    //   }
+    // }
 
     return false;
   }
@@ -202,12 +272,12 @@ export class List extends Block {
   _currentChat = 0;
 
   render(): string {
-    if ((this.props.state as Indexed<unknown>).isLoading) {
-      return `
-        <section class="list ${this.props.className}">
-          Загрузка...
-        </section>`;
-    }
+    // if ((this.props.state as Indexed<unknown>).isLoading) {
+    //   return `
+    //     <section class="list ${this.props.className}">
+    //       Загрузка...
+    //     </section>`;
+    // }
 
     return template;
   }
