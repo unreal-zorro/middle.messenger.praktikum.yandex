@@ -11,6 +11,7 @@ import {
 } from '@/controllers';
 import { isEqual } from '@/utils';
 import { messagesAPI } from '@/api';
+import { store } from '@/store';
 import { Content, List, NewMessage, Search } from './modules';
 import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
 import template from './chats-page.hbs?raw';
@@ -34,9 +35,6 @@ export class ChatsPage extends Block {
   private userController: UserController;
 
   constructor(props: ChatsPageProps) {
-    // const receivedMessages: ResponseMessage[] = [];
-
-    // super({ ...props, receivedMessages });
     super(props);
 
     this.chatController = new ChatController();
@@ -44,6 +42,46 @@ export class ChatsPage extends Block {
     this.chatUsersController = new ChatUsersController();
     this.userController = new UserController();
   }
+
+  public connectHandler: Listener<void> = () => {
+    console.log('connect');
+  };
+
+  public closeHandler: Listener<void> = () => {
+    console.log('close');
+  };
+
+  public messageHandler: Listener<ResponseMessage | ResponseMessage[]> = (
+    message: ResponseMessage | ResponseMessage[]
+  ) => {
+    if ((this.props.state as Indexed<unknown>).receivedMessages as ResponseMessage[]) {
+      if (Array.isArray(message)) {
+        store.set('receivedMessages', [
+          ...message,
+          ...((store.getState() as Indexed<unknown>).receivedMessages as ResponseMessage[])
+        ]);
+      }
+
+      if (!Array.isArray(message)) {
+        store.set('receivedMessages', [
+          message,
+          ...((store.getState() as Indexed<unknown>).receivedMessages as ResponseMessage[])
+        ]);
+      }
+    } else {
+      if (Array.isArray(message)) {
+        store.set('receivedMessages', [...message]);
+      }
+
+      if (!Array.isArray(message)) {
+        store.set('receivedMessages', [message]);
+      }
+    }
+  };
+
+  public errorHandler: Listener<Error> = (error: Error) => {
+    console.log(error);
+  };
 
   public async initMessagesAPI() {
     const currentState = this.props.state as Indexed<
@@ -61,82 +99,10 @@ export class ChatsPage extends Block {
       await messagesAPI.getWSSTransport(userId, chatID);
 
       if (messagesAPI && messagesAPI.wssTransport) {
-        const connectHandler: Listener<void> = () => {
-          console.log('connect');
-        };
-
-        messagesAPI.wssTransport.on(WSTransportEvents.Connected, connectHandler as Listener);
-
-        const closeHandler: Listener<void> = () => {
-          console.log('close');
-        };
-
-        messagesAPI.wssTransport.on(WSTransportEvents.Close, closeHandler as Listener);
-
-        const messageHandler: Listener<ResponseMessage | ResponseMessage[]> = (
-          message: ResponseMessage | ResponseMessage[]
-        ) => {
-          // this.setProps({
-          //   state: {
-          //     ...(this.props.state as Indexed<unknown>),
-          //     receivedMessages: [message]
-          //   }
-          // });
-
-          if ((this.props.state as Indexed<unknown>).receivedMessages as ResponseMessage[]) {
-            if (Array.isArray(message)) {
-              this.setProps({
-                state: {
-                  ...(this.props.state as Indexed<unknown>),
-                  receivedMessages: [
-                    ...((this.props.state as Indexed<unknown>)
-                      .receivedMessages as ResponseMessage[]),
-                    ...message
-                  ]
-                }
-              });
-            }
-
-            if (!Array.isArray(message)) {
-              this.setProps({
-                state: {
-                  ...(this.props.state as Indexed<unknown>),
-                  receivedMessages: [
-                    ...((this.props.state as Indexed<unknown>)
-                      .receivedMessages as ResponseMessage[]),
-                    message
-                  ]
-                }
-              });
-            }
-          } else {
-            if (Array.isArray(message)) {
-              this.setProps({
-                state: {
-                  ...(this.props.state as Indexed<unknown>),
-                  receivedMessages: [...message]
-                }
-              });
-            }
-
-            if (!Array.isArray(message)) {
-              this.setProps({
-                state: {
-                  ...(this.props.state as Indexed<unknown>),
-                  receivedMessages: [message]
-                }
-              });
-            }
-          }
-        };
-
-        messagesAPI.wssTransport.on(WSTransportEvents.Message, messageHandler as Listener);
-
-        const errorHandler: Listener<Error> = (error: Error) => {
-          console.log(error);
-        };
-
-        messagesAPI.wssTransport.on(WSTransportEvents.Error, errorHandler as Listener);
+        messagesAPI.wssTransport.on(WSTransportEvents.Connected, this.connectHandler as Listener);
+        messagesAPI.wssTransport.on(WSTransportEvents.Close, this.closeHandler as Listener);
+        messagesAPI.wssTransport.on(WSTransportEvents.Message, this.messageHandler as Listener);
+        messagesAPI.wssTransport.on(WSTransportEvents.Error, this.errorHandler as Listener);
       }
 
       await messagesAPI.connectToChat();
@@ -238,14 +204,33 @@ export class ChatsPage extends Block {
   ) => {
     const activeChat = await this.chatController.checkActiveChat(Number(data.chatId));
 
+    // this.setProps({
+    //   state: {
+    //     ...(this.props.state as Indexed<unknown>)
+    //     // isUpdateContent: true
+    //   }
+    // });
+
     (this.children.content as Content).setProps({
       state: {
         activeChat
+        // isUpdateContent: true
       }
     });
 
+    this.setProps({
+      state: {
+        ...(this.props.state as Indexed<unknown>),
+        receivedMessages: []
+      }
+    });
+
+    store.set('receivedMessages', []);
+
     await this.getChatUsersHandler(data);
     await this.initMessagesAPI();
+
+    this.initContent();
   };
 
   public deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (data) => {
@@ -349,8 +334,8 @@ export class ChatsPage extends Block {
     this.children.content = new (withActiveChatAndUserIdAndUsersToProps(Content))({
       className: 'chats__content',
       dates: (this.props.content as ContentProps).dates,
-      messages: (this.props.content as ContentProps).messages,
-      messageContent: (this.props.content as ContentProps).messageContent,
+      // messages: (this.props.content as ContentProps).messages,
+      // messageContent: (this.props.content as ContentProps).messageContent,
       currentChat: (this.props.content as ContentProps).currentChat,
       classNameContentMenu: '',
       contentMenu: (this.props.content as ContentProps).contentMenu,
@@ -421,27 +406,27 @@ export class ChatsPage extends Block {
       return true;
     }
 
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<unknown>)?.user as UserModel,
+        (newProps.state as Indexed<unknown>)?.user as UserModel
+      )
+    ) {
+      return true;
+    }
+
     // if (
     //   ((oldProps.state as Indexed<unknown>)?.activeChat as ChatModel)?.id !==
     //   ((newProps.state as Indexed<unknown>)?.activeChat as ChatModel)?.id
     // ) {
-    //   this.initMessagesAPI();
+    //   // this.initMessagesAPI();
 
     //   return true;
     // }
 
-    if (!isEqual(oldProps.state as Indexed<unknown>, newProps.state as Indexed<unknown>)) {
-      return true;
-    }
-
-    if (
-      (oldProps.state as Indexed<unknown>).isLoading !==
-      (newProps.state as Indexed<unknown>).isLoading
-    ) {
-      if ((newProps.state as Indexed<unknown>).isLoading === false) {
-        return true;
-      }
-    }
+    // if (!isEqual(oldProps.state as Indexed<unknown>, newProps.state as Indexed<unknown>)) {
+    //   return true;
+    // }
 
     return false;
   }
@@ -449,13 +434,6 @@ export class ChatsPage extends Block {
   _currentChat = 0;
 
   render(): string {
-    // if ((this.props.state as Indexed<unknown>).isLoading) {
-    //   return `
-    //     <main>
-    //       Загрузка...
-    //     </main>`;
-    // }
-
     return template;
   }
 }
@@ -490,29 +468,6 @@ function mapChatsPageDataToProps(state: Indexed<Indexed<unknown>>): {
   };
 }
 
-function mapChatUsersToProps(state: Indexed<ChatUserModel[] | boolean>): {
-  chatUsers: ChatUserModel[];
-  isLoading: boolean;
-} {
-  return { chatUsers: state?.chatUsers as ChatUserModel[], isLoading: state?.isLoading as boolean };
-}
-
-function mapActiveChatAndUserIdToProps(
-  state: Indexed<Indexed<unknown> | ChatModel | number | boolean>
-): {
-  userId: number;
-  activeChat: ChatModel;
-  chatsPageData: Indexed<unknown>;
-  isLoading: boolean;
-} {
-  return {
-    userId: (state?.user as UserModel)?.id,
-    activeChat: state?.activeChat as ChatModel,
-    chatsPageData: state?.chatsPageData as Indexed<unknown>,
-    isLoading: state?.isLoading as boolean
-  };
-}
-
 function mapActiveChatAndUserIdAndUsersToProps(
   state: Indexed<
     | Indexed<unknown>
@@ -527,6 +482,7 @@ function mapActiveChatAndUserIdAndUsersToProps(
   userId: number;
   user: UserModel;
   activeChat: ChatModel;
+  // isUpdateContent: boolean;
   chatUsers: ChatUserModel[];
   chatsPageData: Indexed<unknown>;
   receivedMessages: ResponseMessage[];
@@ -536,6 +492,7 @@ function mapActiveChatAndUserIdAndUsersToProps(
     userId: (state?.user as UserModel)?.id,
     user: state?.user as UserModel,
     activeChat: state?.activeChat as ChatModel,
+    // isUpdateContent: state?.isUpdateContent as boolean,
     chatUsers: state?.chatUsers as ChatUserModel[],
     chatsPageData: state?.chatsPageData as Indexed<unknown>,
     receivedMessages: state?.receivedMessages as ResponseMessage[],
@@ -560,27 +517,12 @@ export const withChatsPageData = connect(
   }
 );
 
-export const withChatUsers = connect(
-  mapChatUsersToProps as (state: Indexed<unknown>) => {
-    chatUsers: ChatUserModel[];
-    isLoading: boolean;
-  }
-);
-
-export const withActiveChatAndUserIdToProps = connect(
-  mapActiveChatAndUserIdToProps as (state: Indexed<unknown>) => {
-    userId: number;
-    activeChat: ChatModel;
-    chatsPageData: Indexed<unknown>;
-    isLoading: boolean;
-  }
-);
-
 export const withActiveChatAndUserIdAndUsersToProps = connect(
   mapActiveChatAndUserIdAndUsersToProps as (state: Indexed<unknown>) => {
     userId: number;
     user: UserModel;
     activeChat: ChatModel;
+    // isUpdateContent: boolean;
     chatUsers: ChatUserModel[];
     chatsPageData: Indexed<unknown>;
     receivedMessages: ResponseMessage[];

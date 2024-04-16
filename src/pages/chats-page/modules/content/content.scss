@@ -70,6 +70,7 @@
     @include flex(column, flex-start, center);
 
     &-item {
+      padding-bottom: 10px;
       border-bottom: 1px solid $border;
 
       &:last-child {
