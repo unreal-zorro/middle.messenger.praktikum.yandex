@@ -2,6 +2,7 @@ import './equalDatesMessages.scss';
 import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Text } from '@/components';
+import { isEqual } from '@/utils';
 import { Message } from './modules';
 import type { MessageProps, MessageContent } from './modules';
 import template from './equalDatesMessages.hbs?raw';
@@ -11,12 +12,15 @@ export interface EqualDatesMessagesProps extends Props {
   date?: string;
   messages?: MessageProps[];
   messageContent?: MessageContent[];
+  state?: Indexed<MessageProps[] | MessageContent[]>;
 }
 
 export class EqualDatesMessages extends Block {
   constructor(props: EqualDatesMessagesProps) {
     super(props);
+  }
 
+  public initDate() {
     if (this.props.date) {
       this.children.date = new Text({
         className: 'content__date',
@@ -26,10 +30,15 @@ export class EqualDatesMessages extends Block {
         }
       });
 
-      this.children.messages = (this.props.messages as MessageProps[])?.map((message) => {
-        const messageContent: MessageContent[] = (
-          this.props.messageContent as MessageContent[]
-        )?.filter((content) => message.id === content.messageId);
+      const currentState = this.props.state as Indexed<MessageProps[] | MessageContent[]>;
+
+      const messagesArray = currentState?.messages as MessageProps[];
+      const messageContentArray = currentState?.messageContent as MessageContent[];
+
+      this.children.messages = messagesArray?.map((message) => {
+        const newMessageContent: MessageContent[] = messageContentArray?.filter(
+          (content) => message.id === content.messageId
+        );
 
         return new Message({
           className: 'content__message',
@@ -37,13 +46,50 @@ export class EqualDatesMessages extends Block {
           name: message.name,
           time: message.time,
           check: message.check,
-          content: messageContent,
+          content: newMessageContent,
           settings: {
             withInternalID: true
           }
         });
       });
     }
+  }
+
+  async componentDidMount() {
+    try {
+      this.initDate();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  componentDidUpdate(
+    oldProps: EqualDatesMessagesProps,
+    newProps: EqualDatesMessagesProps
+  ): boolean {
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<MessageProps[] | MessageContent[]>).messages as [],
+        (newProps.state as Indexed<MessageProps[] | MessageContent[]>).messages as []
+      )
+    ) {
+      this.initDate();
+
+      return true;
+    }
+
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<MessageProps[] | MessageContent[]>).messageContent as [],
+        (newProps.state as Indexed<MessageProps[] | MessageContent[]>).messageContent as []
+      )
+    ) {
+      this.initDate();
+
+      return true;
+    }
+
+    return false;
   }
 
   render(): string {
