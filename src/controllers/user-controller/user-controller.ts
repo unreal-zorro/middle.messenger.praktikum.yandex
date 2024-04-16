@@ -26,7 +26,9 @@ export class UserController {
 
         store.set('isLoading', false);
       } catch (error: unknown) {
+        store.set('isLoading', false);
         console.log((error as Error).message);
+
         if ((error as Error).message.startsWith('status: 401')) {
           router.go('/');
         }
@@ -60,6 +62,7 @@ export class UserController {
         store.set('isLoading', false);
         router.go('/settings');
       } catch (error: unknown) {
+        store.set('isLoading', false);
         console.log(error);
       }
     } else {
@@ -88,6 +91,7 @@ export class UserController {
         store.set('isLoading', false);
         router.go('/settings');
       } catch (error: unknown) {
+        store.set('isLoading', false);
         console.log(error);
       }
     } else {
@@ -109,6 +113,7 @@ export class UserController {
         store.set('isLoading', false);
         router.go('/settings');
       } catch (error: unknown) {
+        store.set('isLoading', false);
         console.log(error);
       }
     } else {

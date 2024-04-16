@@ -22,6 +22,7 @@ export class ChatController {
 
         store.set('isLoading', false);
       } catch (error: unknown) {
+        store.set('isLoading', false);
         console.log((error as Error).message);
 
         if ((error as Error).message.startsWith('status: 401')) {
