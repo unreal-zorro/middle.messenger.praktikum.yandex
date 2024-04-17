@@ -338,7 +338,7 @@ const getUserAddModalData = () => {
 
   const controls = [
     {
-      label: 'Логин',
+      label: 'Id пользователя',
       name: 'addUser',
       type: 'text',
       disabled: false,
@@ -355,10 +355,14 @@ const getUserAddModalData = () => {
     }
   ];
 
+  const listHeader = 'Список пользователей';
+
   return {
     header,
     controls,
     buttons,
+    listHeader,
+    list: [],
     visible: false
   };
 };
@@ -368,7 +372,7 @@ const getUserDeleteModalData = () => {
 
   const controls = [
     {
-      label: 'Логин',
+      label: 'Id пользователя',
       name: 'deleteUser',
       type: 'text',
       disabled: false,
@@ -385,10 +389,14 @@ const getUserDeleteModalData = () => {
     }
   ];
 
+  const listHeader = 'Список пользователей';
+
   return {
     header,
     controls,
     buttons,
+    listHeader,
+    list: [],
     visible: false
   };
 };
