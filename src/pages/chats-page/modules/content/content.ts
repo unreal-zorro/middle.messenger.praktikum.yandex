@@ -537,10 +537,22 @@ export class Content extends Block {
   }
 
   public initUserAddModal() {
+    const currentState = this.props.state as Indexed<
+      | Indexed<unknown>
+      | ChatModel
+      | UserModel
+      | ChatUserModel[]
+      | ResponseMessage[]
+      | number
+      | boolean
+    >;
+
     const modalState = (
-      ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-        .newMessage as Indexed<unknown>
+      (currentState.chatsPageData as Indexed<unknown>).newMessage as Indexed<unknown>
     ).userAddModal as ModalProps;
+
+    const currentChatUsers = currentState?.chatUsers as ChatUserModel[];
+    const list = currentChatUsers?.map((user) => String(user.id));
 
     this.children.userAddModal = new Modal({
       className: '',
@@ -549,7 +561,8 @@ export class Content extends Block {
       controls: (this.props.userAddModal as ModalProps)?.controls,
       buttons: (this.props.userAddModal as ModalProps)?.buttons,
       visible: this.props.visibleUserAddModal as boolean,
-      // list: [],
+      listHeader: (this.props.userAddModal as ModalProps)?.listHeader,
+      list,
       state: modalState,
       submitHandler: this.submitUserAddModalHandler as Listener,
       closeHandler: this.closeUserAddModalHandler,
@@ -560,10 +573,22 @@ export class Content extends Block {
   }
 
   public initUserDeleteModal() {
+    const currentState = this.props.state as Indexed<
+      | Indexed<unknown>
+      | ChatModel
+      | UserModel
+      | ChatUserModel[]
+      | ResponseMessage[]
+      | number
+      | boolean
+    >;
+
     const modalState = (
-      ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-        .newMessage as Indexed<unknown>
+      (currentState.chatsPageData as Indexed<unknown>).newMessage as Indexed<unknown>
     ).userDeleteModal as ModalProps;
+
+    const currentChatUsers = currentState?.chatUsers as ChatUserModel[];
+    const list = currentChatUsers?.map((user) => String(user.id));
 
     this.children.userDeleteModal = new Modal({
       className: '',
@@ -572,7 +597,8 @@ export class Content extends Block {
       controls: (this.props.userDeleteModal as ModalProps)?.controls,
       buttons: (this.props.userDeleteModal as ModalProps)?.buttons,
       visible: this.props.visibleUserDeleteModal as boolean,
-      // list: [],
+      listHeader: (this.props.userAddModal as ModalProps)?.listHeader,
+      list,
       state: modalState,
       submitHandler: this.submitUserDeleteModalHandler as Listener,
       closeHandler: this.closeUserDeleteModalHandler,
@@ -589,20 +615,6 @@ export class Content extends Block {
       this.initContentMenu();
       this.initUserAddModal();
       this.initUserDeleteModal();
-
-      (this.children.userAddModal as Block).setProps({
-        state: (
-          ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-            .content as Indexed<unknown>
-        ).userAddModal as ModalProps
-      });
-
-      (this.children.userDeleteModal as Block).setProps({
-        state: (
-          ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-            .content as Indexed<unknown>
-        ).userDeleteModal as ModalProps
-      });
     } catch (error) {
       console.log(error);
     }
@@ -655,6 +667,41 @@ export class Content extends Block {
 
     if (
       !isEqual(
+        (oldProps.state as Indexed<unknown>).chatUsers as [],
+        (newProps.state as Indexed<unknown>).chatUsers as []
+      )
+    ) {
+      this.initUserAddModal();
+      this.initUserDeleteModal();
+
+      const currentChatUsers = (newProps.state as Indexed<unknown>)?.chatUsers as ChatUserModel[];
+      const listUsers = currentChatUsers?.map((user) => String(user.id));
+
+      (this.children.userAddModal as Block).setProps({
+        state: {
+          ...((
+            ((newProps.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+              .content as Indexed<unknown>
+          ).userAddModal as ModalProps),
+          list: listUsers
+        }
+      });
+
+      (this.children.userDeleteModal as Block).setProps({
+        state: {
+          ...((
+            ((newProps.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+              .content as Indexed<unknown>
+          ).userDeleteModal as ModalProps),
+          list: listUsers
+        }
+      });
+
+      return true;
+    }
+
+    if (
+      !isEqual(
         (oldProps.state as Indexed<unknown>).receivedMessages as [],
         (newProps.state as Indexed<unknown>).receivedMessages as []
       )
@@ -685,18 +732,27 @@ export class Content extends Block {
       this.initUserAddModal();
       this.initUserDeleteModal();
 
+      const currentChatUsers = (newProps.state as Indexed<unknown>)?.chatUsers as ChatUserModel[];
+      const listUsers = currentChatUsers?.map((user) => String(user.id));
+
       (this.children.userAddModal as Block).setProps({
-        state: (
-          ((newProps.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-            .content as Indexed<unknown>
-        ).userAddModal as ModalProps
+        state: {
+          ...((
+            ((newProps.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+              .content as Indexed<unknown>
+          ).userAddModal as ModalProps),
+          list: listUsers
+        }
       });
 
       (this.children.userDeleteModal as Block).setProps({
-        state: (
-          ((newProps.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-            .content as Indexed<unknown>
-        ).userDeleteModal as ModalProps
+        state: {
+          ...((
+            ((newProps.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+              .content as Indexed<unknown>
+          ).userDeleteModal as ModalProps),
+          list: listUsers
+        }
       });
 
       return true;
