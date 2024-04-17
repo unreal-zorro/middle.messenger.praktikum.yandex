@@ -28,7 +28,6 @@
     border-radius: 25px;
     background-color: $accent;
     position: relative;
-
   }
 
   &__header {
@@ -146,5 +145,22 @@
     top: 7px;
     left: 7px;
     fill: $light;
+  }
+
+  &__list {
+    margin-top: 20px;
+
+    &-header {
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 700;
+      font-size: $font-text;
+    }
+
+    &-item {
+      font-size: $font-text;
+      line-height: 1.5;
+      color: $dark;
+    }
   }
 }

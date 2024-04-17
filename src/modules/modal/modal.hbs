@@ -25,6 +25,22 @@
         {{/if}}
       </form>
 
+      {{#if list}}
+        <div class="modal__list">
+          <h3 class="modal__list-header">
+            {{ listHeader }}
+          </h3>
+
+          <ul>
+            {{#each list}}
+              <li class="modal__list-item">
+                {{{ this }}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+
       {{{ closeButton }}}
     </div>
 

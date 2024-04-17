@@ -1,7 +1,7 @@
 import './modal.scss';
 import { Block } from '@/base/';
 import type { Listener, Props } from '@/base/';
-import { Button, Svg } from '@/components';
+import { Button, Text, Svg } from '@/components';
 import type { ButtonProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
 import { isEqual } from '@/utils';
@@ -16,6 +16,8 @@ export interface ModalProps extends Props {
   controls?: InputFieldProps[];
   buttons?: ButtonProps[];
   visible?: boolean;
+  listHeader?: string;
+  list?: string[];
   state?: ModalProps;
   submitHandler?: Listener;
   closeHandler?: Listener;
@@ -200,6 +202,22 @@ export class Modal extends Block {
     });
   }
 
+  public initList() {
+    if ((this.props.list as string[])?.length) {
+      this.children.list = (this.props.list as string[])?.map((_item, index) => {
+        const text = ((this.props.state as ModalProps)?.list as string[])?.[index];
+
+        return new Text({
+          className: '',
+          text,
+          settings: {
+            withInternalID: true
+          }
+        });
+      });
+    }
+  }
+
   public initCloseButton() {
     this.children.closeButton = new Button({
       dataButton: 'closeButton',
@@ -225,6 +243,7 @@ export class Modal extends Block {
     try {
       this.initControls();
       this.initButtons();
+      this.initList();
       this.initCloseButton();
     } catch (error) {
       console.log(error);
@@ -237,9 +256,21 @@ export class Modal extends Block {
     if (!isEqual(oldProps.state as Indexed<unknown>, newProps.state as Indexed<unknown>)) {
       this.initControls();
       this.initButtons();
+      this.initList();
     }
 
-    return oldProps.visible !== newProps.visible;
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<unknown>)?.list as [],
+        (newProps.state as Indexed<unknown>)?.list as []
+      )
+    ) {
+      this.initList();
+
+      return true;
+    }
+
+    return false;
   }
 
   render(): string {
