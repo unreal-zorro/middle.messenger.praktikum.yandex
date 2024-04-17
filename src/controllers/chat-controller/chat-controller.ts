@@ -23,10 +23,18 @@ export class ChatController {
         store.set('isLoading', false);
       } catch (error: unknown) {
         store.set('isLoading', false);
-        console.log((error as Error).message);
 
-        if ((error as Error).message.startsWith('status: 401')) {
+        const { message } = error as Error;
+        const status = message.slice(8, 11);
+
+        if (status === '401') {
+          console.log(message);
           router.go('/');
+        } else if (status === '500') {
+          console.log(message);
+          router.go('/error500');
+        } else {
+          console.log(message);
         }
       }
     }
@@ -45,7 +53,18 @@ export class ChatController {
 
         data = await this.getChats();
       } catch (error: unknown) {
-        console.log((error as Error).message);
+        const { message } = error as Error;
+        const status = message.slice(8, 11);
+
+        if (status === '401') {
+          console.log(message);
+          router.go('/');
+        } else if (status === '500') {
+          console.log(message);
+          router.go('/error500');
+        } else {
+          console.log(message);
+        }
       }
     }
 
@@ -63,7 +82,18 @@ export class ChatController {
 
         data = await this.getChats();
       } catch (error: unknown) {
-        console.log((error as Error).message);
+        const { message } = error as Error;
+        const status = message.slice(8, 11);
+
+        if (status === '401') {
+          console.log(message);
+          router.go('/');
+        } else if (status === '500') {
+          console.log(message);
+          router.go('/error500');
+        } else {
+          console.log(message);
+        }
       }
     }
 

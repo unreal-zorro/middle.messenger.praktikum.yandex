@@ -26,15 +26,17 @@ export class AuthController {
       }
     } catch (error: unknown) {
       const { message } = error as Error;
-
       const status = message.slice(8, 11);
-      const reason = message.slice(21);
 
       if (status === '401') {
+        console.log(message);
         router.go('/');
+      } else if (status === '500') {
+        console.log(message);
+        router.go('/error500');
+      } else {
+        console.log(message);
       }
-
-      throw new Error(reason);
     }
   }
 
@@ -53,10 +55,17 @@ export class AuthController {
       }
     } catch (error: unknown) {
       const { message } = error as Error;
+      const status = message.slice(8, 11);
 
-      const reason = message.slice(21);
-
-      throw new Error(reason);
+      if (status === '401') {
+        console.log(message);
+        router.go('/');
+      } else if (status === '500') {
+        console.log(message);
+        router.go('/error500');
+      } else {
+        console.log(message);
+      }
     }
   }
 
@@ -80,10 +89,17 @@ export class AuthController {
       }
     } catch (error: unknown) {
       const { message } = error as Error;
+      const status = message.slice(8, 11);
 
-      const reason = message.slice(21);
-
-      throw new Error(reason);
+      if (status === '401') {
+        console.log(message);
+        router.go('/');
+      } else if (status === '500') {
+        console.log(message);
+        router.go('/error500');
+      } else {
+        console.log(message);
+      }
     }
   }
 }

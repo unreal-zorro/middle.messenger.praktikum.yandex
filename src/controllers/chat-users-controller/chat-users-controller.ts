@@ -18,10 +18,17 @@ export class ChatUsersController {
         data = await this.chatUsersAPI.requestUsers({ id });
         store.set('chatUsers', data as ChatUserModel[]);
       } catch (error: unknown) {
-        console.log((error as Error).message);
+        const { message } = error as Error;
+        const status = message.slice(8, 11);
 
-        if ((error as Error).message.startsWith('status: 401')) {
+        if (status === '401') {
+          console.log(message);
           router.go('/');
+        } else if (status === '500') {
+          console.log(message);
+          router.go('/error500');
+        } else {
+          console.log(message);
         }
       }
     }
@@ -34,7 +41,18 @@ export class ChatUsersController {
       try {
         await this.chatUsersAPI.addUsers({ users, chatId });
       } catch (error: unknown) {
-        console.log((error as Error).message);
+        const { message } = error as Error;
+        const status = message.slice(8, 11);
+
+        if (status === '401') {
+          console.log(message);
+          router.go('/');
+        } else if (status === '500') {
+          console.log(message);
+          router.go('/error500');
+        } else {
+          console.log(message);
+        }
       }
     }
   }
@@ -44,7 +62,18 @@ export class ChatUsersController {
       try {
         await this.chatUsersAPI.deleteUsers({ users, chatId });
       } catch (error: unknown) {
-        console.log((error as Error).message);
+        const { message } = error as Error;
+        const status = message.slice(8, 11);
+
+        if (status === '401') {
+          console.log(message);
+          router.go('/');
+        } else if (status === '500') {
+          console.log(message);
+          router.go('/error500');
+        } else {
+          console.log(message);
+        }
       }
     }
   }
