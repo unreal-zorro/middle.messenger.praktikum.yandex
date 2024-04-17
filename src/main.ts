@@ -60,17 +60,17 @@ router
     content: chatsPageData.content,
     newMessage: chatsPageData.newMessage
   })
-  .use('/error404', ErrorPage, {
-    settings: {
-      withInternalID: false
-    },
-    ...error404PageData
-  })
   .use('/error500', ErrorPage, {
     settings: {
       withInternalID: false
     },
     ...error500PageData
+  })
+  .use('/error404', ErrorPage, {
+    settings: {
+      withInternalID: false
+    },
+    ...error404PageData
   });
 
 router.start();
