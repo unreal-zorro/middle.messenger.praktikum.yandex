@@ -163,48 +163,49 @@ export class List extends Block {
     >;
 
     const chatsData = currentState?.chatsData as ChatModel[];
-
     const chatUser = currentState?.user as UserModel;
-    const chatUserId = chatUser.id;
 
-    const chatsArrayLength = chatsData?.length;
+    if (chatsData && chatUser) {
+      const chatUserId = chatUser.id;
+      const chatsArrayLength = chatsData?.length;
 
-    if (chatsArrayLength) {
-      const chatsArray = new Array(chatsArrayLength).fill(0);
+      if (chatsArrayLength) {
+        const chatsArray = new Array(chatsArrayLength).fill(0);
 
-      this.children.chats = chatsArray?.map((_chat, index) => {
-        const currentChat = chatsData?.[index];
+        this.children.chats = chatsArray?.map((_chat, index) => {
+          const currentChat = chatsData?.[index];
 
-        const id = currentChat?.id;
-        const avatar = currentChat?.avatar;
-        const title = currentChat?.title;
-        const lastMessageContent = currentChat?.last_message?.content;
-        const createdBy = currentChat?.created_by === chatUserId;
-        const unreadCount = currentChat?.unread_count;
-        const active = currentChat?.active === id;
+          const id = currentChat?.id;
+          const avatar = currentChat?.avatar;
+          const title = currentChat?.title;
+          const lastMessageContent = currentChat?.last_message?.content;
+          const createdBy = currentChat?.created_by === chatUserId;
+          const unreadCount = currentChat?.unread_count;
+          const active = currentChat?.active === id;
 
-        let lastMessageTime = '';
-        if (currentChat?.last_message) {
-          lastMessageTime = getTransformChatsDate(currentChat?.last_message?.time as string);
-        }
-
-        return new Chat({
-          className: 'list__item',
-          id: String(id),
-          avatar,
-          title,
-          lastMessageTime,
-          lastMessageContent,
-          createdBy,
-          unreadCount,
-          active,
-          chatButtonClickHandler: this.chatButtonClickHandler as Listener,
-          chatClickHandler: this.chatClickHandler as Listener,
-          settings: {
-            withInternalID: true
+          let lastMessageTime = '';
+          if (currentChat?.last_message) {
+            lastMessageTime = getTransformChatsDate(currentChat?.last_message?.time as string);
           }
+
+          return new Chat({
+            className: 'list__item',
+            id: String(id),
+            avatar,
+            title,
+            lastMessageTime,
+            lastMessageContent,
+            createdBy,
+            unreadCount,
+            active,
+            chatButtonClickHandler: this.chatButtonClickHandler as Listener,
+            chatClickHandler: this.chatClickHandler as Listener,
+            settings: {
+              withInternalID: true
+            }
+          });
         });
-      });
+      }
     }
   }
 
@@ -257,28 +258,12 @@ export class List extends Block {
       }
     }
 
-    // if (
-    //   (oldProps.state as Indexed<unknown>).isLoading !==
-    //   (newProps.state as Indexed<unknown>).isLoading
-    // ) {
-    //   if ((newProps.state as Indexed<unknown>).isLoading === false) {
-    //     return true;
-    //   }
-    // }
-
     return false;
   }
 
   _currentChat = 0;
 
   render(): string {
-    // if ((this.props.state as Indexed<unknown>).isLoading) {
-    //   return `
-    //     <section class="list ${this.props.className}">
-    //       Загрузка...
-    //     </section>`;
-    // }
-
     return template;
   }
 }
