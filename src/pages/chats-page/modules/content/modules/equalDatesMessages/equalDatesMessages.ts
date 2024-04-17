@@ -3,7 +3,6 @@ import { Block } from '@/base/';
 import type { Props } from '@/base/';
 import { Text } from '@/components';
 import { isEqual } from '@/utils';
-// import { connect } from '@/hoc';
 import { Message } from './modules';
 import type { MessageProps, MessageContent } from './modules';
 import template from './equalDatesMessages.hbs?raw';
@@ -59,8 +58,6 @@ export class EqualDatesMessages extends Block {
   async componentDidMount() {
     try {
       this.initDate();
-
-      // console.log(this.children.messages);
     } catch (error) {
       console.log(error);
     }
@@ -99,20 +96,3 @@ export class EqualDatesMessages extends Block {
     return template;
   }
 }
-
-// function mapEqualDatesMessagesToProps(state: Indexed<MessageProps[] | MessageContent[]>): {
-//   messages?: MessageProps[];
-//   messageContent?: MessageContent[];
-// } {
-//   return {
-//     messages: state?.messages as MessageProps[],
-//     messageContent: state?.messageContent as MessageContent[]
-//   };
-// }
-
-// const withEqualDatesMessages = connect(
-//   mapEqualDatesMessagesToProps as (state: Indexed<unknown>) => {
-//     messages?: MessageProps[];
-//     messageContent?: MessageContent[];
-//   }
-// );
