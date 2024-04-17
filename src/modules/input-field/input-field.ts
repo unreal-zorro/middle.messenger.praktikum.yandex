@@ -70,37 +70,39 @@ export class InputField extends Block {
         return;
       }
 
-      const { name } = target;
-      let value = '';
-      let type = '';
+      if (target.getAttribute('type') === 'file') {
+        const { name } = target;
+        let value = '';
+        let type = '';
 
-      if (target.files) {
-        value = target.files[0]?.name;
-        type = target.files[0]?.type;
-      }
+        if (target.files) {
+          value = target.files[0]?.name;
+          type = target.files[0]?.type;
+        }
 
-      if (this.props.changeHandler) {
-        const errorMessage = (this.props.changeHandler as (...args: string[]) => string)(
-          name,
-          value,
-          type
-        );
+        if (this.props.changeHandler) {
+          const errorMessage = (this.props.changeHandler as (...args: string[]) => string)(
+            name,
+            value,
+            type
+          );
 
-        (this.children.errorChild as Error).setProps({
-          error: !!errorMessage,
-          text: errorMessage
-        });
-
-        if (!errorMessage) {
-          (this.children.labelChild as Label).setProps({
-            className: this.props.classNameLabel,
-            text: value
+          (this.children.errorChild as Error).setProps({
+            error: !!errorMessage,
+            text: errorMessage
           });
-        } else if (this.props.label) {
-          (this.children.labelChild as Label).setProps({
-            className: this.props.classNameLabel,
-            text: this.props.label
-          });
+
+          if (!errorMessage) {
+            (this.children.labelChild as Label).setProps({
+              className: this.props.classNameLabel,
+              text: value
+            });
+          } else if (this.props.label) {
+            (this.children.labelChild as Label).setProps({
+              className: this.props.classNameLabel,
+              text: this.props.label
+            });
+          }
         }
       }
     };
