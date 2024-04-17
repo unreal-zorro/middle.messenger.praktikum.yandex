@@ -41,6 +41,7 @@ export class ChatController {
       try {
         await this.chatAPI.createChat({ title });
         store.set('activeChat', undefined);
+        store.set('receivedMessages', []);
 
         data = await this.getChats();
       } catch (error: unknown) {
@@ -58,6 +59,7 @@ export class ChatController {
       try {
         await this.chatAPI.deleteChat({ chatId });
         store.set('activeChat', undefined);
+        store.set('receivedMessages', []);
 
         data = await this.getChats();
       } catch (error: unknown) {
@@ -75,6 +77,7 @@ export class ChatController {
     store.set('activeChat', {
       ...activeChat
     });
+    store.set('receivedMessages', []);
 
     return activeChat as ChatModel;
   }
