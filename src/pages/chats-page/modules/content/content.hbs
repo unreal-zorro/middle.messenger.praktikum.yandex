@@ -10,16 +10,15 @@
           {{{ this }}}
         {{/each}}
       </ul>
-    {{else}}
-      {{{ noMessagesText }}}
     {{/if}}
+
+    {{{ noMessagesText }}}
   {{/if}}
 
   {{#unless this.state.activeChat}}
     {{{ noChatText }}}
   {{/unless}}
 
-  {{{ attachMenu }}}
   {{{ contentMenu }}}
 
   {{{ userAddModal }}}
