@@ -281,7 +281,6 @@ export class Content extends Block {
   };
 
   public initContentChat() {
-    // if (this.props.currentChat && !isEqual(this.props.currentChat as PlainObject, {})) {
     const currentState = this.props.state as Indexed<
       | Indexed<unknown>
       | ChatModel
@@ -294,9 +293,7 @@ export class Content extends Block {
 
     const activeChat = currentState?.activeChat as ChatModel;
 
-    // const isUpdate = currentState.isUpdateContent;
-
-    if (activeChat) {
+    if (activeChat && (activeChat as ChatModel)?.id) {
       this.children.contentChat = new ContentChat({
         settings: {
           withInternalID: false
@@ -333,96 +330,6 @@ export class Content extends Block {
         })
       });
     }
-
-    // this.setProps({
-    //   state: {
-    //     ...(this.props.state as Indexed<unknown>),
-    //     isUpdateContent: false
-    //   }
-    // });
-
-    //   const userId = (currentState?.user as UserModel)?.id;
-    //   const messagesArray = currentState?.receivedMessages as ResponseMessage[];
-    //   const chatUsersArray = currentState?.chatUsers as ChatUserModel[];
-
-    //   const {
-    //     dates: datesArray,
-    //     messages: newMessagesArray,
-    //     messageContent: messageContentArray
-    //   } = this.getChatsContent(String(userId), messagesArray, chatUsersArray);
-    //   const datesArrayLength = datesArray?.length;
-
-    //   // if (this.props.dates && (this.props.dates as string[])?.length) {
-    //   if (datesArrayLength) {
-    //     const newDatesArray = new Array(datesArrayLength).fill(0);
-
-    //     // this.children.dates = (this.props.dates as string[])?.map((dateItem) => {
-    //     this.children.dates = newDatesArray?.map((_dateItem, index) => {
-    //       const currentDate = datesArray?.[index];
-
-    //       // const messages: MessageProps[] = (this.props.messages as MessageProps[])?.filter(
-    //       //   (messageItem) => dateItem === messageItem.date
-    //       // );
-    //       const messages: MessageProps[] = newMessagesArray?.filter(
-    //         (messageItem) => currentDate === messageItem.date
-    //       );
-
-    //       const messageContent: MessageContent[] = [];
-    //       // messages?.forEach((messageItem) => {
-    //       //   const content = (this.props.messageContent as MessageContent[])?.filter(
-    //       //     (messageContentItem) => messageItem.id === messageContentItem.messageId
-    //       //   );
-    //       //   messageContent.push(...content);
-    //       // });
-    //       newMessagesArray?.forEach((messageItem) => {
-    //         const content = messageContentArray?.filter(
-    //           (messageContentItem) => messageItem.id === messageContentItem.messageId
-    //         );
-    //         messageContent.push(...content);
-    //       });
-
-    //       this.setProps({
-    //         state: {
-    //           ...(this.props.state as Indexed<unknown>),
-    //           messages: [
-    //             ...((this.props.state as Indexed<unknown>).messages as MessageProps[]),
-    //             ...messages
-    //           ],
-    //           messageContent: [
-    //             ...((this.props.state as Indexed<unknown>).messageContent as MessageContent[]),
-    //             ...messageContent
-    //           ]
-    //         }
-    //       });
-
-    //       return new (withMessagesAndMessageContent(EqualDatesMessages))({
-    //         className: 'content__list-item',
-    //         date: currentDate,
-    //         messages,
-    //         messageContent,
-    //         settings: {
-    //           withInternalID: true
-    //         }
-    //       });
-    //     });
-    //   } else {
-    //     this.children.noMessagesText = new Text({
-    //       className: 'content__text',
-    //       text: 'В выбранном чате отсутствуют сообщения',
-    //       settings: {
-    //         withInternalID: false
-    //       }
-    //     });
-    //   }
-    // } else if (!(activeChat as ChatModel)?.id) {
-    //   this.children.noChatText = new Text({
-    //     className: 'content__text',
-    //     text: 'Выберите чат, чтобы отправить сообщение',
-    //     settings: {
-    //       withInternalID: false
-    //     }
-    //   });
-    // }
   }
 
   public initDates() {
@@ -449,10 +356,6 @@ export class Content extends Block {
     } = getChatsContent(String(userId), messagesArray, chatUsersArray);
     const datesArrayLength = datesArray?.length;
 
-    // console.log(datesArray);
-    // console.log(newMessagesArray);
-    // console.log(messageContentArray);
-
     const filteredMessages: Array<MessageProps[]> = [];
     const filteredMessageContent: Array<MessageContent[]> = [];
 
@@ -473,41 +376,15 @@ export class Content extends Block {
       filteredMessageContent[index] = Array.from(tempContent);
     });
 
-    // console.log(datesArray);
-    // console.log(filteredMessages);
-    // console.log(filteredMessageContent);
-
-    // console.log(userId);
-    // console.log(messagesArray);
-    // console.log(chatUsersArray);
-    // console.log(datesArray);
-    // console.log(newMessagesArray);
-    // console.log(messageContentArray);
-
     if (activeChat && datesArrayLength) {
       const newDatesArray = new Array(datesArrayLength).fill(0);
 
       this.children.dates = newDatesArray?.map((_dateItem, index) => {
         const currentDate = datesArray?.[index];
 
-        // console.log(currentDate);
-        // console.log(newMessagesArray);
-
         const messages: MessageProps[] = Array.from(filteredMessages[index]);
 
-        // console.log(newMessagesArray);
-        // console.log(messages);
-
         const messageContent: MessageContent[] = Array.from(filteredMessageContent[index]);
-
-        // newMessagesArray?.forEach((messageItem) => {
-        //   const content = messageContentArray?.filter(
-        //     (messageContentItem) => messageItem.id === messageContentItem.messageId
-        //   );
-        //   messageContent.push(...content);
-        // });
-
-        // console.log(messageContent);
 
         if ((this.props.state as Indexed<unknown>).messages as MessageProps[]) {
           if (Array.isArray(messages)) {
@@ -516,9 +393,7 @@ export class Content extends Block {
               ...messages
             ]);
 
-            store.set('messagesArray', [
-              ...filteredMessages[index]
-            ]);
+            store.set('messagesArray', [...filteredMessages[index]]);
           }
 
           if (!Array.isArray(messages)) {
@@ -527,9 +402,7 @@ export class Content extends Block {
               messages
             ]);
 
-            store.set('messagesArray', [
-              filteredMessages[index]
-            ]);
+            store.set('messagesArray', [filteredMessages[index]]);
           }
         } else {
           if (Array.isArray(messages)) {
@@ -567,48 +440,6 @@ export class Content extends Block {
           }
         }
 
-        // this.setProps({
-        //   state: {
-        //     ...(this.props.state as Indexed<unknown>),
-        //     messages: [
-        //       ...((this.props.state as Indexed<unknown>).messages as MessageProps[]),
-        //       ...messages
-        //     ],
-        //     messageContent: [
-        //       ...((this.props.state as Indexed<unknown>).messageContent as MessageContent[]),
-        //       ...messageContent
-        //     ]
-        //   }
-        // });
-
-        // if ((this.props.state as Indexed<unknown>).receivedMessages as ResponseMessage[]) {
-        //   if (Array.isArray(message)) {
-        //     store.set('receivedMessages', [
-        //       ...((store.getState() as Indexed<unknown>).receivedMessages as ResponseMessage[]),
-        //       ...message
-        //     ]);
-        //   }
-
-        //   if (!Array.isArray(message)) {
-        //     store.set('receivedMessages', [
-        //       ...((store.getState() as Indexed<unknown>).receivedMessages as ResponseMessage[]),
-        //       message
-        //     ]);
-        //   }
-        // } else {
-        //   if (Array.isArray(message)) {
-        //     store.set('receivedMessages', [...message]);
-        //   }
-
-        //   if (!Array.isArray(message)) {
-        //     store.set('receivedMessages', [message]);
-        //   }
-        // }
-
-        // console.log(currentDate);
-        // console.log(messages);
-        // console.log(messageContent);
-
         return new (withMessagesAndMessageContent(EqualDatesMessages))({
           className: 'content__list-item',
           date: currentDate,
@@ -619,9 +450,11 @@ export class Content extends Block {
           }
         });
       });
-
-      // console.log(this.children.dates);
     }
+  }
+
+  public initEmptyDates() {
+    this.children.dates = [];
   }
 
   public initNoMessagesText() {
@@ -642,10 +475,7 @@ export class Content extends Block {
     const { dates: datesArray } = getChatsContent(String(userId), messagesArray, chatUsersArray);
     const datesArrayLength = datesArray?.length;
 
-    // if (this.props.dates && (this.props.dates as string[])?.length) {
     if (!datesArrayLength) {
-      // if (!activeChat) {
-      // if (!this.props.dates || !(this.props.dates as string[])?.length) {
       this.children.noMessagesText = new Text({
         className: 'content__text',
         text: 'В выбранном чате отсутствуют сообщения',
@@ -653,8 +483,17 @@ export class Content extends Block {
           withInternalID: false
         }
       });
-      // }
     }
+  }
+
+  public initEmptyNoMessagesText() {
+    this.children.noMessagesText = new Text({
+      className: 'content__text',
+      text: '',
+      settings: {
+        withInternalID: false
+      }
+    });
   }
 
   public initNoChatText() {
@@ -669,7 +508,6 @@ export class Content extends Block {
     >;
 
     const activeChat = currentState?.activeChat as ChatModel;
-
     if (!activeChat) {
       this.children.noChatText = new Text({
         className: 'content__text',
@@ -699,14 +537,6 @@ export class Content extends Block {
   }
 
   public initUserAddModal() {
-    // const modalState = {
-    //   ...((
-    //     ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-    //       .newMessage as Indexed<unknown>
-    //   ).userAddModal as ModalProps),
-    //   list: []
-    // };
-
     const modalState = (
       ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
         .newMessage as Indexed<unknown>
@@ -714,7 +544,7 @@ export class Content extends Block {
 
     this.children.userAddModal = new Modal({
       className: '',
-      type: 'image',
+      type: '',
       header: (this.props.userAddModal as ModalProps)?.header,
       controls: (this.props.userAddModal as ModalProps)?.controls,
       buttons: (this.props.userAddModal as ModalProps)?.buttons,
@@ -730,14 +560,6 @@ export class Content extends Block {
   }
 
   public initUserDeleteModal() {
-    // const modalState = {
-    //   ...((
-    //     ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
-    //       .newMessage as Indexed<unknown>
-    //   ).userDeleteModal as ModalProps),
-    //   list: []
-    // };
-
     const modalState = (
       ((this.props.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
         .newMessage as Indexed<unknown>
@@ -745,7 +567,7 @@ export class Content extends Block {
 
     this.children.userDeleteModal = new Modal({
       className: '',
-      type: 'image',
+      type: '',
       header: (this.props.userDeleteModal as ModalProps)?.header,
       controls: (this.props.userDeleteModal as ModalProps)?.controls,
       buttons: (this.props.userDeleteModal as ModalProps)?.buttons,
@@ -763,9 +585,7 @@ export class Content extends Block {
   async componentDidMount() {
     try {
       this.initContentChat();
-      this.initDates();
-      // this.initNoMessagesText();
-      // this.initNoChatText();
+      this.initNoChatText();
       this.initContentMenu();
       this.initUserAddModal();
       this.initUserDeleteModal();
@@ -826,16 +646,11 @@ export class Content extends Block {
         (newProps.state as Indexed<unknown>).activeChat as Indexed<unknown>
       )
     ) {
-      // if ((newProps.state as Indexed<unknown>).activeChat as Indexed<unknown>) {
-      this.initContentChat();
-      // } else {
-      // this.initNoChatText();
-      // }
-
-      this.initDates();
-      // this.initNoMessagesText();
-
-      return true;
+      if (((newProps.state as Indexed<unknown>).activeChat as ChatModel) === undefined) {
+        this.initNoChatText();
+      } else {
+        this.initContentChat();
+      }
     }
 
     if (
@@ -844,8 +659,45 @@ export class Content extends Block {
         (newProps.state as Indexed<unknown>).receivedMessages as []
       )
     ) {
-      this.initContentChat();
+      if (
+        ((newProps.state as Indexed<unknown>).receivedMessages as ResponseMessage[]) ===
+          undefined ||
+        ((newProps.state as Indexed<unknown>).receivedMessages as [])?.length === 0
+      ) {
+        this.initNoMessagesText();
+        this.initEmptyDates();
+      } else {
+        this.initDates();
+        this.initEmptyNoMessagesText();
+        this.initContentMenu();
+      }
+
+      if (((newProps.state as Indexed<unknown>).activeChat as ChatModel) === undefined) {
+        this.initNoChatText();
+      } else {
+        this.initContentChat();
+        this.initContentMenu();
+      }
+
+      this.initNoMessagesText();
       this.initDates();
+
+      this.initUserAddModal();
+      this.initUserDeleteModal();
+
+      (this.children.userAddModal as Block).setProps({
+        state: (
+          ((newProps.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+            .content as Indexed<unknown>
+        ).userAddModal as ModalProps
+      });
+
+      (this.children.userDeleteModal as Block).setProps({
+        state: (
+          ((newProps.state as Indexed<unknown>).chatsPageData as Indexed<unknown>)
+            .content as Indexed<unknown>
+        ).userDeleteModal as ModalProps
+      });
 
       return true;
     }

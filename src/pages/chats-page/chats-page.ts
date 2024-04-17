@@ -184,11 +184,15 @@ export class ChatsPage extends Block {
 
   public addNewChatHandler: (...args: Record<string, string>[]) => void = async (data) => {
     const newChats = this.chatController.createChat(data.newChatTitle);
+    store.set('receivedMessages', undefined);
+    store.set('activeChat', undefined);
 
     this.setProps({
       state: {
         ...(this.props.state as Indexed<unknown>),
-        chatsData: newChats
+        chatsData: newChats,
+        activeChat: undefined,
+        receivedMessages: undefined
       }
     });
 
@@ -197,49 +201,31 @@ export class ChatsPage extends Block {
         chatsData: newChats
       }
     });
+
+    this.initContent();
   };
 
   public checkActiveChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (
     data
   ) => {
-    const activeChat = await this.chatController.checkActiveChat(Number(data.chatId));
+    await this.chatController.checkActiveChat(Number(data.chatId));
 
-    // this.setProps({
-    //   state: {
-    //     ...(this.props.state as Indexed<unknown>)
-    //     // isUpdateContent: true
-    //   }
-    // });
-
-    (this.children.content as Content).setProps({
-      state: {
-        activeChat
-        // isUpdateContent: true
-      }
-    });
-
-    this.setProps({
-      state: {
-        ...(this.props.state as Indexed<unknown>),
-        receivedMessages: []
-      }
-    });
-
-    store.set('receivedMessages', []);
-
+    store.set('receivedMessages', undefined);
     await this.getChatUsersHandler(data);
     await this.initMessagesAPI();
-
-    this.initContent();
   };
 
   public deleteChatHandler: (...args: Record<string, string>[]) => Promise<void> = async (data) => {
     const newChats = await this.chatController.deleteChat(Number(data.chatId));
+    store.set('receivedMessages', undefined);
+    store.set('activeChat', undefined);
 
     this.setProps({
       state: {
         ...(this.props.state as Indexed<unknown>),
-        chatsData: newChats
+        chatsData: newChats,
+        activeChat: undefined,
+        receivedMessages: undefined
       }
     });
 
@@ -248,6 +234,8 @@ export class ChatsPage extends Block {
         chatsData: newChats
       }
     });
+
+    this.initContent();
   };
 
   public getChatUsersHandler: (...args: Record<string, string>[]) => Promise<void> = async (
@@ -386,7 +374,6 @@ export class ChatsPage extends Block {
       this.initList();
       this.initContent();
       this.initNewMessage();
-      // this.initMessagesAPI();
 
       (this.children.list as List).setProps({
         state: this.props.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>
@@ -415,18 +402,16 @@ export class ChatsPage extends Block {
       return true;
     }
 
-    // if (
-    //   ((oldProps.state as Indexed<unknown>)?.activeChat as ChatModel)?.id !==
-    //   ((newProps.state as Indexed<unknown>)?.activeChat as ChatModel)?.id
-    // ) {
-    //   // this.initMessagesAPI();
+    if (
+      !isEqual(
+        (oldProps.state as Indexed<unknown>)?.activeChat as ChatModel,
+        (newProps.state as Indexed<unknown>)?.activeChat as ChatModel
+      )
+    ) {
+      this.initContent();
 
-    //   return true;
-    // }
-
-    // if (!isEqual(oldProps.state as Indexed<unknown>, newProps.state as Indexed<unknown>)) {
-    //   return true;
-    // }
+      return true;
+    }
 
     return false;
   }
@@ -482,7 +467,6 @@ function mapActiveChatAndUserIdAndUsersToProps(
   userId: number;
   user: UserModel;
   activeChat: ChatModel;
-  // isUpdateContent: boolean;
   chatUsers: ChatUserModel[];
   chatsPageData: Indexed<unknown>;
   receivedMessages: ResponseMessage[];
@@ -492,7 +476,6 @@ function mapActiveChatAndUserIdAndUsersToProps(
     userId: (state?.user as UserModel)?.id,
     user: state?.user as UserModel,
     activeChat: state?.activeChat as ChatModel,
-    // isUpdateContent: state?.isUpdateContent as boolean,
     chatUsers: state?.chatUsers as ChatUserModel[],
     chatsPageData: state?.chatsPageData as Indexed<unknown>,
     receivedMessages: state?.receivedMessages as ResponseMessage[],
@@ -522,7 +505,6 @@ export const withActiveChatAndUserIdAndUsersToProps = connect(
     userId: number;
     user: UserModel;
     activeChat: ChatModel;
-    // isUpdateContent: boolean;
     chatUsers: ChatUserModel[];
     chatsPageData: Indexed<unknown>;
     receivedMessages: ResponseMessage[];
