@@ -4,6 +4,7 @@ import type { Listener, Props } from '@/base/';
 import { Button, Svg } from '@/components';
 import type { ButtonProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
+import { isEqual } from '@/utils';
 import { InputField } from '../input-field';
 import type { InputFieldProps } from '../input-field';
 import template from './modal.hbs?raw';
@@ -233,6 +234,11 @@ export class Modal extends Block {
   _formData: Record<string, string | File> = {};
 
   componentDidUpdate(oldProps: ModalProps, newProps: ModalProps): boolean {
+    if (!isEqual(oldProps.state as Indexed<unknown>, newProps.state as Indexed<unknown>)) {
+      this.initControls();
+      this.initButtons();
+    }
+
     return oldProps.visible !== newProps.visible;
   }
 
