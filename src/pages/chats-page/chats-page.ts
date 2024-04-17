@@ -419,6 +419,13 @@ export class ChatsPage extends Block {
   _currentChat = 0;
 
   render(): string {
+    if ((this.props.state as Indexed<unknown>).isLoading) {
+      return `
+        <main>
+          Загрузка...
+        </main>`;
+    }
+
     return template;
   }
 }
