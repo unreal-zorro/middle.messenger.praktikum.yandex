@@ -40,10 +40,11 @@ export class Router {
   }
 
   _onRoute(pathname: string): void {
-    const route = this.getRoute(pathname);
+    let route = this.getRoute(pathname);
 
     if (!route) {
-      return;
+      const routesLength = this.routes.length;
+      route = this.routes[routesLength - 1];
     }
 
     if (this._currentRoute && this._currentRoute !== route) {
