@@ -42,6 +42,16 @@
     color: inherit;
   }
 
+  &__date {
+    align-self: end;
+    color: $dark-gray;
+    margin-top: 10px;
+
+    &_active {
+      color: $dark;
+    }
+  }
+
   &__check {
     width: calc($font-text * 1.2);
     height: calc($font-text * 1.2);

@@ -1,13 +1,15 @@
-<div
+<li
   class="message{{#if className}} {{ className }}{{/if}}{{#if check}} message_our{{else}} message_their{{/if}}"
 >
   <h3 class="message__name">
     {{#if check}}Вы{{else}}{{ name }}{{/if}}
   </h3>
 
-  {{#each content}}
-    {{{ this }}}
-  {{/each}}
+  {{ content }}
+
+  <div class="message__date{{#if check}} message__date_active{{/if}}">
+    {{ date }}
+  </div>
 
   <div class="message__info{{#if check}} message__info_active{{/if}}">
     {{#if check}}
@@ -22,4 +24,4 @@
       {{ time }}
     </div>
   </div>
-</div>
+</li>
