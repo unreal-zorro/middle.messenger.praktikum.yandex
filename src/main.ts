@@ -26,6 +26,12 @@ router
     },
     ...loginPageData
   })
+  .use('/index.html', LoginPage, {
+    settings: {
+      withInternalID: false
+    },
+    ...loginPageData
+  })
   .use('/sign-up', LoginPage, {
     settings: {
       withInternalID: false
