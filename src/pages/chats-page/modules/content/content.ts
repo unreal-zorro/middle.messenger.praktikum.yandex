@@ -8,17 +8,18 @@ import type { MenuProps, ModalProps } from '@/modules';
 import { CONTENT_MENU_ITEMS, VALIDATION_RULES } from '@/consts';
 import { isEqual } from '@/utils';
 import { ChatModel, ChatUserModel, ResponseMessage, UserModel } from '@/models';
-import { connect } from '@/hoc';
 import { store } from '@/store';
-import { ContentChat, EqualDatesMessages } from './modules';
-import type { MessageContent, MessageProps } from './modules';
+import { ContentChat, Message } from './modules';
+import type { MessageProps } from './modules';
 import template from './content.hbs?raw';
+
+type ChatsStateToProps = Indexed<
+  ChatModel[] | ChatModel | UserModel | ResponseMessage[] | boolean | Indexed<unknown>
+>;
 
 export interface ContentProps extends Props {
   className?: string;
   dates?: string[];
-  // messages?: MessageProps[];
-  // messageContent?: MessageContent[];
   currentChat?: CurrentChat;
   classNameContentMenu?: string;
   contentMenu?: MenuProps;
@@ -27,35 +28,21 @@ export interface ContentProps extends Props {
   visibleUserAddModal?: boolean;
   userDeleteModal: ModalProps;
   visibleUserDeleteModal?: boolean;
-  state?: Indexed<
-    | Indexed<unknown>
-    | ChatModel
-    | UserModel
-    | ChatUserModel[]
-    | ResponseMessage[]
-    | number
-    | boolean
-  >;
+  state?: ChatsStateToProps;
   chatUsersAddHandler: Listener;
   chatUsersDeleteHandler: Listener;
 }
 
-const getChatsContent = (
-  userID: string = '',
-  messagesArray: ResponseMessage[] = [],
-  chatUsers: ChatUserModel[] = []
-) => {
+const getMessageDateAndTimeAndCheck: (
+  userID: string,
+  messagesArray: ResponseMessage[],
+  chatUsers: ChatUserModel[]
+) => MessageProps[] = (userID = '', messagesArray = [], chatUsers = []) => {
   if (!userID || !messagesArray) {
-    return {
-      dates: [],
-      messages: [],
-      messageContent: []
-    };
+    return [];
   }
 
-  const dateArray: Set<string> = new Set();
-  const messageArray: MessageProps[] = [];
-  const messageContentArray: MessageContent[] = [];
+  const messages: MessageProps[] = [];
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -89,34 +76,21 @@ const getChatsContent = (
 
     const chatUser = chatUsers.filter((user) => user.id === +message.user_id);
     const name = chatUser?.[0].display_name;
+    const { content } = message;
 
     const resultMessage: MessageProps = {
       id: message.id,
       name,
       date,
       time,
-      check: isISendMessage
+      check: isISendMessage,
+      content
     };
 
-    dateArray.add(date);
-    messageArray.push(resultMessage);
-    messageContentArray.push({
-      messageId: message.id,
-      isText: true,
-      isImage: false,
-      data: message.content
-    });
+    messages.push(resultMessage);
   });
 
-  const dates = Array.from(dateArray);
-  const messages = messageArray;
-  const messageContent = messageContentArray;
-
-  return {
-    dates,
-    messages,
-    messageContent
-  };
+  return messages;
 };
 
 export class Content extends Block {
@@ -145,17 +119,7 @@ export class Content extends Block {
   };
 
   public contentMenuItemClickHandler: Listener<string> = (text) => {
-    const currentChat = (
-      this.props?.state as Indexed<
-        | Indexed<unknown>
-        | ChatModel
-        | UserModel
-        | ChatUserModel[]
-        | ResponseMessage[]
-        | number
-        | boolean
-      >
-    )?.activeChat as ChatModel;
+    const currentChat = (this.props?.state as ChatsStateToProps)?.activeChat as ChatModel;
 
     const currentChatId = currentChat?.id;
 
@@ -187,17 +151,7 @@ export class Content extends Block {
     });
 
     if (isValid) {
-      const currentChat = (
-        this.props?.state as Indexed<
-          | Indexed<unknown>
-          | ChatModel
-          | UserModel
-          | ChatUserModel[]
-          | ResponseMessage[]
-          | number
-          | boolean
-        >
-      )?.activeChat as ChatModel;
+      const currentChat = (this.props?.state as ChatsStateToProps)?.activeChat as ChatModel;
 
       const currentChatId = currentChat?.id;
       const users = [Number(formData.addUser)];
@@ -232,17 +186,7 @@ export class Content extends Block {
     });
 
     if (isValid) {
-      const currentChat = (
-        this.props?.state as Indexed<
-          | Indexed<unknown>
-          | ChatModel
-          | UserModel
-          | ChatUserModel[]
-          | ResponseMessage[]
-          | number
-          | boolean
-        >
-      )?.activeChat as ChatModel;
+      const currentChat = (this.props?.state as ChatsStateToProps)?.activeChat as ChatModel;
 
       const currentChatId = currentChat?.id;
       const users = [Number(formData.deleteUser)];
@@ -281,15 +225,7 @@ export class Content extends Block {
   };
 
   public initContentChat() {
-    const currentState = this.props.state as Indexed<
-      | Indexed<unknown>
-      | ChatModel
-      | UserModel
-      | ChatUserModel[]
-      | ResponseMessage[]
-      | number
-      | boolean
-    >;
+    const currentState = this.props.state as ChatsStateToProps;
 
     const activeChat = currentState?.activeChat as ChatModel;
 
@@ -333,15 +269,7 @@ export class Content extends Block {
   }
 
   public initDates() {
-    const currentState = this.props.state as Indexed<
-      | Indexed<unknown>
-      | ChatModel
-      | UserModel
-      | ChatUserModel[]
-      | ResponseMessage[]
-      | number
-      | boolean
-    >;
+    const currentState = this.props.state as Indexed<unknown>;
 
     const activeChat = currentState?.activeChat as ChatModel;
 
@@ -349,51 +277,19 @@ export class Content extends Block {
     const messagesArray = currentState?.receivedMessages as ResponseMessage[];
     const chatUsersArray = currentState?.chatUsers as ChatUserModel[];
 
-    const {
-      dates: datesArray,
-      messages: newMessagesArray,
-      messageContent: messageContentArray
-    } = getChatsContent(String(userId), messagesArray, chatUsersArray);
-    const datesArrayLength = datesArray?.length;
+    const messages = getMessageDateAndTimeAndCheck(String(userId), messagesArray, chatUsersArray);
+    const messagesLength = messages?.length;
 
-    const filteredMessages: Array<MessageProps[]> = [];
-    const filteredMessageContent: Array<MessageContent[]> = [];
-
-    datesArray?.forEach((currentDate, index) => {
-      filteredMessages[index] = newMessagesArray.filter(
-        (messageItem) => currentDate === messageItem.date
-      );
-
-      const tempContent: MessageContent[] = [];
-
-      filteredMessages[index]?.forEach((messageItem) => {
-        const content = messageContentArray?.filter(
-          (messageContentItem) => messageItem.id === messageContentItem.messageId
-        );
-        tempContent.push(...content);
-      });
-
-      filteredMessageContent[index] = Array.from(tempContent);
-    });
-
-    if (activeChat && datesArrayLength) {
-      const newDatesArray = new Array(datesArrayLength).fill(0);
+    if (activeChat && messagesLength) {
+      const newDatesArray = new Array(messagesLength).fill(0);
 
       this.children.dates = newDatesArray?.map((_dateItem, index) => {
-        const currentDate = datesArray?.[index];
-
-        const messages: MessageProps[] = Array.from(filteredMessages[index]);
-
-        const messageContent: MessageContent[] = Array.from(filteredMessageContent[index]);
-
         if ((this.props.state as Indexed<unknown>).messages as MessageProps[]) {
           if (Array.isArray(messages)) {
             store.set('messages', [
               ...((store.getState() as Indexed<unknown>).messages as MessageProps[]),
               ...messages
             ]);
-
-            store.set('messagesArray', [...filteredMessages[index]]);
           }
 
           if (!Array.isArray(messages)) {
@@ -401,50 +297,25 @@ export class Content extends Block {
               ...((store.getState() as Indexed<unknown>).messages as MessageProps[]),
               messages
             ]);
-
-            store.set('messagesArray', [filteredMessages[index]]);
           }
         } else {
           if (Array.isArray(messages)) {
             store.set('messages', [...messages]);
-            store.set('messagesArray', [...filteredMessages[index]]);
           }
 
           if (!Array.isArray(messages)) {
             store.set('messages', [messages]);
-            store.set('messagesArray', [filteredMessages[index]]);
           }
         }
 
-        if ((this.props.state as Indexed<unknown>).messageContent as MessageContent[]) {
-          if (Array.isArray(messageContent)) {
-            store.set('messageContent', [
-              ...((store.getState() as Indexed<unknown>).messageContent as MessageContent[]),
-              ...messageContent
-            ]);
-          }
-
-          if (!Array.isArray(messageContent)) {
-            store.set('messageContent', [
-              ...((store.getState() as Indexed<unknown>).messageContent as MessageContent[]),
-              messageContent
-            ]);
-          }
-        } else {
-          if (Array.isArray(messageContent)) {
-            store.set('messageContent', [...messageContent]);
-          }
-
-          if (!Array.isArray(messageContent)) {
-            store.set('messageContent', [messageContent]);
-          }
-        }
-
-        return new (withMessagesAndMessageContent(EqualDatesMessages))({
-          className: 'content__list-item',
-          date: currentDate,
-          messages,
-          messageContent,
+        return new Message({
+          className: 'content__message',
+          id: messages[index].id,
+          name: messages[index].name,
+          date: messages[index].date,
+          time: messages[index].time,
+          check: messages[index].check,
+          content: messages[index].content,
           settings: {
             withInternalID: true
           }
@@ -458,24 +329,16 @@ export class Content extends Block {
   }
 
   public initNoMessagesText() {
-    const currentState = this.props.state as Indexed<
-      | Indexed<unknown>
-      | ChatModel
-      | UserModel
-      | ChatUserModel[]
-      | ResponseMessage[]
-      | number
-      | boolean
-    >;
+    const currentState = this.props.state as Indexed<unknown>;
 
     const userId = (currentState?.user as UserModel)?.id;
     const messagesArray = currentState?.receivedMessages as ResponseMessage[];
     const chatUsersArray = currentState?.chatUsers as ChatUserModel[];
 
-    const { dates: datesArray } = getChatsContent(String(userId), messagesArray, chatUsersArray);
-    const datesArrayLength = datesArray?.length;
+    const messages = getMessageDateAndTimeAndCheck(String(userId), messagesArray, chatUsersArray);
+    const messagesLength = messages?.length;
 
-    if (!datesArrayLength) {
+    if (!messagesLength) {
       this.children.noMessagesText = new Text({
         className: 'content__text',
         text: 'В выбранном чате отсутствуют сообщения',
@@ -497,15 +360,7 @@ export class Content extends Block {
   }
 
   public initNoChatText() {
-    const currentState = this.props.state as Indexed<
-      | Indexed<unknown>
-      | ChatModel
-      | UserModel
-      | ChatUserModel[]
-      | ResponseMessage[]
-      | number
-      | boolean
-    >;
+    const currentState = this.props.state as ChatsStateToProps;
 
     const activeChat = currentState?.activeChat as ChatModel;
     if (!activeChat) {
@@ -537,15 +392,7 @@ export class Content extends Block {
   }
 
   public initUserAddModal() {
-    const currentState = this.props.state as Indexed<
-      | Indexed<unknown>
-      | ChatModel
-      | UserModel
-      | ChatUserModel[]
-      | ResponseMessage[]
-      | number
-      | boolean
-    >;
+    const currentState = this.props.state as Indexed<unknown>;
 
     const modalState = (
       (currentState.chatsPageData as Indexed<unknown>).newMessage as Indexed<unknown>
@@ -573,15 +420,7 @@ export class Content extends Block {
   }
 
   public initUserDeleteModal() {
-    const currentState = this.props.state as Indexed<
-      | Indexed<unknown>
-      | ChatModel
-      | UserModel
-      | ChatUserModel[]
-      | ResponseMessage[]
-      | number
-      | boolean
-    >;
+    const currentState = this.props.state as Indexed<unknown>;
 
     const modalState = (
       (currentState.chatsPageData as Indexed<unknown>).newMessage as Indexed<unknown>
@@ -765,23 +604,3 @@ export class Content extends Block {
     return template;
   }
 }
-
-function mapMessagesAndMessageContentToProps(state: Indexed<MessageProps[] | MessageContent[]>): {
-  messages?: MessageProps[];
-  messagesArray?: MessageProps[];
-  messageContent?: MessageContent[];
-} {
-  return {
-    messages: state?.messages as MessageProps[],
-    messagesArray: state?.messagesArray as MessageProps[],
-    messageContent: state?.messageContent as MessageContent[]
-  };
-}
-
-const withMessagesAndMessageContent = connect(
-  mapMessagesAndMessageContentToProps as (state: Indexed<unknown>) => {
-    messages?: MessageProps[];
-    messagesArray?: MessageProps[];
-    messageContent?: MessageContent[];
-  }
-);

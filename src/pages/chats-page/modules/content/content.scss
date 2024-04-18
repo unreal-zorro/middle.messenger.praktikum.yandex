@@ -66,17 +66,9 @@
 
   &__list {
     width: 100%;
+    padding-top: 10px;
 
     @include flex(column, flex-start, center);
-
-    &-item {
-      padding-bottom: 10px;
-      border-bottom: 1px solid $border;
-
-      &:last-child {
-        border-bottom: none;
-      }
-    }
   }
 
   &__message {

@@ -84,9 +84,7 @@ export class ChatsPage extends Block {
   };
 
   public async initMessagesAPI() {
-    const currentState = this.props.state as Indexed<
-      ChatModel[] | ChatModel | UserModel | boolean | Indexed<unknown>
-    >;
+    const currentState = this.props.state as ChatsStateToProps;
 
     const userId = (currentState?.user as UserModel)?.id;
     const chatID = (currentState?.activeChat as ChatModel)?.id;
@@ -319,11 +317,9 @@ export class ChatsPage extends Block {
   }
 
   public initContent() {
-    this.children.content = new (withActiveChatAndUserIdAndUsersToProps(Content))({
+    this.children.content = new (withChatContent(Content))({
       className: 'chats__content',
       dates: (this.props.content as ContentProps).dates,
-      // messages: (this.props.content as ContentProps).messages,
-      // messageContent: (this.props.content as ContentProps).messageContent,
       currentChat: (this.props.content as ContentProps).currentChat,
       classNameContentMenu: '',
       contentMenu: (this.props.content as ContentProps).contentMenu,
@@ -430,11 +426,11 @@ export class ChatsPage extends Block {
   }
 }
 
-function mapChatsToProps(
-  state: Indexed<
-    ChatModel[] | ChatModel | UserModel | ResponseMessage[] | boolean | Indexed<unknown>
-  >
-): {
+type ChatsStateToProps = Indexed<
+  ChatModel[] | ChatModel | UserModel | ResponseMessage[] | boolean | Indexed<unknown>
+>;
+
+function mapChatsToProps(state: ChatsStateToProps): {
   chatsData: ChatModel[];
   activeChat: ChatModel;
   user: UserModel;
@@ -460,17 +456,11 @@ function mapChatsPageDataToProps(state: Indexed<Indexed<unknown>>): {
   };
 }
 
-function mapActiveChatAndUserIdAndUsersToProps(
-  state: Indexed<
-    | Indexed<unknown>
-    | ChatModel
-    | UserModel
-    | ChatUserModel[]
-    | ResponseMessage[]
-    | number
-    | boolean
-  >
-): {
+type ChatContentStateToProps = Indexed<
+  number | UserModel | ChatModel | ChatUserModel[] | Indexed<unknown> | ResponseMessage[] | boolean
+>;
+
+function mapChatContentToProps(state: ChatContentStateToProps): {
   userId: number;
   user: UserModel;
   activeChat: ChatModel;
@@ -507,8 +497,8 @@ export const withChatsPageData = connect(
   }
 );
 
-export const withActiveChatAndUserIdAndUsersToProps = connect(
-  mapActiveChatAndUserIdAndUsersToProps as (state: Indexed<unknown>) => {
+const withChatContent = connect(
+  mapChatContentToProps as (state: Indexed<unknown>) => {
     userId: number;
     user: UserModel;
     activeChat: ChatModel;
