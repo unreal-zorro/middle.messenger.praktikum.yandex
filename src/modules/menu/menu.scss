@@ -8,13 +8,8 @@
   border-radius: 15px;
   background-color: $secondary;
   overflow: hidden;
-  visibility: hidden;
-  opacity: 0;
-
-  &_visible {
-    visibility: visible;
-    opacity: 1;
-  }
+  z-index: 5000;
+  display: none;
 
   &__item {
     width: 100%;
@@ -46,6 +41,7 @@
     overflow: hidden;
     position: relative;
     color: inherit;
+    font-size: $font-text;
 
     @include flex(row, flex-start, center);
 
@@ -62,9 +58,5 @@
     top: 7px;
     left: 7px;
     fill: inherit;
-  }
-
-  &__text {
-    font-size: $font-text;
   }
 }

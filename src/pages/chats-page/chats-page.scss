@@ -2,15 +2,20 @@
 @import '@/styles/mixins';
 
 .chats {
-  flex: 1 0 auto;
-  display: grid;
-  grid-template:
-    'search content' $chats-search-height
-    'list content' auto
-    'list new-message' calc($chats-new-height) / calc($chats-width) auto;
-  place-self: stretch stretch;
-  position: fixed;
-  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  &__wrapper {
+    flex: 1 0 auto;
+    display: grid;
+    grid-template:
+      'search content' $chats-search-height
+      'list content' auto
+      'list new-message' calc($chats-new-height) / calc($chats-width) auto;
+    place-self: stretch stretch;
+    position: fixed;
+    inset: 0;
+  }
 
   &__search {
     grid-area: search;
@@ -28,8 +33,5 @@
   &__new-message {
     grid-area: new-message;
     border-top: 1px solid $gray;
-    padding: 20px 20px 8px;
-
-    @include flex(row, center, center);
   }
 }

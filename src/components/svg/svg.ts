@@ -5,6 +5,7 @@ import template from './svg.hbs?raw';
 export interface SvgProps extends Props {
   className?: string;
   href?: string;
+  dataSvg?: string;
 }
 
 export class Svg extends Block {

@@ -66,16 +66,9 @@
 
   &__list {
     width: 100%;
+    padding-top: 10px;
 
     @include flex(column, flex-start, center);
-
-    &-item {
-      border-bottom: 1px solid $border;
-
-      &:last-child {
-        border-bottom: none;
-      }
-    }
   }
 
   &__message {
@@ -91,15 +84,7 @@
     margin: auto;
   }
 
-  &__user-menu {
+  &__content-menu {
     position: absolute;
-    top: 10px;
-    right: 10px;
-  }
-
-  &__attach-menu {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
   }
 }

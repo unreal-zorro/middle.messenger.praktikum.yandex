@@ -13,6 +13,14 @@ export class Header extends Block {
     super(props);
   }
 
+  componentDidUpdate(oldProps: HeaderProps, newProps: HeaderProps): boolean {
+    if (oldProps.text !== newProps.text) {
+      this.setProps({ text: newProps.text });
+    }
+
+    return true;
+  }
+
   render(): string {
     return template;
   }

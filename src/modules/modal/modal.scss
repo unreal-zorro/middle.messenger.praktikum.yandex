@@ -5,23 +5,29 @@
   position: fixed;
   inset: 0;
   overflow: auto;
-  visibility: hidden;
-  opacity: 0;
   background-color: $dark-gray;
+  padding: 10px;
+  z-index: 8000;
+  display: none;
 
-  @include flex(column, center, center);
+  &__wrapper {
+    position: relative;
+    inset: 0;
+    overflow: auto;
+    width: 100%;
+    min-height: 100%;
 
-  &_visible {
-    visibility: visible;
-    opacity: 1;
+    @include flex(column, center, center);
   }
 
   &__content {
     flex: 0 0 auto;
+    min-width: $modal-width;
     padding: 30px;
     border: 3px solid $border;
     border-radius: 25px;
     background-color: $accent;
+    position: relative;
   }
 
   &__header {
@@ -38,27 +44,123 @@
   }
 
   &__controls {
-    margin-right: 50px;
+    width: 100%;
+    margin-bottom: 50px;
+
+    @include flex(column, center, center);
   }
 
   &__control {
-    margin-right: 10px;
+    min-height: calc($input-field-height - 42px);
+    width: 100%;
+    margin-bottom: 10px;
+
+    @include flex(column, center, center);
 
     &:last-child {
-      margin-right: 0;
+      margin-bottom: 0;
     }
   }
 
-  &__buttons {
-    @include flex(row, space-between, center);
+  &__input-field {
+    width: 100%;
+    max-width: $button-width;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: $font-text $input-height auto;
+    gap: 10px;
+    place-items: center start;
+    margin-bottom: 10px;
+
+    &-file {
+      width: 200px;
+
+      @include flex(column, column, center);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__label {
+    &-file {
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        scale: 1.05;
+        text-decoration: underline;
+      }
+    }
+
+    &-selected {
+      color: $dark;
+      cursor: auto;
+
+      &:hover {
+        scale: 1;
+        text-decoration: none;
+      }
+    }
+  }
+
+  &__input {
+    width: 100%;
+
+    &-file {
+      height: 0;
+      visibility: hidden;
+      opacity: 0;
+    }
+
+  }
+
+  &__error {
+    &-file {
+      text-align: center;
+    }
   }
 
   &__button {
+    width: 100%;
     line-height: 2;
-    margin-right: 10px;
+    padding: 0;
+  }
 
-    &:last-child {
-      margin-right: 0;
+  &__close {
+    width: $icon-size;
+    height: $icon-size;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: $error;
+  }
+
+  &__icon {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 7px;
+    left: 7px;
+    fill: $light;
+  }
+
+  &__list {
+    margin-top: 20px;
+
+    &-header {
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 700;
+      font-size: $font-text;
+    }
+
+    &-item {
+      font-size: $font-text;
+      line-height: 1.5;
+      color: $dark;
     }
   }
 }

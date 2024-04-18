@@ -19,6 +19,12 @@
     color: $bold-gray;
   }
 
+  &[type="file"] {
+    border: none;
+    background-color: none;
+    color: $main;
+  }
+
   &:focus {
     border: 2px solid $border;
     box-shadow: 0 0 4px 0 $gray;

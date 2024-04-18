@@ -1,6 +1,6 @@
 <li
+  id="chat_{{ this.id }}"
   class="chat{{#if className}} {{ className }}{{/if}}{{#if active}} chat_active{{/if}}"
-  id="chat{{ this.id }}"
 >
   {{{ avatarChild }}}
 
@@ -17,10 +17,10 @@
       <p
         class="chat__text"
       >
-        {{#if this.sender}}<span class="chat__text_i-sender">Вы: </span>{{/if}}{{ text }}
+        {{#if this.createdBy}}<span class="chat__text_i-sender">Вы: </span>{{/if}}{{ lastMessageContent }}
       </p>
 
-      {{#if this.count}}
+      {{#if this.unreadCount}}
         {{{ countChild }}}
       {{/if}}
     </div>

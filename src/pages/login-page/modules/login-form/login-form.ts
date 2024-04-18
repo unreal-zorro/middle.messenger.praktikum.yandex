@@ -5,6 +5,7 @@ import type { InputFieldProps } from '@/modules';
 import { Button } from '@/components';
 import type { ButtonProps } from '@/components';
 import { VALIDATION_RULES } from '@/consts';
+import { isEqual } from '@/utils';
 import { Listener } from '@/base/EventBus';
 import template from './login-form.hbs?raw';
 
@@ -139,6 +140,14 @@ export class LoginForm extends Block {
   _password = '';
 
   _formData: Record<string, string> = {};
+
+  componentDidUpdate(oldProps: LoginFormProps, newProps: LoginFormProps): boolean {
+    if (!isEqual(oldProps as Indexed<unknown>, newProps as Indexed<unknown>)) {
+      return true;
+    }
+
+    return false;
+  }
 
   render(): string {
     return template;

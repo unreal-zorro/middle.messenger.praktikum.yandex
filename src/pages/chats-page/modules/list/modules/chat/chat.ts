@@ -7,26 +7,54 @@ import template from './chat.hbs?raw';
 export interface ChatProps extends Props {
   className?: string;
   id?: string;
-  avatar?: string;
+  avatar?: string | null;
   title?: string;
-  date?: string;
-  text?: string;
-  sender?: boolean;
-  count?: string;
+  lastMessageTime?: string;
+  lastMessageContent?: string;
+  createdBy?: boolean;
+  unreadCount?: number;
   active?: boolean;
-  clickHandler?: Listener;
+  chatButtonClickHandler?: Listener;
+  chatClickHandler?: Listener;
 }
 
 export class Chat extends Block {
   constructor(props: ChatProps) {
     super(props);
 
-    const clickHandler = () => {
-      if (this.props.clickHandler) {
+    const chatButtonClickHandler: Listener<Event> = (event: Event) => {
+      if (this.props.chatButtonClickHandler) {
         const chatId = this.props.id;
+        const coords = (event.currentTarget as HTMLButtonElement).getBoundingClientRect();
 
-        (this.props.clickHandler as Listener)(chatId);
+        (this.props.chatButtonClickHandler as Listener)(
+          chatId,
+          coords.left,
+          coords.top,
+          coords.height
+        );
       }
+    };
+
+    const chatClickHandler: Listener<Event> = (event: Event) => {
+      if (event.target && (this.children.buttonChild as Button)) {
+        const isChatButton =
+          (event.target as HTMLButtonElement).getAttribute('data-button') === 'chatButton';
+        const isChatButtonSvg =
+          (event.target as SVGAElement).getAttribute('data-svg') === 'chatSvg';
+
+        if (!isChatButton && !isChatButtonSvg) {
+          if (this.props.chatClickHandler) {
+            const chatId = this.props.id;
+
+            (this.props.chatClickHandler as Listener)(chatId);
+          }
+        }
+      }
+    };
+
+    this.props.events = {
+      click: ((event: Event) => chatClickHandler(event)) as Listener
     };
 
     this.children.avatarChild = new Avatar({
@@ -39,16 +67,16 @@ export class Chat extends Block {
 
     this.children.dateChild = new Text({
       className: 'chat__date',
-      text: this.props.date as string,
+      text: this.props.lastMessageTime as string,
       settings: {
         withInternalID: false
       }
     });
 
-    if (this.props.count) {
+    if (this.props.unreadCount) {
       this.children.countChild = new Text({
         className: 'chat__count',
-        text: this.props.count as string,
+        text: this.props.unreadCount as string,
         settings: {
           withInternalID: false
         }
@@ -56,17 +84,19 @@ export class Chat extends Block {
     }
 
     this.children.buttonChild = new Button({
-      className: 'chat__settings-button button',
+      dataButton: 'chatButton',
+      className: 'chat__settings-button',
       type: 'button',
       settings: {
         withInternalID: false
       },
       buttonChild: new Svg({
+        dataSvg: 'chatSvg',
         className: 'chat__settings-icon',
         href: '#icon-settings'
       }),
       events: {
-        click: (() => clickHandler.call(this)) as Listener
+        click: ((event: Event) => chatButtonClickHandler.call(this, event)) as Listener
       }
     });
   }
@@ -76,12 +106,12 @@ export class Chat extends Block {
       (this.children.avatarChild as Avatar).setProps({ value: newProps.avatar });
     }
 
-    if (oldProps.date !== newProps.date) {
-      (this.children.dateChild as Text).setProps({ error: newProps.date });
+    if (oldProps.lastMessageTime !== newProps.lastMessageTime) {
+      (this.children.dateChild as Text).setProps({ error: newProps.lastMessageTime });
     }
 
-    if (oldProps.count !== newProps.count) {
-      (this.children.countChild as Text).setProps({ text: newProps.count });
+    if (oldProps.unreadCount !== newProps.unreadCount) {
+      (this.children.countChild as Text).setProps({ text: newProps.unreadCount });
     }
 
     return true;
