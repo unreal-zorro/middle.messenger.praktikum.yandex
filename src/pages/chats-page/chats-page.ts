@@ -389,26 +389,6 @@ export class ChatsPage extends Block {
       return true;
     }
 
-    if (
-      !isEqual(
-        (oldProps.state as Indexed<unknown>)?.user as UserModel,
-        (newProps.state as Indexed<unknown>)?.user as UserModel
-      )
-    ) {
-      return true;
-    }
-
-    if (
-      !isEqual(
-        (oldProps.state as Indexed<unknown>)?.activeChat as ChatModel,
-        (newProps.state as Indexed<unknown>)?.activeChat as ChatModel
-      )
-    ) {
-      this.initContent();
-
-      return true;
-    }
-
     return false;
   }
 
