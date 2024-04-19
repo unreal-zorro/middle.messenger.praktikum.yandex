@@ -77,7 +77,7 @@
     padding: 10px 20px 10px 0;
     overflow: auto;
 
-    @include flex(column, flex-start, center);
+    @include flex(column-reverse, flex-start, center);
   }
 
   &__message {
