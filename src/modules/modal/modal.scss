@@ -161,6 +161,10 @@
       font-size: $font-text;
       line-height: 1.5;
       color: $dark;
+
+      &_title {
+        font-weight: 700;
+      }
     }
   }
 }

@@ -17,6 +17,7 @@ export interface ModalProps extends Props {
   buttons?: ButtonProps[];
   visible?: boolean;
   listHeader?: string;
+  listTitle?: string;
   list?: string[];
   state?: ModalProps;
   submitHandler?: Listener;

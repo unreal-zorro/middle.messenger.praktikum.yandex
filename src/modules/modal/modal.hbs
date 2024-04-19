@@ -32,6 +32,10 @@
           </h3>
 
           <ul>
+            <li class="modal__list-item modal__list-item_title">
+              {{ @root.listTitle }}
+            </li>
+
             {{#each list}}
               <li class="modal__list-item">
                 {{{ this }}}
