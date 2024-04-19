@@ -2,6 +2,7 @@ import { ChatAPI } from '@/api';
 import { store } from '@/store';
 import { router } from '@/router';
 import type { ChatModel } from '@/models';
+import { errorRedirect } from '@/utils';
 
 export class ChatController {
   private chatAPI: Nullable<ChatAPI> = null;
@@ -18,18 +19,7 @@ export class ChatController {
         data = await this.chatAPI.requestChats();
         store.set('chats', data as ChatModel[]);
       } catch (error: unknown) {
-        const { message } = error as Error;
-        const status = message.slice(8, 11);
-
-        if (status === '401') {
-          console.log(message);
-          router.go('/');
-        } else if (status === '500') {
-          console.log(message);
-          router.go('/error500');
-        } else {
-          console.log(message);
-        }
+        errorRedirect(error, router);
       }
     }
 
@@ -47,18 +37,7 @@ export class ChatController {
 
         data = await this.getChats();
       } catch (error: unknown) {
-        const { message } = error as Error;
-        const status = message.slice(8, 11);
-
-        if (status === '401') {
-          console.log(message);
-          router.go('/');
-        } else if (status === '500') {
-          console.log(message);
-          router.go('/error500');
-        } else {
-          console.log(message);
-        }
+        errorRedirect(error, router);
       }
     }
 
@@ -76,18 +55,7 @@ export class ChatController {
 
         data = await this.getChats();
       } catch (error: unknown) {
-        const { message } = error as Error;
-        const status = message.slice(8, 11);
-
-        if (status === '401') {
-          console.log(message);
-          router.go('/');
-        } else if (status === '500') {
-          console.log(message);
-          router.go('/error500');
-        } else {
-          console.log(message);
-        }
+        errorRedirect(error, router);
       }
     }
 
