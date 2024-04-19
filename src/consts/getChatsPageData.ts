@@ -356,12 +356,14 @@ const getUserAddModalData = () => {
   ];
 
   const listHeader = 'Список пользователей';
+  const listTitle = 'Id --- Имя в чате';
 
   return {
     header,
     controls,
     buttons,
     listHeader,
+    listTitle,
     list: [],
     visible: false
   };
@@ -390,12 +392,14 @@ const getUserDeleteModalData = () => {
   ];
 
   const listHeader = 'Список пользователей';
+  const listTitle = 'Id --- Имя в чате';
 
   return {
     header,
     controls,
     buttons,
     listHeader,
+    listTitle,
     list: [],
     visible: false
   };
