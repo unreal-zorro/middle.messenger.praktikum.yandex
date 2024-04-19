@@ -1,0 +1,1 @@
+export { errorRedirect } from './errorRedirect';

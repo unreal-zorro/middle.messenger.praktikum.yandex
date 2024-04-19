@@ -6,3 +6,4 @@ export { set } from './set';
 export { cloneDeep } from './cloneDeep';
 export { queryStringify } from './queryStringify';
 export { validate } from './validate';
+export { errorRedirect } from './errorRedirect';
