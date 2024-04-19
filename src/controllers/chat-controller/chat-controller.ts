@@ -15,15 +15,9 @@ export class ChatController {
 
     if (this.chatAPI) {
       try {
-        store.set('isLoading', true);
-
         data = await this.chatAPI.requestChats();
         store.set('chats', data as ChatModel[]);
-
-        store.set('isLoading', false);
       } catch (error: unknown) {
-        store.set('isLoading', false);
-
         const { message } = error as Error;
         const status = message.slice(8, 11);
 
