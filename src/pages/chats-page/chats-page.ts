@@ -16,13 +16,17 @@ import { Content, List, NewMessage, Search } from './modules';
 import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
 import template from './chats-page.hbs?raw';
 
+type ChatsPageStateToProps = Indexed<
+  ChatModel[] | ChatModel | UserModel | ResponseMessage[] | boolean | Indexed<unknown>
+>;
+
 interface ChatsPageProps extends Props {
   id?: string;
   search?: SearchProps;
   list?: ListProps;
   content?: ContentProps;
   newMessage?: NewMessageProps;
-  state?: Record<string, ChatModel[] | UserModel | boolean>;
+  state?: ChatsPageStateToProps;
 }
 
 export class ChatsPage extends Block {
