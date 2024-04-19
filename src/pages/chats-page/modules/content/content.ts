@@ -365,13 +365,23 @@ export class Content extends Block {
     const activeChat = currentState?.activeChat as ChatModel;
     if (!activeChat) {
       this.children.noChatText = new Text({
-        className: 'content__text',
+        className: 'content__no-chat-text',
         text: 'Выберите чат, чтобы отправить сообщение',
         settings: {
           withInternalID: false
         }
       });
     }
+  }
+
+  public initEmptyNoChatText() {
+    this.children.noChatText = new Text({
+      className: 'content__no-chat-text',
+      text: '',
+      settings: {
+        withInternalID: false
+      }
+    });
   }
 
   public initContentMenu() {
@@ -497,8 +507,11 @@ export class Content extends Block {
         (newProps.state as Indexed<unknown>).activeChat as Indexed<unknown>
       )
     ) {
-      if (((newProps.state as Indexed<unknown>).activeChat as ChatModel) === undefined) {
-        this.initNoChatText();
+      if (
+        ((oldProps.state as Indexed<unknown>).activeChat as ChatModel) === undefined ||
+        ((newProps.state as Indexed<unknown>).activeChat as ChatModel) === undefined
+      ) {
+        this.initEmptyNoChatText();
       } else {
         this.initContentChat();
       }
