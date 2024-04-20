@@ -12,6 +12,9 @@ import {
 import { isEqual } from '@/utils';
 import { messagesAPI } from '@/api';
 import { store } from '@/store';
+import { VALIDATION_RULES } from '@/consts';
+import { Modal } from '@/modules';
+import type { ModalProps } from '@/modules';
 import { Content, List, NewMessage, Search } from './modules';
 import type { NewMessageProps, SearchProps, ListProps, ContentProps } from './modules';
 import template from './chats-page.hbs?raw';
@@ -27,6 +30,8 @@ interface ChatsPageProps extends Props {
   content?: ContentProps;
   newMessage?: NewMessageProps;
   state?: ChatsPageStateToProps;
+  changeAvatarModal?: ModalProps;
+  visibleChangeAvatarModal?: boolean;
 }
 
 export class ChatsPage extends Block {
@@ -125,6 +130,20 @@ export class ChatsPage extends Block {
       }
     }
 
+    if (event.target) {
+      const isChangeAvatarMenuButton =
+        (event.target as HTMLButtonElement).getAttribute('data-button') ===
+        'changeChatAvatarButton';
+      const isChangeAvatarMenuSvg =
+        (event.target as SVGAElement).getAttribute('data-svg') === 'changeChatAvatarSvg';
+
+      if (isChangeAvatarMenuButton || isChangeAvatarMenuSvg) {
+        this.setProps({
+          visibleChangeAvatarModal: true
+        });
+      }
+    }
+
     if (event.target && (this.children.content as Content)) {
       const isContentButton =
         (event.target as HTMLButtonElement).getAttribute('data-button') === 'contentButton';
@@ -150,6 +169,12 @@ export class ChatsPage extends Block {
         });
       }
     }
+  };
+
+  public closeChangeAvatarModalHandler: Listener = () => {
+    this.setProps({
+      visibleChangeAvatarModal: false
+    });
   };
 
   public wheelHandler: Listener = () => {
@@ -240,6 +265,38 @@ export class ChatsPage extends Block {
     this.initContent();
   };
 
+  public clickChangeAvatarModalHandler: (...args: Record<string, string>[]) => Promise<void> =
+    async (data) => {
+      this._updateAvatarChat = Number(data.chatId);
+    };
+
+  public submitChangeAvatarModalHandler: (...args: Record<string, string | File>[]) => void = (
+    formData
+  ) => {
+    const chatId: number = this._updateAvatarChat;
+
+    let isValid = true;
+
+    Object.entries(formData).forEach(([key, value]) => {
+      const { regExp } = VALIDATION_RULES[key];
+      isValid = isValid && regExp.test((value as File).name);
+    });
+
+    if (isValid) {
+      this.chatController.updateAvatar(chatId, formData.avatar as File).then(() => {});
+
+      this.setProps({
+        visibleChangeAvatarModal: true
+      });
+    } else {
+      console.log('Invalid avatar form data');
+    }
+
+    this.setProps({
+      visibleChangeAvatarModal: false
+    });
+  };
+
   public getChatUsersHandler: (...args: Record<string, string>[]) => Promise<void> = async (
     data
   ) => {
@@ -314,6 +371,7 @@ export class ChatsPage extends Block {
       visibleChatMenu: false,
       checkActiveChatHandler: this.checkActiveChatHandler,
       deleteChatHandler: this.deleteChatHandler,
+      clickChangeAvatarModalHandler: this.clickChangeAvatarModalHandler,
       settings: {
         withInternalID: false
       }
@@ -363,6 +421,26 @@ export class ChatsPage extends Block {
     });
   }
 
+  public initAvatarModal() {
+    this.children.changeAvatarModal = new Modal({
+      className: '',
+      type: 'image',
+      header: (this.props.changeAvatarModal as ModalProps)?.header,
+      controls: (this.props.changeAvatarModal as ModalProps)?.controls,
+      buttons: (this.props.changeAvatarModal as ModalProps)?.buttons,
+      visible: this.props.visibleChangeAvatarModal as boolean,
+      state: (
+        (this.props.state as Indexed<UserModel | boolean | Indexed<unknown>>)
+          .chatsPageData as Indexed<unknown>
+      ).changeAvatarModal as ModalProps,
+      submitHandler: this.submitChangeAvatarModalHandler as Listener,
+      closeHandler: this.closeChangeAvatarModalHandler,
+      settings: {
+        withInternalID: false
+      }
+    });
+  }
+
   async componentDidMount() {
     try {
       await this.chatController?.getChats();
@@ -374,6 +452,14 @@ export class ChatsPage extends Block {
       this.initList();
       this.initContent();
       this.initNewMessage();
+      this.initAvatarModal();
+
+      (this.children.changeAvatarModal as Block).setProps({
+        state: (
+          (this.props.state as Indexed<UserModel | boolean | Indexed<unknown>>)
+            .chatsPageData as Indexed<unknown>
+        ).changeAvatarModal as ModalProps
+      });
 
       (this.children.list as List).setProps({
         state: this.props.state as Indexed<ChatModel[] | boolean | Indexed<unknown>>
@@ -384,6 +470,19 @@ export class ChatsPage extends Block {
   }
 
   componentDidUpdate(oldProps: ChatsPageProps, newProps: ChatsPageProps): boolean {
+    // console.log(newProps);
+
+    if (oldProps.visibleChangeAvatarModal !== newProps.visibleChangeAvatarModal) {
+      if (newProps.visibleChangeAvatarModal === false) {
+        (this.children.changeAvatarModal as Modal).hide();
+        document.body.classList.remove('modal-open');
+      }
+      if (newProps.visibleChangeAvatarModal === true) {
+        (this.children.changeAvatarModal as Modal).show();
+        document.body.classList.add('modal-open');
+      }
+    }
+
     if (
       !isEqual(
         (oldProps.state as Indexed<unknown>)?.chatsData as [],
@@ -397,6 +496,8 @@ export class ChatsPage extends Block {
   }
 
   _currentChat = 0;
+
+  _updateAvatarChat = 0;
 
   render(): string {
     if ((this.props.state as Indexed<unknown>).isLoading) {

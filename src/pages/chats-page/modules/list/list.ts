@@ -84,6 +84,7 @@ export interface ListProps extends Props {
   isUpdate?: boolean;
   checkActiveChatHandler: (...args: Record<string, string>[]) => Promise<void>;
   deleteChatHandler: (...args: Record<string, string>[]) => Promise<void>;
+  clickChangeAvatarModalHandler: (...args: Record<string, string>[]) => Promise<void>;
 }
 
 export class List extends Block {
@@ -130,6 +131,16 @@ export class List extends Block {
     if (itemText === CHAT_MENU_ITEMS.delete) {
       if (this.props.deleteChatHandler) {
         (this.props.deleteChatHandler as (...args: Record<string, string>[]) => Promise<void>)({
+          chatId: String(id)
+        });
+      }
+    } else if (itemText === CHAT_MENU_ITEMS.changeAvatar) {
+      if (this.props.clickChangeAvatarModalHandler) {
+        (
+          this.props.clickChangeAvatarModalHandler as (
+            ...args: Record<string, string>[]
+          ) => Promise<void>
+        )({
           chatId: String(id)
         });
       }
