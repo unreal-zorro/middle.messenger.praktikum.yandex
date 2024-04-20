@@ -17,7 +17,9 @@
       <p
         class="chat__text"
       >
-        {{#if this.createdBy}}<span class="chat__text_i-sender">Вы: </span>{{/if}}{{ lastMessageContent }}
+        {{#if lastMessageContent}}
+          {{#if this.createdBy}}<span class="chat__text_i-sender">Вы: </span>{{/if}}{{ lastMessageContent }}
+        {{/if}}
       </p>
 
       {{#if this.unreadCount}}
