@@ -64,7 +64,8 @@ router
     search: chatsPageData.search,
     list: chatsPageData.list,
     content: chatsPageData.content,
-    newMessage: chatsPageData.newMessage
+    newMessage: chatsPageData.newMessage,
+    changeAvatarModal: chatsPageData.changeAvatarModal
   })
   .use('/error500', ErrorPage, {
     settings: {

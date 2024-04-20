@@ -44,8 +44,11 @@ export class Menu extends Block {
       const type = currentItem?.[index].type;
       const text = currentItem?.[index].text;
       const href = currentItem?.[index].href;
+      const dataButton = currentItem?.[index].dataButton;
+      const dataSvg = currentItem?.[index].dataSvg;
 
       return new Button({
+        dataButton,
         className: 'menu__button',
         type,
         text,
@@ -53,6 +56,7 @@ export class Menu extends Block {
           withInternalID: true
         },
         buttonChild: new Svg({
+          dataSvg,
           className: 'menu__icon',
           href
         }),

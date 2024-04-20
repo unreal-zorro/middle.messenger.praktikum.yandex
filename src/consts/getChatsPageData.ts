@@ -6,17 +6,23 @@ const getChatMenuData = () => {
     {
       type: 'button',
       href: '#icon-rename',
-      text: CHAT_MENU_ITEMS.rename
+      text: CHAT_MENU_ITEMS.rename,
+      dataButton: 'renameChatButton',
+      dataSvg: 'renameChatSvg'
     },
     {
       type: 'button',
       href: '#icon-avatar',
-      text: CHAT_MENU_ITEMS.changeAvatar
+      text: CHAT_MENU_ITEMS.changeAvatar,
+      dataButton: 'changeChatAvatarButton',
+      dataSvg: 'changeChatAvatarSvg'
     },
     {
       type: 'button',
       href: '#icon-delete',
-      text: CHAT_MENU_ITEMS.delete
+      text: CHAT_MENU_ITEMS.delete,
+      dataButton: 'deleteChatButton',
+      dataSvg: 'deleteChatSvg'
     }
   ];
 
@@ -356,12 +362,14 @@ const getUserAddModalData = () => {
   ];
 
   const listHeader = 'Список пользователей';
+  const listTitle = 'Id --- Имя в чате';
 
   return {
     header,
     controls,
     buttons,
     listHeader,
+    listTitle,
     list: [],
     visible: false
   };
@@ -390,14 +398,46 @@ const getUserDeleteModalData = () => {
   ];
 
   const listHeader = 'Список пользователей';
+  const listTitle = 'Id --- Имя в чате';
 
   return {
     header,
     controls,
     buttons,
     listHeader,
+    listTitle,
     list: [],
     visible: false
+  };
+};
+
+const getChangeAvatarModalData = () => {
+  const header = 'Загрузите файл';
+
+  const controls = [
+    {
+      label: 'Выбрать файл на компьютере',
+      name: 'avatar',
+      type: 'file',
+      disabled: false,
+      value: '',
+      error: false,
+      text: ''
+    }
+  ];
+
+  const buttons = [
+    {
+      type: 'submit',
+      text: 'Поменять'
+    }
+  ];
+
+  return {
+    header,
+    controls,
+    buttons,
+    visibleChangeAvatarModal: false
   };
 };
 
@@ -423,6 +463,9 @@ export const getChatsPageData = () => {
   };
   const addNewChatModal = {
     ...getAddNewChatModalData()
+  };
+  const changeAvatarModal = {
+    ...getChangeAvatarModalData()
   };
 
   return {
@@ -480,6 +523,7 @@ export const getChatsPageData = () => {
       attachPhotoModal,
       attachFileModal,
       attachLocationModal
-    }
+    },
+    changeAvatarModal
   };
 };

@@ -1,7 +1,7 @@
 import { AuthAPI } from '@/api';
 import { router } from '@/router';
 import type { LoginFormModel, RegisterFormModel } from '@/models';
-import { validate } from '@/utils';
+import { errorRedirect, validate } from '@/utils';
 import { store } from '@/store';
 
 export class AuthController {
@@ -25,21 +25,7 @@ export class AuthController {
         throw new Error(`status: ${status}, reason: ${reason}`);
       }
     } catch (error: unknown) {
-      const { message } = error as Error;
-      const status = message.slice(8, 11);
-      const reason = message.slice(21);
-
-      if (reason === 'User already in system') {
-        router.go('/messenger');
-      } else if (status === '401') {
-        console.log(message);
-        router.go('/');
-      } else if (status === '500') {
-        console.log(message);
-        router.go('/error500');
-      } else {
-        console.log(message);
-      }
+      errorRedirect(error, router);
     }
   }
 
@@ -57,21 +43,7 @@ export class AuthController {
         throw new Error(`status: ${status}, reason: ${reason}`);
       }
     } catch (error: unknown) {
-      const { message } = error as Error;
-      const status = message.slice(8, 11);
-      const reason = message.slice(21);
-
-      if (reason === 'User already in system') {
-        router.go('/messenger');
-      } else if (status === '401') {
-        console.log(message);
-        router.go('/');
-      } else if (status === '500') {
-        console.log(message);
-        router.go('/error500');
-      } else {
-        console.log(message);
-      }
+      errorRedirect(error, router);
     }
   }
 
@@ -94,18 +66,7 @@ export class AuthController {
         router.go('/messenger');
       }
     } catch (error: unknown) {
-      const { message } = error as Error;
-      const status = message.slice(8, 11);
-
-      if (status === '401') {
-        console.log(message);
-        router.go('/');
-      } else if (status === '500') {
-        console.log(message);
-        router.go('/error500');
-      } else {
-        console.log(message);
-      }
+      errorRedirect(error, router);
     }
   }
 }

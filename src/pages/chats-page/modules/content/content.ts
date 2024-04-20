@@ -365,13 +365,23 @@ export class Content extends Block {
     const activeChat = currentState?.activeChat as ChatModel;
     if (!activeChat) {
       this.children.noChatText = new Text({
-        className: 'content__text',
+        className: 'content__no-chat-text',
         text: 'Выберите чат, чтобы отправить сообщение',
         settings: {
           withInternalID: false
         }
       });
     }
+  }
+
+  public initEmptyNoChatText() {
+    this.children.noChatText = new Text({
+      className: 'content__no-chat-text',
+      text: '',
+      settings: {
+        withInternalID: false
+      }
+    });
   }
 
   public initContentMenu() {
@@ -399,7 +409,7 @@ export class Content extends Block {
     ).userAddModal as ModalProps;
 
     const currentChatUsers = currentState?.chatUsers as ChatUserModel[];
-    const list = currentChatUsers?.map((user) => String(user.id));
+    const list = currentChatUsers?.map((user) => `${user.id} --- ${user.display_name}`);
 
     this.children.userAddModal = new Modal({
       className: '',
@@ -409,6 +419,7 @@ export class Content extends Block {
       buttons: (this.props.userAddModal as ModalProps)?.buttons,
       visible: this.props.visibleUserAddModal as boolean,
       listHeader: (this.props.userAddModal as ModalProps)?.listHeader,
+      listTitle: (this.props.userAddModal as ModalProps)?.listTitle,
       list,
       state: modalState,
       submitHandler: this.submitUserAddModalHandler as Listener,
@@ -427,7 +438,7 @@ export class Content extends Block {
     ).userDeleteModal as ModalProps;
 
     const currentChatUsers = currentState?.chatUsers as ChatUserModel[];
-    const list = currentChatUsers?.map((user) => String(user.id));
+    const list = currentChatUsers?.map((user) => `${user.id} --- ${user.display_name}`);
 
     this.children.userDeleteModal = new Modal({
       className: '',
@@ -436,7 +447,8 @@ export class Content extends Block {
       controls: (this.props.userDeleteModal as ModalProps)?.controls,
       buttons: (this.props.userDeleteModal as ModalProps)?.buttons,
       visible: this.props.visibleUserDeleteModal as boolean,
-      listHeader: (this.props.userAddModal as ModalProps)?.listHeader,
+      listHeader: (this.props.userDeleteModal as ModalProps)?.listHeader,
+      listTitle: (this.props.userDeleteModal as ModalProps)?.listTitle,
       list,
       state: modalState,
       submitHandler: this.submitUserDeleteModalHandler as Listener,
@@ -497,8 +509,11 @@ export class Content extends Block {
         (newProps.state as Indexed<unknown>).activeChat as Indexed<unknown>
       )
     ) {
-      if (((newProps.state as Indexed<unknown>).activeChat as ChatModel) === undefined) {
-        this.initNoChatText();
+      if (
+        ((oldProps.state as Indexed<unknown>).activeChat as ChatModel) === undefined ||
+        ((newProps.state as Indexed<unknown>).activeChat as ChatModel) === undefined
+      ) {
+        this.initEmptyNoChatText();
       } else {
         this.initContentChat();
       }
@@ -514,7 +529,7 @@ export class Content extends Block {
       this.initUserDeleteModal();
 
       const currentChatUsers = (newProps.state as Indexed<unknown>)?.chatUsers as ChatUserModel[];
-      const listUsers = currentChatUsers?.map((user) => String(user.id));
+      const listUsers = currentChatUsers?.map((user) => `${user.id} --- ${user.display_name}`);
 
       (this.children.userAddModal as Block).setProps({
         state: {
@@ -572,7 +587,7 @@ export class Content extends Block {
       this.initUserDeleteModal();
 
       const currentChatUsers = (newProps.state as Indexed<unknown>)?.chatUsers as ChatUserModel[];
-      const listUsers = currentChatUsers?.map((user) => String(user.id));
+      const listUsers = currentChatUsers?.map((user) => `${user.id} --- ${user.display_name}`);
 
       (this.children.userAddModal as Block).setProps({
         state: {

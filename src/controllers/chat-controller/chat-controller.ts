@@ -2,6 +2,7 @@ import { ChatAPI } from '@/api';
 import { store } from '@/store';
 import { router } from '@/router';
 import type { ChatModel } from '@/models';
+import { errorRedirect, validate } from '@/utils';
 
 export class ChatController {
   private chatAPI: Nullable<ChatAPI> = null;
@@ -15,27 +16,10 @@ export class ChatController {
 
     if (this.chatAPI) {
       try {
-        store.set('isLoading', true);
-
         data = await this.chatAPI.requestChats();
         store.set('chats', data as ChatModel[]);
-
-        store.set('isLoading', false);
       } catch (error: unknown) {
-        store.set('isLoading', false);
-
-        const { message } = error as Error;
-        const status = message.slice(8, 11);
-
-        if (status === '401') {
-          console.log(message);
-          router.go('/');
-        } else if (status === '500') {
-          console.log(message);
-          router.go('/error500');
-        } else {
-          console.log(message);
-        }
+        errorRedirect(error, router);
       }
     }
 
@@ -53,18 +37,7 @@ export class ChatController {
 
         data = await this.getChats();
       } catch (error: unknown) {
-        const { message } = error as Error;
-        const status = message.slice(8, 11);
-
-        if (status === '401') {
-          console.log(message);
-          router.go('/');
-        } else if (status === '500') {
-          console.log(message);
-          router.go('/error500');
-        } else {
-          console.log(message);
-        }
+        errorRedirect(error, router);
       }
     }
 
@@ -82,22 +55,43 @@ export class ChatController {
 
         data = await this.getChats();
       } catch (error: unknown) {
-        const { message } = error as Error;
-        const status = message.slice(8, 11);
-
-        if (status === '401') {
-          console.log(message);
-          router.go('/');
-        } else if (status === '500') {
-          console.log(message);
-          router.go('/error500');
-        } else {
-          console.log(message);
-        }
+        errorRedirect(error, router);
       }
     }
 
     return data;
+  }
+
+  public async updateAvatar(chatId: number, avatar: File) {
+    const avatarFileName = avatar.name;
+    const isValid = validate({ avatar: avatarFileName });
+
+    const data = new FormData();
+    data.append('chatId', String(chatId));
+    data.append('avatar', avatar);
+
+    let newChatData: ChatModel | undefined;
+
+    if (this.chatAPI && isValid) {
+      try {
+        newChatData = (await this.chatAPI.updateAvatar(data)) as unknown as ChatModel;
+
+        const currentChats: ChatModel[] = (await store.getState().chats) as ChatModel[];
+        const newChats = currentChats?.map((chat) =>
+          chat.id === (newChatData as unknown as ChatModel).id ? newChatData : chat
+        );
+
+        store.set('chats', newChats as ChatModel[]);
+        store.set('activeChat', undefined);
+        store.set('receivedMessages', undefined);
+      } catch (error: unknown) {
+        errorRedirect(error, router);
+      }
+    } else {
+      console.log('Invalid avatar form data');
+    }
+
+    return newChatData;
   }
 
   public async checkActiveChat(chatId: number): Promise<ChatModel> {
