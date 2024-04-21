@@ -100,8 +100,8 @@ export abstract class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
-  private _componentDidMount() {
-    this.componentDidMount();
+  private async _componentDidMount() {
+    await this.componentDidMount();
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
 
     Object.values(this.children).forEach((child) => {
@@ -114,7 +114,7 @@ export abstract class Block {
   }
 
   // Может переопределять пользователь, необязательно трогать
-  componentDidMount() {}
+  async componentDidMount() {}
 
   dispatchComponentDidMount() {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
@@ -132,7 +132,15 @@ export abstract class Block {
 
   // Может переопределять пользователь, необязательно трогать
   componentDidUpdate(oldProps: Props, newProps: Props): boolean {
-    return oldProps !== newProps;
+    if (oldProps) {
+      return false;
+    }
+
+    if (newProps) {
+      return false;
+    }
+
+    return false;
   }
 
   setProps = (nextProps: Props) => {
@@ -251,5 +259,9 @@ export abstract class Block {
 
   hide(): void {
     this.getContent()!.style.display = 'none';
+  }
+
+  getId(): string {
+    return String(this.props.id);
   }
 }

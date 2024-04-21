@@ -53,6 +53,48 @@
 - Добавлен линтер **Stylelint** для проверки стилей CSS, SCSS: в корне проекта создан файл `.stylelintrc.json` с настройками линтера **Stylelint**.
 - В корне проекта создан конфигурационный файл `.editorconfig` для поддержки согласованности стилей кодирования при работе над проектом в различных редакторах и IDE.
 
+### 3. **Спринт 3**. На данном этапе выполнены следующие работы:
+
+- В проект добавлен роутинг:
+  - написаны базовые компоненты **Route**, **Router**;
+  - создан общий на всё приложение инстанс класса **Router**;
+  - В файле `main.ts` в него добавляются роуты и затем он используется в контроллерах для осуществления программной навигации;
+  - у всех страниц приложения есть собственный роут:
+    - `/` или `/index.html` — страница входа;
+    - `/sign-up` — страница регистрации;
+    - `/settings` — страница настроек профиля пользователя:
+      - `/settings/data` — страница изменения данных пользователя;
+      - `/settings/password` — страница изменения пароля;
+    - `/messenger` — страница чатов;
+    - `/error404` - страница 404;
+    - `/error500` - страница 500;
+  - в **DOM** активна только одна страница (при переходе на новую страницу старая удаляется из него);
+  - при обновлении страницы с определённым **URL** отображается та же самая страница;
+  - переходы по страницам работают через нажатие на ссылки в интерфейсе приложения;
+  - работают переходы "назад" и "вперёд", как через интерфейс браузера, так и через роутер;
+  - при переходе по несуществующему роуту пользователь перенаправляется на страницу 404;
+  - при попытке войти в приложение неавторизованного пользователя он перенаправляется на страницу входа;
+  - при возникновении внутренней ошибки сервера пользователь перенаправляется на страницу 500.
+- В проект внедрено `HTTP API` чатов, авторизации и пользователей. Добавлено следующее:
+  - авторизация в полном объеме (контроллер **AuthController**):
+    - регистрация;
+    - авторизация;
+    - выход из системы;
+  - работа с информацией пользователя (контроллер **UserController**):
+    - изменение данные пользователя;
+    - изменение аватара;
+    - изменение пароля;
+  - работа с чатами (контроллеры **ChatController** и **ChatUsersController**):
+    - просмотр списка чатов пользователя;
+    - создание нового чата;
+    - удаление чата;
+    - добавление пользователя в чат;
+    - удаление пользователя из чата.
+- В проекте подключен протокол **WebSocket** для работы с **real-time** сообщениями:
+  - написан базовый компонент **WSTransport**;
+  - создано **API** чатов (**MessagesAPI**) для мгновенного обмена сообщения по протоколу **WebSocket**;
+  - создан общий на всё приложение инстанс **API** чатов, который используется для мгновенного обмена сообщениями.
+
 ## Ссылка на шаблоны страниц в Figma
 
 https://www.figma.com/file/ztRVwTa1FVh3I42YLFFOyE/Web-messenger?type=design&node-id=0%3A1&mode=design&t=0G3GbYznBYrYK8db-1
@@ -75,59 +117,67 @@ https://cool-web-messenger.netlify.app - готовый проект на бес
 
 ### Ссылки на все страницы в dev сборке на сервере для разработки:
 
-- http://localhost:5173 или http://localhost:5173/index.html — страница логина;
-- http://localhost:5173/register — страница регистрации;
-- http://localhost:5173/chats — страница чатов;
-- http://localhost:5173/profile — страница профиля;
-- http://localhost:5173/profile/data — страница изменения данных пользователя;
-- http://localhost:5173/profile/password — страница изменения пароля;
+- http://localhost:5173 или http://localhost:5173/index.html — страница входа;
+- http://localhost:5173/sign-up — страница регистрации;
+- http://localhost:5173/messenger — страница чатов;
+- http://localhost:5173/settings — страница настроек профиля пользователя;
+- http://localhost:5173/settings/data — страница изменения данных пользователя;
+- http://localhost:5173/settings/password — страница изменения пароля;
 - http://localhost:5173/error404 - страница 404;
 - http://localhost:5173/error500 - страница 500.
 
 ### Ссылки на все страницы на локальном сервере:
 
-- http://localhost:3000 или http://localhost:3000/index.html — страница логина;
-- http://localhost:3000/register — страница регистрации;
-- http://localhost:3000/chats — страница чатов;
-- http://localhost:3000/profile — страница профиля;
-- http://localhost:3000/profile/data — страница изменения данных пользователя;
-- http://localhost:3000/profile/password — страница изменения пароля;
+- http://localhost:3000 или http://localhost:3000/index.html — страница входа;
+- http://localhost:3000/sign-up — страница регистрации;
+- http://localhost:3000/messenger — страница чатов;
+- http://localhost:3000/settings — страница настроек профиля пользователя;
+- http://localhost:3000/settings/data — страница изменения данных пользователя;
+- http://localhost:3000/settings/password — страница изменения пароля;
 - http://localhost:3000/error404 - страница 404;
 - http://localhost:3000/error500 - страница 500.
 
 ### Ссылки на все страницы на хостинге Netlify:
 
-- https://cool-web-messenger.netlify.app или https://cool-web-messenger.netlify.app/index.html — страница логина;
-- https://cool-web-messenger.netlify.app/register — страница регистрации;
-- https://cool-web-messenger.netlify.app/chats — страница чатов;
-- https://cool-web-messenger.netlify.app/profile — страница профиля;
-- https://cool-web-messenger.netlify.app/profile/data — страница изменения данных пользователя;
-- https://cool-web-messenger.netlify.app/profile/password — страница изменения пароля;
+- https://cool-web-messenger.netlify.app или https://cool-web-messenger.netlify.app/index.html — страница входа;
+- https://cool-web-messenger.netlify.app/sign-up — страница регистрации;
+- https://cool-web-messenger.netlify.app/messenger — страница чатов;
+- https://cool-web-messenger.netlify.app/settings — страница настроек профиля пользователя;
+- https://cool-web-messenger.netlify.app/settings/data — страница изменения данных пользователя;
+- https://cool-web-messenger.netlify.app/settings/password — страница изменения пароля;
 - https://cool-web-messenger.netlify.app/error404 - страница 404;
 - https://cool-web-messenger.netlify.app/error500 - страница 500.
 
 ## **Примеры использования**
 
 1. Страница логина:
+
    ![Страница логина](./docs/login-page.png)
 
 2. Страница регистрации:
+
    ![Страница регистрации](./docs/register-page.png)
 
 3. Страница чатов:
+
    ![Страница чатов](./docs/chats-page.png)
 
 4. Страница профиля:
+
    ![Страница профиля](./docs/profile-page.png)
 
 5. Страница изменения данных пользователя:
+
    ![Страница изменения данных пользователя](./docs/profile-data-page.png)
 
 6. Страница изменения пароля:
+
    ![Страница изменения пароля](./docs/profile-password-page.png)
 
 7. Страница 404:
+
    ![Страница 404](./docs/error404-page.png)
 
 8. Страница 500:
+
    ![Страница 500](./docs/error500-page.png)

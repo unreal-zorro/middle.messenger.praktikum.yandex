@@ -2,19 +2,26 @@
 @import '@/styles/mixins';
 
 .content {
-  padding: 10px 20px;
+  padding: 10px 0 0 20px;
+  flex: 1 0 auto;
+  display: grid;
+  grid-template:
+    'chat' $chat-height
+    'list' auto;
+  place-self: stretch stretch;
+  inset: 0;
   overflow: auto;
-
-  @include flex(column, flex-start, center);
+  position: relative;
 
   &__chat {
-    max-height: 100px;
+    grid-area: chat;
+    height: $chat-height;
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     border-bottom: 1px solid $border;
-    padding: 10px 0;
+    padding: 10px 20px 10px 0;
   }
 
   &__info {
@@ -65,17 +72,12 @@
   }
 
   &__list {
+    grid-area: list;
     width: 100%;
+    padding: 10px 20px 10px 0;
+    overflow: auto;
 
-    @include flex(column, flex-start, center);
-
-    &-item {
-      border-bottom: 1px solid $border;
-
-      &:last-child {
-        border-bottom: none;
-      }
-    }
+    @include flex(column-reverse, flex-start, center);
   }
 
   &__message {
@@ -89,17 +91,18 @@
 
   &__text {
     margin: auto;
+    padding-top: 10px;
+    grid-area: list;
   }
 
-  &__user-menu {
+  &__no-chat-text {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
-  &__attach-menu {
+  &__content-menu {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
   }
 }

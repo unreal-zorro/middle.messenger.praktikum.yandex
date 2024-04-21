@@ -9,6 +9,7 @@ export interface ButtonProps extends Props {
   type?: string;
   text?: string;
   disabled?: boolean;
+  dataButton?: string;
 }
 
 export class Button extends Block {
@@ -23,8 +24,9 @@ export class Button extends Block {
   componentDidUpdate(oldProps: ButtonProps, newProps: ButtonProps): boolean {
     if (oldProps.disabled !== newProps.disabled) {
       this.setProps({ disabled: newProps.disabled });
+      return true;
     }
 
-    return true;
+    return false;
   }
 }

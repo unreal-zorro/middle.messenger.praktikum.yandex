@@ -14,8 +14,6 @@ export { Label } from './label';
 export type { LabelProps } from './label';
 export { Link } from './link';
 export type { LinkProps } from './link';
-export { Span } from './span';
-export type { SpanProps } from './span';
 export { Svg } from './svg';
 export type { SvgProps } from './svg';
 export { Text } from './text';

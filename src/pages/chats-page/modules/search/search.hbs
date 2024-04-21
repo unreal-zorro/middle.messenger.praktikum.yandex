@@ -2,26 +2,10 @@
   class="search{{#if className}} {{ className }}{{/if}}"
 >
   {{{ navLinkChild }}}
+  {{{ searchFormChild }}}
+  {{{ buttonChild }}}
 
-  <form
-    class="search__form"
-  >
-    <div
-      class="search__form-controls"
-    >
-      {{#each controls}}
-        <div
-          class="search__form-control"
-        >
-          <svg class="search__icon">
-            <use xlink:href="#icon-search"></use>
-          </svg>
-
-          {{{ this }}}
-        </div>
-      {{/each}}
-    </div>
-  </form>
+  {{{ addNewChatModal }}}
 
   <svg class="spritesheet">
     <symbol id="icon-search" viewBox="0 0 32 32">

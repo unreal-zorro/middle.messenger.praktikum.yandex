@@ -1,7 +1,7 @@
 import './menu.scss';
-import { Block } from '@/base/';
-import type { Props } from '@/base/';
-import { Button, Span, Svg } from '@/components';
+import { Block } from '@/base';
+import type { Listener, Props } from '@/base';
+import { Button, Svg } from '@/components';
 import template from './menu.hbs?raw';
 
 interface MenuItem extends Record<string, string | undefined> {
@@ -11,60 +11,72 @@ interface MenuItem extends Record<string, string | undefined> {
 }
 
 export interface MenuProps extends Props {
+  dataMenu?: string;
   className?: string;
   visible?: boolean;
-  top?: string;
-  left?: string;
   items?: MenuItem[];
+  state?: MenuProps;
+  menuItemClickHandler?: Listener;
 }
 
 export class Menu extends Block {
   constructor(props: MenuProps) {
     super(props);
+  }
 
-    this.children.items = (this.props.items as MenuItem[])?.map(
-      (item) =>
-        new Button({
-          className: 'menu__button',
-          type: item.type,
-          settings: {
-            withInternalID: true
-          },
-          buttonChild: new Svg({
-            className: 'menu__icon',
-            href: item.href
-          }),
-          buttonChild2: new Span({
-            className: 'menu__text',
-            text: item.text
-          })
-        })
-    );
+  public menuItemClickHandler: (event: SubmitEvent) => void = (event) => {
+    event.preventDefault();
 
-    this.setTop(this.props.top as string);
-    this.setLeft(this.props.left as string);
+    if (this.props.menuItemClickHandler) {
+      const itemTarget = event.target as HTMLButtonElement;
+      const itemText = itemTarget.textContent;
+
+      (this.props.menuItemClickHandler as Listener)(itemText);
+    }
+
+    this.hide();
+  };
+
+  public initItems() {
+    this.children.items = (this.props.items as MenuItem[])?.map((_item, index) => {
+      const currentItem = (this.props.state as MenuProps)?.items as MenuItem[];
+
+      const type = currentItem?.[index].type;
+      const text = currentItem?.[index].text;
+      const href = currentItem?.[index].href;
+      const dataButton = currentItem?.[index].dataButton;
+      const dataSvg = currentItem?.[index].dataSvg;
+
+      return new Button({
+        dataButton,
+        className: 'menu__button',
+        type,
+        text,
+        settings: {
+          withInternalID: true
+        },
+        buttonChild: new Svg({
+          dataSvg,
+          className: 'menu__icon',
+          href
+        }),
+        events: {
+          click: ((event: SubmitEvent) => this.menuItemClickHandler.call(this, event)) as Listener
+        }
+      });
+    });
+  }
+
+  async componentDidMount() {
+    try {
+      this.initItems();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   componentDidUpdate(oldProps: MenuProps, newProps: MenuProps): boolean {
-    if (oldProps.top !== newProps.top) {
-      this.setProps({ top: newProps.top });
-      this.setTop(newProps.top as string);
-    }
-
-    if (oldProps.left !== newProps.left) {
-      this.setProps({ left: newProps.left });
-      this.setLeft(newProps.left as string);
-    }
-
-    return true;
-  }
-
-  setTop(value: string): void {
-    this.getContent()!.style.top = value;
-  }
-
-  setLeft(value: string): void {
-    this.getContent()!.style.left = value;
+    return oldProps.visible !== newProps.visible;
   }
 
   render(): string {

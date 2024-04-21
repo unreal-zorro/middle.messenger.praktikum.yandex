@@ -2,16 +2,18 @@
 @import '@/styles/mixins';
 
 .login {
-  min-width: calc($button-width + 40px);
-  width: 100%;
-  max-width: $login-width;
-  min-height: $login-height;
-  padding: 20px 10px;
-  border: 3px solid $border;
-  border-radius: 25px;
-  background-color: $accent;
+  height: 100%;
+  width: $login-width;
 
-  @include flex(column, center, center);
+  &__wrapper {
+    min-height: $login-height;
+    padding: 20px 10px;
+    border: 3px solid $border;
+    border-radius: 25px;
+    background-color: $accent;
+
+    @include flex(column, center, center);
+  }
 
   &__header {
     margin-bottom: 20px;

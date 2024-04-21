@@ -25,6 +25,10 @@ body {
   height: 100%;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 #root {
   width: 100%;
   min-height: 100%;

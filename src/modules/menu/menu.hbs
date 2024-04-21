@@ -1,4 +1,7 @@
-<article class="menu{{#if className}} {{ className }}{{/if}}{{#if visible}} menu_visible{{/if}}">
+<article
+  data-menu={{ dataMenu }}
+  class="menu{{#if className}} {{ className }}{{/if}}"
+>
   {{#each items}}
     <div class="menu__item">
       {{{ this }}}

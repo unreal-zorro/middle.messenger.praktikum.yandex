@@ -1,26 +1,26 @@
 <section
   class="content{{#if className}} {{ className }}{{/if}}"
 >
-  <div class="content__chat">
-    <div class="content__info">
-      {{{ avatar }}}
-      {{{ title }}}
-    </div>
+  {{#if this.state.activeChat}}
+    {{{ contentChat }}}
 
-    {{{ button }}}
-  </div>
+    {{#if dates}}
+      <ul class="content__list">
+        {{#each dates}}
+          {{{ this }}}
+        {{/each}}
+      </ul>
+    {{/if}}
 
-  <ul class="content__list">
-    {{#each dates}}
-      {{{ this }}}
-    {{/each}}
-  </ul>
+    {{{ noMessagesText }}}
+  {{/if}}
 
-  {{{ noMessagesText }}}
   {{{ noChatText }}}
 
-  {{{ attachMenu }}}
-  {{{ userMenu }}}
+  {{{ contentMenu }}}
+
+  {{{ userAddModal }}}
+  {{{ userDeleteModal }}}
 
   <svg class="spritesheet">
     <symbol id="icon-triple" viewBox="0 0 20 20">

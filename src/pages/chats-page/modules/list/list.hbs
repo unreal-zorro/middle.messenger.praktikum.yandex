@@ -1,7 +1,7 @@
 <section
   class="list{{#if className}} {{ className }}{{/if}}"
 >
-  {{#if this.chats}}
+  {{#if this.state.chatsData}}
     <ul class="list__list">
       {{#each this.chats}}
         {{{ this }}}
@@ -11,7 +11,7 @@
     {{{ text }}}
   {{/if}}
 
-  {{{ menu }}}
+  {{{ chatMenu }}}
 
   <svg class="spritesheet">
     <symbol id="icon-settings" viewBox="0 0 32 32">

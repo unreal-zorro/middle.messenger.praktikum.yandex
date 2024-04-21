@@ -19,6 +19,7 @@ export interface InputFieldProps extends Props {
   text?: string;
   focusHandler?: Listener;
   blurHandler?: (...args: string[]) => string;
+  changeHandler?: (...args: string[]) => string;
 }
 
 export class InputField extends Block {
@@ -52,6 +53,60 @@ export class InputField extends Block {
       }
     };
 
+    const changeHandler = (target: HTMLInputElement): void => {
+      if (target.getAttribute('type') === 'file' && (!target.files || target.files.length === 0)) {
+        (this.children.errorChild as Block).setProps({
+          error: true,
+          text: 'Нужно выбрать файл'
+        });
+
+        if (this.props.label) {
+          (this.children.labelChild as Label).setProps({
+            className: this.props.classNameLabel,
+            text: this.props.label
+          });
+        }
+
+        return;
+      }
+
+      if (target.getAttribute('type') === 'file') {
+        const { name } = target;
+        let value = '';
+        let type = '';
+
+        if (target.files) {
+          value = target.files[0]?.name;
+          type = target.files[0]?.type;
+        }
+
+        if (this.props.changeHandler) {
+          const errorMessage = (this.props.changeHandler as (...args: string[]) => string)(
+            name,
+            value,
+            type
+          );
+
+          (this.children.errorChild as Error).setProps({
+            error: !!errorMessage,
+            text: errorMessage
+          });
+
+          if (!errorMessage) {
+            (this.children.labelChild as Label).setProps({
+              className: this.props.classNameLabel,
+              text: value
+            });
+          } else if (this.props.label) {
+            (this.children.labelChild as Label).setProps({
+              className: this.props.classNameLabel,
+              text: this.props.label
+            });
+          }
+        }
+      }
+    };
+
     this.children.labelChild = new Label({
       className: this.props.classNameLabel as string,
       for: this.props.name as string,
@@ -80,6 +135,9 @@ export class InputField extends Block {
             (event?.target as HTMLInputElement).name,
             (event?.target as HTMLInputElement).value
           );
+        }) as Listener,
+        change: ((event: Event) => {
+          changeHandler.call(this, event?.target as HTMLInputElement);
         }) as Listener
       }
     });
@@ -96,20 +154,28 @@ export class InputField extends Block {
 
   componentDidUpdate(oldProps: InputFieldProps, newProps: InputFieldProps): boolean {
     if (oldProps.value !== newProps.value) {
-      (this.children.inputChild as Block).setProps({ value: newProps.value });
+      (this.children.inputChild as Input).setProps({ value: newProps.value });
     }
 
     if (oldProps.disabled !== newProps.disabled) {
-      (this.children.inputChild as Block).setProps({ disabled: newProps.disabled });
+      (this.children.inputChild as Input).setProps({ disabled: newProps.disabled });
     }
 
     if (oldProps.error !== newProps.error) {
-      (this.children.inputChild as Block).setProps({ error: newProps.error });
-      (this.children.inputChild as Block).setProps({ error: newProps.error });
+      (this.children.inputChild as Input).setProps({ error: newProps.error });
+      (this.children.errorChild as Error).setProps({ error: newProps.error });
     }
 
     if (oldProps.text !== newProps.text) {
-      (this.children.inputChild as Block).setProps({ text: newProps.text });
+      (this.children.errorChild as Error).setProps({ text: newProps.text });
+    }
+
+    if (oldProps.label !== newProps.label) {
+      (this.children.labelChild as Label).setProps({ text: newProps.label });
+    }
+
+    if (oldProps.classNameLabel !== newProps.classNameLabel) {
+      (this.children.labelChild as Label).setProps({ classNameLabel: newProps.classNameLabel });
     }
 
     return true;
