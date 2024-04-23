@@ -32,7 +32,8 @@
     "@typescript-eslint/no-shadow": "warn",
     "func-names": "off",
     "no-empty-function": "off",
-    "no-unused-expressions": "off"
+    "no-unused-expressions": "off",
+    "max-classes-per-file": ["error", { "ignoreExpressions": true, "max": 2 }]
   },
   "settings": {
     "import/parsers": {
