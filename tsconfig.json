@@ -22,7 +22,8 @@
   },
   "ts-node": {
     "esm": true,
-    "experimentalSpecifierResolution": "node"
+    "experimentalSpecifierResolution": "node",
+    "files": true
   },
   "include": ["*.ts", "src/**/*.ts"],
   "exclude": ["node_modules", "dist", "docs", "static"]
