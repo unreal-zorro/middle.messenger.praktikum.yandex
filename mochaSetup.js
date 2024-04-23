@@ -1,6 +1,8 @@
 import { JSDOM } from 'jsdom';
 
-const jsdom = new JSDOM('<body></body>');
+const jsdom = new JSDOM('<body></body>', {
+  url: 'http://localhost:5173/'
+});
 
 global.window = jsdom.window;
 global.document = jsdom.window.document;
