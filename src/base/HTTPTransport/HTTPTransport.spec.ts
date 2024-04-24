@@ -36,12 +36,6 @@ describe('HTTPTransport', () => {
     requests.length = 0;
   });
 
-  after(async (done) => {
-    xhr.restore();
-    requests.length = 0;
-    done();
-  });
-
   it('should invoke get method', () => {
     transport.get('/');
 
@@ -64,7 +58,7 @@ describe('HTTPTransport', () => {
     const data = { userId: 1 };
     transport.put('/', { data });
 
-    expect(requests[0].requestBody).to.equal('{"userId":1}');
+    expect(requests[0].requestBody).to.deep.equal('{"userId":1}');
   });
 
   it('should invoke post method', () => {
@@ -77,7 +71,7 @@ describe('HTTPTransport', () => {
     const data = { withCredentials: true };
     transport.post('/', { data });
 
-    expect(requests[0].requestBody).to.equal('{"withCredentials":true}');
+    expect(requests[0].requestBody).to.deep.equal('{"withCredentials":true}');
   });
 
   it('should invoke delete method', () => {
@@ -90,6 +84,6 @@ describe('HTTPTransport', () => {
     const data = { timeout: 2000 };
     transport.delete('/', { data });
 
-    expect(requests[0].requestBody).to.equal('{"timeout":2000}');
+    expect(requests[0].requestBody).to.deep.equal('{"timeout":2000}');
   });
 });
