@@ -3,7 +3,7 @@ import Sinon from 'sinon';
 import { Block } from './Block';
 import type { Props } from './Block';
 
-describe('Block tests', () => {
+describe('Block', () => {
   type BlockConstructor = new (props: Props) => Block;
 
   let BlockClass: BlockConstructor;
@@ -53,10 +53,10 @@ describe('Block tests', () => {
     expect(handler.calledOnce).to.be.true;
   });
 
-  it('should invoke _render', async () => {
+  it('should invoke render', async () => {
     const textData = 'Click';
     const buttonComponent = await new BlockClass({ text: textData });
-    const spyRender = Sinon.spy(buttonComponent, '_render' as keyof Block);
+    const spyRender = Sinon.spy(buttonComponent, 'render' as keyof Block);
     const newText = 'New text';
     buttonComponent.setProps({ text: newText });
 
