@@ -24,7 +24,7 @@ class RegisterPage extends Block {
   }
 }
 
-describe('Router tests', () => {
+describe('Router', () => {
   let router: Router;
 
   before(() => {
@@ -41,8 +41,9 @@ describe('Router tests', () => {
   it('should add two routes', () => {
     router.use('/sign-up', RegisterPage, {});
     const route = router.getRoute('/sign-up');
+    const isSignUp = route?.match('/sign-up');
 
-    expect(route).to.be.an.instanceof(Route);
+    expect(isSignUp).to.be.true;
   });
 
   it('should render route', async () => {
