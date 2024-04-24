@@ -1,4 +1,4 @@
-import { VALIDATION_RULES } from '@/consts';
+import { VALIDATION_RULES } from '../../consts';
 
 export function validate(data: Record<string, string>): boolean {
   let isValid = true;
