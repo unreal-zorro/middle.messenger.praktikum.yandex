@@ -6,7 +6,7 @@ export function queryStringify(
     throw new Error('input must be an object');
   }
 
-  let result = '';
+  let result = '?';
 
   Object.entries(data).forEach(([key, value]) => {
     if (Array.isArray(value)) {

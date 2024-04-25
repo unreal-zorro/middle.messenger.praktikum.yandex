@@ -1,4 +1,4 @@
-import { isEqual, render } from '@/utils';
+import { isEqual, render } from '../../utils';
 import { Block } from '../Block';
 import type { Props } from '../Block';
 
